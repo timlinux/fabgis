@@ -2,58 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2af6930f-ee2d-4716-a299-d7084d11f744" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/fonts/arial.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/fonts/arialbd.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/fonts/arialbi.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/fonts/ariali.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/fonts/ariblk.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/fonts/cour.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/fonts/courbd.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/fonts/courbi.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/fonts/couri.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/fabgis.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/fonts/symbols.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.name" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/sql/dumps/README.rst" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/QGISProjects/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/docs/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/mapfiles/README" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Vagrantfile" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fabfile.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/apache/fabgis.django.apache.conf.templ" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/mapfiles/fabgis.map.templ" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fabgis.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/fonts/fonts.list" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/templates/footer.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/templates/header.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/mapfiles/mapserver-key.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/other.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/requirements.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/templates/site-point.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/templates/site-point.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/mapserver/symbols/symbols.sym" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test.sh" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/testrunner.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.rst" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/scrap.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Vagrantfile" afterPath="$PROJECT_DIR$/Vagrantfile" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fabfile.py" afterPath="$PROJECT_DIR$/fabfile.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fabgis.py" afterPath="$PROJECT_DIR$/fabgis.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.sh" afterPath="$PROJECT_DIR$/test.sh" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="fabgis.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366702509589" ignored="false" />
-    <file path="/fabfile.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366709675591" ignored="false" />
+    <file path="/Dummy.txt" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366897076274" ignored="false" />
+    <file path="/fabfile.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366884864048" ignored="false" />
     <file path="/requirements.txt" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366704108895" ignored="false" />
     <file path="/README.rst" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366709503433" ignored="false" />
     <file path="$PROJECT_DIR$/../inasafe-dev/safe_qgis/dock.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366705422982" ignored="false" />
     <file path="$PROJECT_DIR$/../inasafe-dev/realtime/shake_event.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366705422982" ignored="false" />
     <file path="$PROJECT_DIR$/../inasafe-dev/safe_qgis/map.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366705422983" ignored="false" />
     <file path="/test.sh" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366709848099" ignored="false" />
+    <file path="/Vagrantfile" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366878485865" ignored="false" />
+    <file path="/fabgis.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366902497743" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../../web/farminfo/farminfo/valuations/management/commands/import_parcels.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366897121040" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../../web/farminfo/farminfo/valuations/helpers.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366897702271" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,12 +37,33 @@
     <disable_hints />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="fabgis" />
+  </component>
   <component name="FileEditorManager">
     <leaf>
       <file leaf-file-name="fabfile.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fabfile.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="19" selection-start="346" selection-end="361" vertical-scroll-proportion="0.0">
+            <state line="11" column="0" selection-start="336" selection-end="336" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="scrap.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/scrap.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="21" column="0" selection-start="506" selection-end="671" vertical-scroll-proportion="-7.8235292">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Vagrantfile" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Vagrantfile">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="18" column="0" selection-start="511" selection-end="511" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -97,19 +87,28 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fabgis.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="fabgis.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fabgis.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="280" column="0" selection-start="10077" selection-end="10077" vertical-scroll-proportion="0.0">
+            <state line="53" column="9" selection-start="1769" selection-end="1899" vertical-scroll-proportion="0.7278732">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test.sh" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="utils.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file:///usr/local/lib/python2.7/dist-packages/fabric/utils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="141" column="6" selection-start="5062" selection-end="5062" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test.sh" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="28" selection-start="52" selection-end="52" vertical-scroll-proportion="0.07289003">
+            <state line="3" column="28" selection-start="52" selection-end="52" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -133,18 +132,19 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/Vagrantfile" />
         <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/README.rst" />
+        <option value="$PROJECT_DIR$/test.sh" />
+        <option value="$PROJECT_DIR$/Vagrantfile" />
+        <option value="$PROJECT_DIR$/scrap.py" />
         <option value="$PROJECT_DIR$/fabfile.py" />
         <option value="$PROJECT_DIR$/fabgis.py" />
-        <option value="$PROJECT_DIR$/test.sh" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="3940" />
-    <option name="y" value="46" />
+    <option name="x" value="2032" />
+    <option name="y" value="29" />
     <option name="width" value="1719" />
     <option name="height" value="954" />
   </component>
@@ -174,7 +174,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -195,15 +194,16 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="options.lastSelected" value="reference.settings.ide.settings.web.browsers" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../inasafe-dev/fabfile.py" />
-    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../web/farminfo/farminfo" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="tests" factoryName="Nosetests">
@@ -213,6 +213,8 @@
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="fabgis" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="" />
@@ -226,22 +228,6 @@
       <option name="USE_PARAM" value="false" />
       <method />
     </configuration>
-    <configuration default="true" type="docs" factoryName="Docutils task">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <module name="fabgis" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="docutils_input_file" value="" />
-      <option name="docutils_output_file" value="" />
-      <option name="docutils_params" value="" />
-      <option name="docutils_task" value="" />
-      <option name="docutils_open_in_browser" value="false" />
-      <method />
-    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -251,10 +237,30 @@
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="fabgis" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="" />
       <option name="PARAMETERS" value="" />
+      <method />
+    </configuration>
+    <configuration default="true" type="docs" factoryName="Docutils task">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="fabgis" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="docutils_input_file" value="" />
+      <option name="docutils_output_file" value="" />
+      <option name="docutils_params" value="" />
+      <option name="docutils_task" value="" />
+      <option name="docutils_open_in_browser" value="false" />
       <method />
     </configuration>
     <configuration default="true" type="tests" factoryName="Doctests">
@@ -264,6 +270,8 @@
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="fabgis" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="" />
@@ -287,26 +295,26 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="3940" y="46" width="1719" height="954" extended-state="0" />
+    <frame x="2032" y="29" width="1719" height="954" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24955116" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24955116" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2525434" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974267" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32974267" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -335,7 +343,7 @@
     <option name="SHOW_ONLY_CHANGED_IN_SELECTION_DIFF" value="true" />
     <option name="CHECK_COMMIT_MESSAGE_SPELLING" value="true" />
     <option name="DEFAULT_PATCH_EXTENSION" value="patch" />
-    <option name="SHORT_DIFF_HORISONTALLY" value="true" />
+    <option name="SHORT_DIFF_HORIZONTALLY" value="true" />
     <option name="SHORT_DIFF_EXTRA_LINES" value="2" />
     <option name="SOFT_WRAPS_IN_SHORT_DIFF" value="true" />
     <option name="INCLUDE_TEXT_INTO_PATCH" value="false" />
@@ -345,6 +353,10 @@
     <option name="SHOW_DIRTY_RECURSIVELY" value="false" />
     <option name="LIMIT_HISTORY" value="true" />
     <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
+    <option name="UPDATE_FILTER_SCOPE_NAME" />
+    <option name="USE_COMMIT_MESSAGE_MARGIN" value="false" />
+    <option name="COMMIT_MESSAGE_MARGIN_SIZE" value="72" />
+    <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
     <option name="LAST_COMMIT_MESSAGE" />
@@ -358,6 +370,7 @@
     <option name="ACTIVE_VCS_NAME" />
     <option name="UPDATE_GROUP_BY_PACKAGES" value="false" />
     <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
+    <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
   </component>
@@ -365,37 +378,9 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../../../../web/catalogue/fabfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="241" column="13" selection-start="7639" selection-end="7648" vertical-scroll-proportion="-23.76">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../web/mappingthesacred/fabfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="4" selection-start="1083" selection-end="1357" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="13" selection-start="13" selection-end="13" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vagrantfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="4" selection-start="1118" selection-end="1118" vertical-scroll-proportion="0.60741687">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../inasafe-dev/fabfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="96" column="79" selection-start="0" selection-end="15238" vertical-scroll-proportion="0.43734014">
           <folding />
         </state>
       </provider>
@@ -409,21 +394,94 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/fabgis.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="280" column="0" selection-start="10077" selection-end="10077" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fabfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="19" selection-start="346" selection-end="361" vertical-scroll-proportion="0.0">
+        <state line="516" column="0" selection-start="18281" selection-end="18281" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="28" selection-start="52" selection-end="52" vertical-scroll-proportion="0.07289003">
+        <state line="3" column="28" selection-start="52" selection-end="52" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../web/catalogue/fabfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="241" column="13" selection-start="7639" selection-end="7648" vertical-scroll-proportion="-23.76">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../web/mappingthesacred/fabfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="48" column="4" selection-start="1083" selection-end="1357" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../inasafe-dev/fabfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="96" column="79" selection-start="0" selection-end="15238" vertical-scroll-proportion="0.43734014" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="28" selection-start="52" selection-end="52" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Vagrantfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="0" selection-start="511" selection-end="511" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scrap.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="0" selection-start="506" selection-end="671" vertical-scroll-proportion="-7.8235292">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.rst">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="59" column="0" selection-start="2508" selection-end="2508" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="13" selection-start="13" selection-end="13" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python2.7/dist-packages/fabric/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="141" column="6" selection-start="5062" selection-end="5062" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fabfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="0" selection-start="336" selection-end="336" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python2.7/dist-packages/fabtools/require/deb.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="48" column="4" selection-start="1137" selection-end="1137" vertical-scroll-proportion="0.33248082">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fabgis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="53" column="9" selection-start="1769" selection-end="1899" vertical-scroll-proportion="0.7278732">
           <folding />
         </state>
       </provider>
