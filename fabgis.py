@@ -26,7 +26,7 @@ def all():
     env.fg = fdict()
     with hide('output'):
         env.fg.user = run('whoami')
-        env.fg.hostname = run('hostname')
+        env.fg.hostname = fabtools.system.get_hostname()
         env.fg.home = os.path.join('/home/', env.fg.user)
         env.fg.workspace = os.path.join(env.fg.home, 'dev')
         env.fg.inasafe_git_url = 'git://github.com/AIFDR/inasafe.git'
@@ -293,22 +293,25 @@ def create_user():
     fabtools.require.users.user(env.user)
     fabtools.require.users.sudoer(env.user)
 
+
 @task
 def ssh_copy_id():
     """Copy ssh id from local system to remote."""
     command = 'ssh-copy-id %s' % env.host
     local(command)
 
+
 @task
-def harden(ssh_port=8697):
+def harden(ssh_port=22):
     """Harden the server a little.
 
     Warning: We make no claim that this makes your server intruder proof. You
-     should always check any system yourself and make sure that it is
-     adequately secured.
+    should always check any system yourself and make sure that it is
+    adequately secured.
 
     """
-    ssh_copy_id()
+    #print fabtools.system.get_hostname()
+    #ssh_copy_id()
 
     # Set up ufw and mosh
     fabtools.require.deb.package('ufw')
@@ -336,7 +339,8 @@ def harden(ssh_port=8697):
     sudo('ufw allow from 127.0.0.1/32 to 78.40.125.4 port 6667')
     sudo('ufw allow from 127.0.0.1/32 to any port 22')
     sudo('ufw allow 443')
-    sudo('ufw allow 53')  # dns
+    sudo('ufw allow 53/udps')  # dns
+    sudo('ufw allow 53/tcp')
     sudo('ufw allow 1053')  # dns client
 
     sed('/etc/ssh/sshd_config', 'Port 22', 'Port 8697', use_sudo=True)
@@ -370,3 +374,20 @@ def harden(ssh_port=8697):
     fabtools.require.deb.package('mailutils')
     fabtools.require.deb.package('byobu')
     fabtools.service.restart('ssh')
+
+
+@task
+def masquerade():
+    """Set up masquerading so that a box with two nics can act as a router.
+    """
+    # Set up masquerade so that one host can act as a NAT gateway for a network
+    # of hosts.
+    #http://forums.fedoraforum.org/archive/index.php/t-178224.html
+    rc_file = '/etc/rc.local'
+    masq1 = '/sbin/iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE'
+    masq2 = 'echo 1 > /proc/sys/net/ipv4/ip_forward'
+    if not contains(rc_file, masq1):
+        sed(rc_file, '^exit 0', '#exit 0', use_sudo=True)
+        append(rc_file, masq1, use_sudo=True)
+        append(rc_file, masq2, use_sudo=True)
+
