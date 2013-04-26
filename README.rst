@@ -80,4 +80,11 @@ The download is around 20mb.
 .. note:: Don't use the one in apt - it is old (at the time of writing anyway).
 
 
+Some examples
+-------------
+
+Here is how we might create a new postgis 1.5 instance on the target host::
+
+    fab vagrant create_postgis_1_5_db:dbname=test
+
 

@@ -460,14 +460,6 @@ def update_git_checkout(branch='master'):
         run('git pull')
 
 
-def add_ubuntugis_ppa():
-    """Ensure we have ubuntu-gis repos."""
-    sudo('apt-get update')
-    require.deb.ppa('ppa:ubuntugis/ubuntugis-unstable')
-    sudo('sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable')
-    sudo('apt-get update')
-
-
 def install_latex():
     """Ensure that the target system has a usable latex installation."""
     all()
@@ -476,49 +468,6 @@ def install_latex():
     fabtools.require.deb.package('python-sphinx')
     fabtools.require.deb.package('dvi2png')
     fabtools.require.deb.package('texinfo')
-
-
-def clone_qgis(branch='master'):
-    """Clone or update QGIS from git.
-
-    Args:
-        branch: str - a string representing the name of the branch to build
-            from. Defaults to 'master'
-
-    """
-    all()
-    fabtools.require.deb.package('git')
-    code_base = '/home/%s/dev/cpp' % env.user
-    code_path = '%s/Quantum-GIS' % code_base
-    if not exists(code_path):
-        fastprint('Repo checkout does not exist, creating.')
-        run('mkdir -p %s' % code_base)
-        with cd(code_base):
-            run('git clone %s' % env.qgis_git_url)
-    else:
-        fastprint('Repo checkout does exist, updating.')
-        with cd(code_path):
-            # Get any updates first
-            run('git fetch')
-            # Get rid of any local changes
-            run('git reset --hard')
-            # Get back onto master branch
-            run('git checkout master')
-            # Remove any local changes in master
-            run('git reset --hard')
-            # Delete all local branches
-            run('git branch | grep -v \* | xargs git branch -D')
-
-    with cd(code_path):
-        if branch != 'master':
-            run('git branch --track %s origin/%s' %
-                (branch, branch))
-            run('git checkout %s' % branch)
-        else:
-            run('git checkout master')
-        run('git pull')
-
-
 
 def setup_realtime():
     """Set up a working environment for the realtime quake report generator."""

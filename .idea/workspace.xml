@@ -2,27 +2,30 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2af6930f-ee2d-4716-a299-d7084d11f744" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/scrap.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Vagrantfile" afterPath="$PROJECT_DIR$/Vagrantfile" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.rst" afterPath="$PROJECT_DIR$/README.rst" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fabfile.py" afterPath="$PROJECT_DIR$/fabfile.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fabgis.py" afterPath="$PROJECT_DIR$/fabgis.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.sh" afterPath="$PROJECT_DIR$/test.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/requirements.txt" afterPath="$PROJECT_DIR$/requirements.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scrap.py" afterPath="$PROJECT_DIR$/scrap.py" />
     </list>
     <ignored path="fabgis.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366897076274" ignored="false" />
-    <file path="/fabfile.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366884864048" ignored="false" />
+    <file path="/Dummy.txt" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366968918247" ignored="false" />
+    <file path="/fabfile.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366959179934" ignored="false" />
     <file path="/requirements.txt" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366704108895" ignored="false" />
-    <file path="/README.rst" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366709503433" ignored="false" />
+    <file path="/README.rst" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366959712298" ignored="false" />
     <file path="$PROJECT_DIR$/../inasafe-dev/safe_qgis/dock.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366705422982" ignored="false" />
     <file path="$PROJECT_DIR$/../inasafe-dev/realtime/shake_event.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366705422982" ignored="false" />
     <file path="$PROJECT_DIR$/../inasafe-dev/safe_qgis/map.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366705422983" ignored="false" />
     <file path="/test.sh" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366709848099" ignored="false" />
     <file path="/Vagrantfile" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366878485865" ignored="false" />
-    <file path="/fabgis.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366902497743" ignored="false" />
+    <file path="/fabgis.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366981562017" ignored="false" />
     <file path="$PROJECT_DIR$/../../../../web/farminfo/farminfo/valuations/management/commands/import_parcels.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366897121040" ignored="false" />
     <file path="$PROJECT_DIR$/../../../../web/farminfo/farminfo/valuations/helpers.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366897702271" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../../web/mappingthesacred/django_project/core/settings/prod.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366958300409" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../../web/mappingthesacred/django_project/core/settings/project.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366958300409" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../../web/mappingthesacred/docs/source/batch_import.rst" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366958300409" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../../web/mappingthesacred/django_project/mts/models.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366963465872" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +48,7 @@
       <file leaf-file-name="fabfile.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fabfile.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="0" selection-start="336" selection-end="336" vertical-scroll-proportion="0.0">
+            <state line="16" column="0" selection-start="497" selection-end="497" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -54,7 +57,7 @@
       <file leaf-file-name="scrap.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scrap.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="0" selection-start="506" selection-end="671" vertical-scroll-proportion="-7.8235292">
+            <state line="470" column="0" selection-start="16384" selection-end="16384" vertical-scroll-proportion="-175.09804">
               <folding />
             </state>
           </provider>
@@ -72,7 +75,7 @@
       <file leaf-file-name="requirements.txt" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/requirements.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="13" selection-start="13" selection-end="13" vertical-scroll-proportion="0.0">
+            <state line="1" column="9" selection-start="23" selection-end="23" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -81,7 +84,7 @@
       <file leaf-file-name="README.rst" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.rst">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="59" column="0" selection-start="2508" selection-end="2508" vertical-scroll-proportion="0.0">
+            <state line="89" column="0" selection-start="3575" selection-end="3575" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -90,7 +93,7 @@
       <file leaf-file-name="fabgis.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fabgis.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="53" column="9" selection-start="1769" selection-end="1899" vertical-scroll-proportion="0.7278732">
+            <state line="330" column="26" selection-start="11100" selection-end="11100" vertical-scroll-proportion="0.17391305">
               <folding />
             </state>
           </provider>
@@ -132,19 +135,19 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/requirements.txt" />
-        <option value="$PROJECT_DIR$/README.rst" />
         <option value="$PROJECT_DIR$/test.sh" />
         <option value="$PROJECT_DIR$/Vagrantfile" />
+        <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/scrap.py" />
         <option value="$PROJECT_DIR$/fabfile.py" />
+        <option value="$PROJECT_DIR$/README.rst" />
         <option value="$PROJECT_DIR$/fabgis.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="2032" />
-    <option name="y" value="29" />
+    <option name="x" value="2048" />
+    <option name="y" value="26" />
     <option name="width" value="1719" />
     <option name="height" value="954" />
   </component>
@@ -201,7 +204,7 @@
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="options.lastSelected" value="reference.settings.ide.settings.web.browsers" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../web/farminfo/farminfo" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../web/mappingthesacred/fabfile.py" />
     <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
   </component>
@@ -295,7 +298,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="2032" y="29" width="1719" height="954" extended-state="0" />
+    <frame x="2048" y="26" width="1719" height="954" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -378,13 +381,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="13" selection-start="13" selection-end="13" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.rst">
       <provider selected="true" editor-type-id="text-editor">
         <state line="59" column="0" selection-start="2508" selection-end="2508" vertical-scroll-proportion="0.0">
@@ -413,11 +409,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../web/mappingthesacred/fabfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="4" selection-start="1083" selection-end="1357" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../inasafe-dev/fabfile.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="96" column="79" selection-start="0" selection-end="15238" vertical-scroll-proportion="0.43734014" />
@@ -437,23 +428,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scrap.py">
+    <entry file="file:///usr/local/lib/python2.7/dist-packages/fabtools/require/deb.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="0" selection-start="506" selection-end="671" vertical-scroll-proportion="-7.8235292">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.rst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="59" column="0" selection-start="2508" selection-end="2508" vertical-scroll-proportion="0.0">
+        <state line="48" column="4" selection-start="1137" selection-end="1137" vertical-scroll-proportion="0.33248082">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="13" selection-start="13" selection-end="13" vertical-scroll-proportion="0.0">
+        <state line="1" column="9" selection-start="23" selection-end="23" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -465,23 +449,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fabfile.py">
+    <entry file="file:///usr/local/lib/python2.7/dist-packages/fabric/operations.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="0" selection-start="336" selection-end="336" vertical-scroll-proportion="0.0">
+        <state line="68" column="4" selection-start="1498" selection-end="1498" vertical-scroll-proportion="0.40702212">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/local/lib/python2.7/dist-packages/fabtools/require/deb.py">
+    <entry file="file://$PROJECT_DIR$/../../../../web/mappingthesacred/fabfile.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="4" selection-start="1137" selection-end="1137" vertical-scroll-proportion="0.33248082">
+        <state line="255" column="0" selection-start="4112" selection-end="8581" vertical-scroll-proportion="-3.567775">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scrap.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="470" column="0" selection-start="16384" selection-end="16384" vertical-scroll-proportion="-175.09804">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fabfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="0" selection-start="497" selection-end="497" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.rst">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="89" column="0" selection-start="3575" selection-end="3575" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/fabgis.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="53" column="9" selection-start="1769" selection-end="1899" vertical-scroll-proportion="0.7278732">
+        <state line="330" column="26" selection-start="11100" selection-end="11100" vertical-scroll-proportion="0.17391305">
           <folding />
         </state>
       </provider>
