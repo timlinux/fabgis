@@ -158,7 +158,7 @@ def update_git_checkout(branch='master'):
             env.run('git checkout master')
             # Remove any local changes in master
             env.run('git reset --hard')
-            # Delete all local branches
+            # Delete setup_env local branches
             env.run('git branch | grep -v \* | xargs git branch -D')
 
     with cd(os.path.join(env.repo_path, env.repo_alias)):
@@ -447,7 +447,7 @@ def update_git_checkout(branch='master'):
             run('git checkout master')
             # Remove any local changes in master
             run('git reset --hard')
-            # Delete all local branches
+            # Delete setup_env local branches
             run('git branch | grep -v \* | xargs git branch -D')
 
     with cd(env.code_path):

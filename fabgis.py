@@ -16,7 +16,7 @@ env.roledefs = {
 env.fg = None
 
 
-def all():
+def setup_env():
     """Things to do regardless of whether command is local or remote."""
     if env.fg is not None:
         fastprint('Environment already set!\n')
@@ -42,7 +42,7 @@ def all():
 @task
 def show_environment():
     """For diagnostics - show any pertinent info about server."""
-    all()
+    setup_env()
     fastprint('\n-------------------------------------------------\n')
     for key, value in env.fg.iteritems():
         fastprint('Key: %s \t\t Value: %s' % (key, value))
@@ -64,7 +64,7 @@ def clone_qgis(branch='master'):
 
     :rtype: None
     """
-    all()
+    setup_env()
     fabtools.require.deb.package('git')
     code_base = '%s/dev/cpp' % env.fg.workspace
     code_path = '%s/Quantum-GIS' % code_base
@@ -84,7 +84,7 @@ def clone_qgis(branch='master'):
             run('git checkout master')
             # Remove any local changes in master
             run('git reset --hard')
-            # Delete all local branches
+            # Delete setup_env local branches
             run('git branch | grep -v \* | xargs git branch -D')
 
     with cd(code_path):
@@ -99,7 +99,7 @@ def clone_qgis(branch='master'):
 @task
 def install_qgis1_8():
     """Install QGIS 1.8 under /usr/local/qgis-1.8."""
-    all()
+    setup_env()
     add_ubuntugis_ppa()
     sudo('apt-get build-dep -y qgis')
     fabtools.require.deb.package('cmake-curses-gui')
@@ -126,7 +126,7 @@ def install_qgis2():
     TODO: create one function from this and the 1.8 function above for DRY.
 
     """
-    all()
+    setup_env()
     add_ubuntugis_ppa()
     sudo('apt-get build-dep -y qgis')
     fabtools.require.deb.package('cmake-curses-gui')
@@ -174,16 +174,16 @@ def setup_postgres_superuser(user):
 def setup_postgis():
     """Set up postgis.
 
-    You can call this multiple times without it actually installing all over
+    You can call this multiple times without it actually installing setup_env over
     again each time since it checks for the presence of pgis first.
 
     We build from source because we want 1.5"""
-    all()
+    setup_env()
 
     pg_file = '/usr/share/postgresql/9.1/contrib/postgis-1.5/postgis.sql'
     if not fabtools.files.is_file(pg_file):
         add_ubuntugis_ppa()
-        fabtools.require.deb.package('postgresql-server-dev-all')
+        fabtools.require.deb.package('postgresql-server-dev-setup_env')
         fabtools.require.deb.package('build-essential')
 
         # Note - no postgis installation from package as we want to build 1.5
@@ -244,7 +244,7 @@ def create_postgis_1_5_db(dbname, user):
     fabtools.require.postgres.database(
         '%s' % dbname, owner='%s' % user, template='template_postgis')
 
-    grant_sql = 'grant all on schema public to %s;' % user
+    grant_sql = 'grant setup_env on schema public to %s;' % user
     # assumption is env.repo_alias is also database name
     run('psql %s -c "%s"' % (dbname, grant_sql))
     grant_sql = (
@@ -259,7 +259,7 @@ def create_postgis_1_5_db(dbname, user):
 @task
 def get_postgres_dump(dbname):
     """Get a dump of the database from teh server."""
-    all()
+    setup_env()
     date = run('date +%d-%B-%Y')
     my_file = '%s-%s.dmp' % (dbname, date)
     run('pg_dump -Fc -f /tmp/%s %s' % (my_file, dbname))
@@ -269,7 +269,7 @@ def get_postgres_dump(dbname):
 @task
 def restore_postgres_dump(dbname):
     """Upload dump to host, remove existing db, recreate then restore dump."""
-    all()
+    setup_env()
     show_environment()
     setup_postgres_user()
     create_user()
@@ -310,6 +310,7 @@ def harden(ssh_port=22):
     adequately secured.
 
     """
+    fabtools.deb.update_index(quiet=True)
     #print fabtools.system.get_hostname()
     #ssh_copy_id()
 
@@ -339,7 +340,7 @@ def harden(ssh_port=22):
     sudo('ufw allow from 127.0.0.1/32 to 78.40.125.4 port 6667')
     sudo('ufw allow from 127.0.0.1/32 to any port 22')
     sudo('ufw allow 443')
-    sudo('ufw allow 53/udps')  # dns
+    sudo('ufw allow 53/udp')  # dns
     sudo('ufw allow 53/tcp')
     sudo('ufw allow 1053')  # dns client
 
@@ -354,26 +355,119 @@ def harden(ssh_port=22):
 
     append('/etc/ssh/sshd_config', 'Banner /etc/issue.net', use_sudo=True)
 
-    if not contains('/etc/sysctl.conf', 'rp_filter=1'):
-        append('/etc/sysctl.conf',
-               'net.ipv4.conf.default.rp_filter=1', use_sudo=True)
-        append('/etc/sysctl.conf',
-               'net.ipv4.conf.all.rp_filter=1', use_sudo=True)
-        append('/etc/sysctl.conf',
-               'net.ipv4.conf.all.accept_redirects = 0', use_sudo=True)
-        append('/etc/sysctl.conf',
-               'net.ipv4.conf.all.send_redirects = 0', use_sudo=True)
-        append('/etc/sysctl.conf',
-               'net.ipv4.conf.all.accept_source_route = 0', use_sudo=True)
-        append('/etc/sysctl.conf',
-               'net.ipv4.icmp_echo_ignore_broadcasts = 1', use_sudo=True)
-        append('/etc/sysctl.conf',
-               'net.ipv4.icmp_ignore_bogus_error_responses = 1', use_sudo=True)
+    append_if_not_present(
+        '/etc/sysctl.conf',
+        'net.ipv4.conf.default.rp_filter=1', use_sudo=True)
+    append_if_not_present(
+        '/etc/sysctl.conf',
+        'net.ipv4.conf.setup_env.rp_filter=1', use_sudo=True)
+    append_if_not_present(
+        '/etc/sysctl.conf',
+        'net.ipv4.conf.setup_env.accept_redirects = 0', use_sudo=True)
+    append_if_not_present(
+        '/etc/sysctl.conf',
+        'net.ipv4.conf.setup_env.send_redirects = 0', use_sudo=True)
+    append_if_not_present(
+        '/etc/sysctl.conf',
+        'net.ipv4.conf.setup_env.accept_source_route = 0', use_sudo=True)
+    append_if_not_present(
+        '/etc/sysctl.conf',
+        'net.ipv4.icmp_echo_ignore_broadcasts = 1', use_sudo=True)
+    append_if_not_present(
+        '/etc/sysctl.conf',
+        'net.ipv4.icmp_ignore_bogus_error_responses = 1', use_sudo=True)
 
     fabtools.require.deb.package('denyhosts')
     fabtools.require.deb.package('mailutils')
     fabtools.require.deb.package('byobu')
     fabtools.service.restart('ssh')
+
+    # Some hints and tips from:
+    # http://www.thefanclub.co
+    # .za/how-to/how-secure-ubuntu-1204-lts-server-part-1-basics
+    secure_tmp = (
+        'tmpfs     /dev/shm     tmpfs     defaults,noexec,'
+        'nosuid     0     0')
+    append('/etc/fstab', secure_tmp, use_sudo=True)
+
+    if not contains('/etc/group', 'admin'):
+        sudo('groupadd admin')
+    sudo('usermod -a -G admin %s' % env.user)
+    sudo('dpkg-statoverride --update --add root admin 4750 /bin/su')
+
+    sysctl = '/etc/sysctl.conf'
+
+    append_if_not_present(
+        sysctl, '# IP Spoofing protection', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv4.conf.setup_env.rp_filter = 1', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv4.conf.default.rp_filter = 1', use_sudo=True)
+
+    append_if_not_present(
+        sysctl, '# Ignore ICMP broadcast requests', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv4.icmp_echo_ignore_broadcasts = 1', use_sudo=True)
+
+    append_if_not_present(
+        sysctl, '# Disable source packet routing', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv4.conf.setup_env.accept_source_route = 0', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv6.conf.setup_env.accept_source_route = 0', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv4.conf.default.accept_source_route = 0', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv6.conf.default.accept_source_route = 0', use_sudo=True)
+
+    append_if_not_present(
+        sysctl, '# Ignore send redirects', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv4.conf.setup_env.send_redirects = 0', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv4.conf.default.send_redirects = 0', use_sudo=True)
+
+    append_if_not_present(
+        sysctl, '# Block SYN attacks', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv4.tcp_syncookies = 1', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv4.tcp_max_syn_backlog = 2048', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv4.tcp_synack_retries = 2', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv4.tcp_syn_retries = 5', use_sudo=True)
+
+    append_if_not_present(
+        sysctl, '# Log Martians', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv4.conf.setup_env.log_martians = 1', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv4.icmp_ignore_bogus_error_responses = 1', use_sudo=True)
+
+    append_if_not_present(
+        sysctl, '# Ignore ICMP redirects', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv4.conf.setup_env.accept_redirects = 0', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv6.conf.setup_env.accept_redirects = 0', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv4.conf.default.accept_redirects = 0', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv6.conf.default.accept_redirects = 0', use_sudo=True)
+
+    append_if_not_present(
+        sysctl, '# Ignore Directed pings', use_sudo=True)
+    append_if_not_present(
+        sysctl, 'net.ipv4.icmp_echo_ignore_all = 1', use_sudo=True)
+
+    sudo('sysctl -p')
+
+
+def append_if_not_present(filename, text, use_sudo=False):
+    """Append to a file if an equivalent line is not already there."""
+    if not contains(filename, text):
+        append(filename, text, use_sudo=use_sudo)
 
 
 @task
