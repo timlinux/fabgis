@@ -1,0 +1,138 @@
+#
+# Notes:
+#
+# Tim Sutton 2009
+#
+# By using status default for all layers, mapserver will render them
+# all based on their scale dependent ranges when open layers
+# makes a request. This is a good thing since It will allow us
+# to create complex maps without having to add many layer definitions to
+# OpenLayers.
+#
+
+MAP
+  CONFIG "MS_ENCRYPTION_KEY" "[SITEBASE]/[SITENAME]/resources/server_config/mapserver/mapfiles/mapserver-key.txt"
+  NAME "[MAP_NAME]"
+  # Map image size
+  SIZE 400 400
+  UNITS dd
+
+  EXTENT -17
+  PROJECTION
+    'proj=longlat'
+    'ellps=WGS84'
+    'datum=WGS84'
+    'no_defs'
+    ''
+  END
+
+  SYMBOLSET "../symbols/symbols.sym"
+  FONTSET "../fonts/fonts.list"
+  IMAGEQUALITY 95
+  # Background color for the map canvas -- change as desired
+  IMAGECOLOR -1 -1 -1
+  IMAGEQUALITY 95
+
+  #IMAGETYPE png24
+  #OUTPUTFORMAT
+  #  # use the new rendering backend from MapServer 5
+  #  NAME 'AGGA'
+  #  DRIVER AGG/PNG
+  #  IMAGEMODE RGBA
+  #END
+
+  #OUTPUTFORMAT
+  #  NAME png
+  #  DRIVER 'GD/PNG'
+  #  MIMETYPE 'image/png'
+  #  IMAGEMODE PC256
+  #  EXTENSION 'png'
+  #END
+
+  IMAGETYPE jpeg
+  OUTPUTFORMAT
+    # use the new rendering backend from MapServer 5
+    NAME 'AGG_JPEG'
+    DRIVER AGG/JPEG
+    IMAGEMODE RGB
+  END
+
+  # Web interface definition. Only the template parameter
+  # is required to display a map. See MapServer documentation
+  WEB
+    # Set IMAGEPATH to the path where MapServer should
+    # write its output.
+    IMAGEPATH '/tmp/'
+
+    # Set IMAGEURL to the url that points to IMAGEPATH
+    # as defined in your web server configuration
+    IMAGEURL '/tmp/'
+
+    # WMS server settings
+    METADATA
+      'wms_title'           'SacredSites'
+      'wms_onlineresource'  'http://[SERVERNAME]/cgi-bin/mapserv?map=[SITENAME]&'
+      'wms_srs'             'EPSG:4326 EPSG:900913'
+      "ows_enable_request" "*"
+      'wms_feature_info_mime_type' "text/html"
+    END
+
+    # Template and header/footer settings
+    TEMPLATE "../templates/site-point.html"
+  END
+
+  SYMBOL
+   NAME 'CIRCLE'
+   TYPE ELLIPSE
+   FILLED TRUE
+   POINTS 1 1 END
+  END
+
+  LAYER
+    NAME 'SacredSites'
+    TYPE POINT
+    CONNECTIONTYPE postgis
+    # ####################
+    # We have to use a view because I wanted to use the site id in the tempalte but
+    # according to ms docs [id] will return the current session key in the template
+    # so as a workaround I made a view which aliases id with site_id
+    # Tim Sutton
+    # ####################
+    CONNECTION "dbname='[SITENAME]' host=localhost port=5432 user='{688477225F5ABDFA}' password='{688477225F5ABDFA}' sslmode=disable"
+    DATA 'point_geom FROM vw_sites using unique id using SRID=4326'
+    METADATA
+      'wms_title' 'SacredSites'
+      'wms_abstract' 'Sacred Sites'
+      'wms_srs' "EPSG:4326"
+      'wms_extent' "-180 -90 180 90"
+      'wms_include_items' "all"
+      'wms_exclude_items' "point_geom, polygon_geom"
+      'gml_include_items' "all"
+      'gml_exclude_items' "point_geom, polygon_geom"
+    END
+    STATUS DEFAULT
+    TRANSPARENCY ALPHA
+    PROJECTION
+      'proj=longlat'
+      'ellps=WGS84'
+      'datum=WGS84'
+      'no_defs'
+      ''
+    END
+    CLASS
+      STYLE
+        COLOR 210 50 100
+        OUTLINECOLOR 200 200 200
+        SIZE 10
+        SYMBOL "CIRCLE"
+      END
+    END
+    # Only used if your 'wms_feature_info_mime_type' is  "text/html"
+    HEADER "../templates/header.html"
+    FOOTER "../templates/footer.html"
+    # Templates for queries
+    # This must be present even for gml queries which use no template
+    TEMPLATE "../templates/site-point.html"
+    TOLERANCE 5
+  END
+END

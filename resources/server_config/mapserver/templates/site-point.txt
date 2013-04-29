@@ -1,0 +1,3 @@
+<!-- MapServer Template -->
+Feature ID [id] 
+Name: [name]
