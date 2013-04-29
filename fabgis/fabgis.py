@@ -40,9 +40,28 @@ def setup_env():
 
 
 @task
+def setup_venv(requirements_file='requirements.txt'):
+    """Initialise or update the virtual environmnet.
+
+
+    To run e.g.::
+
+        fab -H 192.168.1.1:2222 remote setup_venv
+
+    or if you have configured env.hosts, simply
+
+        fab remote setup_venv
+    """
+    setup_env()
+    with cd(env.code_path):
+        # Ensure we have a venv set up
+        fabtools.require.python.virtualenv('venv')
+        run('venv/bin/pip install -r %s' % requirements_file)
+
+@task
 def show_environment():
     """For diagnostics - show any pertinent info about server."""
-    all()
+    setup_env()
     fastprint('\n-------------------------------------------------\n')
     for key, value in env.fg.iteritems():
         fastprint('Key: %s \t\t Value: %s' % (key, value))
@@ -64,7 +83,7 @@ def clone_qgis(branch='master'):
 
     :rtype: None
     """
-    all()
+    setup_env()
     fabtools.require.deb.package('git')
     code_base = '%s/dev/cpp' % env.fg.workspace
     code_path = '%s/Quantum-GIS' % code_base
