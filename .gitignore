@@ -1,0 +1,14 @@
+.DS_Store
+Thumb.db
+desktop.ini
+*.*~
+*~
+*.swp
+_build
+*.rc
+data
+*.pyc
+.vagrant
+MANIFEST
+build
+scrap.py
