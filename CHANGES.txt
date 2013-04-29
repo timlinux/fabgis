@@ -1,1 +1,2 @@
+v0.2, 29 April 2013 -- Small Fixes
 v0.1, 29 April 2013 -- Initial release
