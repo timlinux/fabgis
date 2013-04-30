@@ -58,6 +58,7 @@ def setup_venv(requirements_file='requirements.txt'):
         fabtools.require.python.virtualenv('venv')
         run('venv/bin/pip install -r %s' % requirements_file)
 
+
 @task
 def show_environment():
     """For diagnostics - show any pertinent info about server."""
@@ -68,6 +69,7 @@ def show_environment():
     fastprint('-------------------------------------------------\n')
 
 
+@task
 def add_ubuntugis_ppa():
     """Ensure we have ubuntu-gis repos."""
     fabtools.deb.update_index(quiet=True)
@@ -75,6 +77,7 @@ def add_ubuntugis_ppa():
         'ppa:ubuntugis/ubuntugis-unstable', auto_yes=True)
 
 
+@task
 def clone_qgis(branch='master'):
     """Clone or update QGIS from git.
 
@@ -85,6 +88,10 @@ def clone_qgis(branch='master'):
     """
     setup_env()
     fabtools.require.deb.package('git')
+    # Add this to the users git config so that we don't get repeated
+    # authentication requests when using ssl
+    run('git config --global credential.helper \'cache --timeout=3600\'')
+
     code_base = '%s/dev/cpp' % env.fg.workspace
     code_path = '%s/Quantum-GIS' % code_base
     if not exists(code_path):
@@ -166,23 +173,24 @@ def install_qgis2():
         run('make install')
 
 
-def setup_postgres_user(user):
+@task
+def require_postgres_user(user, password=''):
     #sudo('apt-get upgrade')
     # wsgi user needs pg access to the db
     if not fabtools.postgres.user_exists(user):
         fabtools.postgres.create_user(
             user,
-            password='',
+            password=password,
             createdb=False,
             createrole=False,
             connection_limit=20)
 
 
-def setup_postgres_superuser(user):
+def setup_postgres_superuser(user, password=''):
     if not fabtools.postgres.user_exists(env.user):
         fabtools.postgres.create_user(
             user,
-            password='',
+            password=password,
             createdb=True,
             createrole=True,
             superuser=True,
@@ -258,7 +266,7 @@ def create_postgis_1_5_template():
 def create_postgis_1_5_db(dbname, user):
     """Create a postgis database."""
     setup_postgis()
-    setup_postgres_user(user)
+    require_postgres_user(user)
     setup_postgres_superuser(env.user)
     create_user()
     fabtools.require.postgres.database(
@@ -291,7 +299,7 @@ def restore_postgres_dump(dbname):
     """Upload dump to host, remove existing db, recreate then restore dump."""
     setup_env()
     show_environment()
-    setup_postgres_user()
+    require_postgres_user()
     create_user()
     date = run('date +%d-%B-%Y')
     my_file = '%s-%s.dmp' % (env.repo_alias, date)
