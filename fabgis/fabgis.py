@@ -92,7 +92,7 @@ def clone_qgis(branch='master'):
     # authentication requests when using ssl
     run('git config --global credential.helper \'cache --timeout=3600\'')
 
-    code_base = '%s/dev/cpp' % env.fg.workspace
+    code_base = '%s/cpp' % env.fg.workspace
     code_path = '%s/Quantum-GIS' % code_base
     if not exists(code_path):
         fastprint('Repo checkout does not exist, creating.')
@@ -131,7 +131,7 @@ def install_qgis1_8():
     fabtools.require.deb.package('cmake-curses-gui')
     fabtools.require.deb.package('git')
     clone_qgis(branch='release-1_8')
-    workspace = '%s/dev/cpp' % env.fg.workspace
+    workspace = '%s/cpp' % env.fg.workspace
     code_path = '%s/Quantum-GIS' % workspace
     build_path = '%s/build-qgis18' % code_path
     build_prefix = '/usr/local/qgis-1.8'
@@ -158,7 +158,7 @@ def install_qgis2():
     fabtools.require.deb.package('cmake-curses-gui')
     fabtools.require.deb.package('git')
     clone_qgis(branch='master')
-    workspace = '%s/dev/cpp' % env.fg.workspace
+    workspace = '%s/cpp' % env.fg.workspace
     code_path = '%s/Quantum-GIS' % workspace
     build_path = '%s/build-master' % code_path
     build_prefix = '/usr/local/qgis-master'
