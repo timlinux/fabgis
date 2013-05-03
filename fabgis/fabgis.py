@@ -74,7 +74,8 @@ def add_ubuntugis_ppa():
     """Ensure we have ubuntu-gis repos."""
     fabtools.deb.update_index(quiet=True)
     fabtools.require.deb.ppa(
-        'ppa:ubuntugis/ubuntugis-unstable', auto_yes=True)
+        #'ppa:ubuntugis/ubuntugis-unstable', auto_yes=True)
+        'ppa:ubuntugis/ubuntugis-unstable')
 
 
 @task
