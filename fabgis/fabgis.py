@@ -295,23 +295,25 @@ def get_postgres_dump(dbname):
 
 
 @task
-def restore_postgres_dump(dbname):
+def restore_postgres_dump(dbname, user=None):
     """Upload dump to host, remove existing db, recreate then restore dump."""
     setup_env()
+    if user is None:
+        user = env.fg.user
     show_environment()
-    require_postgres_user()
+    require_postgres_user(user)
     create_user()
     date = run('date +%d-%B-%Y')
-    my_file = '%s-%s.dmp' % (env.repo_alias, date)
+    my_file = '%s-%s.dmp' % (dbname, date)
     put('resources/sql/dumps/%s' % my_file, '/tmp/%s' % my_file)
-    if fabtools.postgres.database_exists(env.repo_alias):
+    if fabtools.postgres.database_exists(dbname):
         run('dropdb %s' % env.repo_alias)
     fabtools.require.postgres.database(
         '%s' % dbname,
-        owner='%s' % env.user,
+        owner='%s' % user,
         template='template_postgis',
         encoding='UTF8')
-    run('pg_restore /tmp/%s | psql %s' % (my_file, env.repo_alias))
+    run('pg_restore /tmp/%s | psql %s' % (my_file, dbname))
 
 
 @task
