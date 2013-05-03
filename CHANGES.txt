@@ -1,3 +1,4 @@
+v0.6, 3 May 2013 -- Fix invalid var references in get and restore pg methods
 v0.5, 3 May 2013 -- Fix invalid var references in get and restore pg methods
 v0.4, 2 May 2013 -- Fixed incorrect source path for QGIS sources.
 v0.3, 30 April 2013 -- Renamed setup_postgres_user methods. Add task decorators
