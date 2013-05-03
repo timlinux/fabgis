@@ -307,7 +307,7 @@ def restore_postgres_dump(dbname, user=None):
     my_file = '%s-%s.dmp' % (dbname, date)
     put('resources/sql/dumps/%s' % my_file, '/tmp/%s' % my_file)
     if fabtools.postgres.database_exists(dbname):
-        run('dropdb %s' % env.repo_alias)
+        run('dropdb %s' % dbname)
     fabtools.require.postgres.database(
         '%s' % dbname,
         owner='%s' % user,
