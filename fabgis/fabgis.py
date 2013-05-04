@@ -93,7 +93,8 @@ def setup_sphinx():
     sudo('pip install sphinx')
 
 
-@task setup_transifex():
+@task 
+def setup_transifex():
     """Install transifex client."""
     sudo('pip install transifex-client')
 
@@ -156,6 +157,7 @@ def install_qgis1_8():
     """Install QGIS 1.8 under /usr/local/qgis-1.8."""
     setup_env()
     add_ubuntugis_ppa()
+    setup_ccache()
     sudo('apt-get build-dep -y qgis')
     fabtools.require.deb.package('cmake-curses-gui')
     fabtools.require.deb.package('git')
@@ -173,6 +175,12 @@ def install_qgis1_8():
         run('cmake .. -DCMAKE_INSTALL_PREFIX=%s' % build_prefix)
         run('make install')
 
+@task
+def setup_ccache():
+    fabtools.require.deb.package('ccache')
+    sudo('ln -fs /usr/bin/ccache /usr/local/bin/gcc')
+    sudo('ln -fs /usr/bin/ccache /usr/local/bin/g++')
+    sudo('ln -fs /usr/bin/ccache /usr/local/bin/cc')
 
 @task
 def install_qgis2():
@@ -182,10 +190,15 @@ def install_qgis2():
 
     """
     setup_env()
+    setup_ccache()
     add_ubuntugis_ppa()
+    
     sudo('apt-get build-dep -y qgis')
+
     fabtools.require.deb.package('cmake-curses-gui')
     fabtools.require.deb.package('git')
+    fabtools.require.deb.package('python-qscintilla2')
+    fabtools.require.deb.package('libqscintilla2-dev')
     clone_qgis(branch='master')
     workspace = '%s/cpp' % env.fg.workspace
     code_path = '%s/Quantum-GIS' % workspace
@@ -197,6 +210,12 @@ def install_qgis2():
             build_prefix,
             use_sudo=True,
             owner=env.fg.user)
+        cmake = ('cmake .. '
+                 '-DCMAKE_INSTALL_PREFIX=%s '
+                 '-DCMAKE_CXX_COMPILER:FILEPATH=/usr/local/bin/g++ '
+                 '-DQT_QMAKE_EXECUTABLE=/usr/bin/qmake-qt4 '
+                 '-DWITH_MAPSERVER=ON '
+                 % build_prefix)
         run('cmake .. -DCMAKE_INSTALL_PREFIX=%s' % build_prefix)
 
         run('make install')
