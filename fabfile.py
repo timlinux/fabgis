@@ -3,6 +3,9 @@
 # Tim Sutton, Jan 2013
 from fabric import *
 import fabgis.fabgis
+from fabric.api import *
+from fabric.contrib.files import contains, exists, append, sed
+import fabtools
 
 ###############################################################################
 # Next section contains actual tasks

@@ -77,6 +77,34 @@ def add_ubuntugis_ppa():
         #'ppa:ubuntugis/ubuntugis-unstable', auto_yes=True)
         'ppa:ubuntugis/ubuntugis-unstable')
 
+@task
+def setup_latex():
+    """Install latex and friends needed to generate sphinx pdfs."""
+    fabtools.deb.update_index(quiet=True)
+    fabtools.require.deb.package('texlive-latex-extra')
+    fabtools.require.deb.package('texinfo')
+
+
+@task 
+def setup_sphinx():
+    """Install sphinx from pip.
+
+    We prefer from pip as ubuntu packages are usually old."""
+    sudo('pip install sphinx')
+
+
+@task setup_transifex():
+    """Install transifex client."""
+    sudo('pip install transifex-client')
+
+
+@task
+def setup_devtools():
+    """Install various useful tools needed for developers."""
+    fabtools.require.deb.package('qtcreator')
+    fabtools.require.deb.package('qt4-designer')
+    fabtools.require.deb.package('qt4-linguist-tools')
+
 
 @task
 def clone_qgis(branch='master'):
@@ -327,7 +355,10 @@ def create_user():
 
 @task
 def ssh_copy_id():
-    """Copy ssh id from local system to remote."""
+    """Copy ssh id from local system to remote.
+    .. note:: Does not work on OSX!
+    """
+	
     command = 'ssh-copy-id %s' % env.host
     local(command)
 
