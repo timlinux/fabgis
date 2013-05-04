@@ -1,5 +1,4 @@
 import os
-from datetime import datetime
 from fabric.api import *
 from fabric.utils import _AttributeDict as fdict
 from fabric.contrib.files import contains, exists, append, sed
@@ -77,6 +76,7 @@ def add_ubuntugis_ppa():
         #'ppa:ubuntugis/ubuntugis-unstable', auto_yes=True)
         'ppa:ubuntugis/ubuntugis-unstable')
 
+
 @task
 def setup_latex():
     """Install latex and friends needed to generate sphinx pdfs."""
@@ -85,7 +85,7 @@ def setup_latex():
     fabtools.require.deb.package('texinfo')
 
 
-@task 
+@task
 def setup_sphinx():
     """Install sphinx from pip.
 
@@ -93,7 +93,7 @@ def setup_sphinx():
     sudo('pip install sphinx')
 
 
-@task 
+@task
 def setup_transifex():
     """Install transifex client."""
     sudo('pip install transifex-client')
@@ -161,6 +161,7 @@ def install_qgis1_8():
     sudo('apt-get build-dep -y qgis')
     fabtools.require.deb.package('cmake-curses-gui')
     fabtools.require.deb.package('git')
+    fabtools.require.deb.package('python-gdal')
     clone_qgis(branch='release-1_8')
     workspace = '%s/cpp' % env.fg.workspace
     code_path = '%s/Quantum-GIS' % workspace
@@ -175,12 +176,14 @@ def install_qgis1_8():
         run('cmake .. -DCMAKE_INSTALL_PREFIX=%s' % build_prefix)
         run('make install')
 
+
 @task
 def setup_ccache():
     fabtools.require.deb.package('ccache')
     sudo('ln -fs /usr/bin/ccache /usr/local/bin/gcc')
     sudo('ln -fs /usr/bin/ccache /usr/local/bin/g++')
     sudo('ln -fs /usr/bin/ccache /usr/local/bin/cc')
+
 
 @task
 def install_qgis2():
@@ -192,13 +195,15 @@ def install_qgis2():
     setup_env()
     setup_ccache()
     add_ubuntugis_ppa()
-    
+
     sudo('apt-get build-dep -y qgis')
 
     fabtools.require.deb.package('cmake-curses-gui')
     fabtools.require.deb.package('git')
     fabtools.require.deb.package('python-qscintilla2')
     fabtools.require.deb.package('libqscintilla2-dev')
+    fabtools.require.deb.package('libspatialindex-dev')
+    fabtools.require.deb.package('python-gdal')
     clone_qgis(branch='master')
     workspace = '%s/cpp' % env.fg.workspace
     code_path = '%s/Quantum-GIS' % workspace
@@ -210,12 +215,20 @@ def install_qgis2():
             build_prefix,
             use_sudo=True,
             owner=env.fg.user)
+        os_version = run('cat /etc/issue.net')
+        os_version == float(os_version.split(' ')[1])
+        if os_version > 13:
+            extra = '-DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython2.7.so'
+        else:
+            extra = ''
         cmake = ('cmake .. '
                  '-DCMAKE_INSTALL_PREFIX=%s '
                  '-DCMAKE_CXX_COMPILER:FILEPATH=/usr/local/bin/g++ '
                  '-DQT_QMAKE_EXECUTABLE=/usr/bin/qmake-qt4 '
                  '-DWITH_MAPSERVER=ON '
-                 % build_prefix)
+                 '-DWITH_INTERNAL_SPATIALITE=ON '
+                 '%s'
+                 % (build_prefix, extra))
         run('cmake .. -DCMAKE_INSTALL_PREFIX=%s' % build_prefix)
 
         run('make install')
@@ -377,7 +390,6 @@ def ssh_copy_id():
     """Copy ssh id from local system to remote.
     .. note:: Does not work on OSX!
     """
-	
     command = 'ssh-copy-id %s' % env.host
     local(command)
 
