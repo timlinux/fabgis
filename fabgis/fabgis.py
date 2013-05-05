@@ -179,10 +179,20 @@ def install_qgis1_8():
 
 @task
 def setup_ccache():
+    """Setup ccache."""
     fabtools.require.deb.package('ccache')
     sudo('ln -fs /usr/bin/ccache /usr/local/bin/gcc')
     sudo('ln -fs /usr/bin/ccache /usr/local/bin/g++')
     sudo('ln -fs /usr/bin/ccache /usr/local/bin/cc')
+
+
+@task
+def setup_inasafe():
+    """Setup requirements for InaSAFE."""
+    fabtools.require.deb.package('pep8')
+    fabtools.require.deb.package('pylint')
+    fabtools.require.deb.package('python-nose')
+    fabtools.require.deb.package('python-nosexcover')
 
 
 @task
