@@ -250,16 +250,20 @@ def setup_qgis2_and_postgis():
 
 
 @task
-def require_postgres_user(user, password=''):
+def require_postgres_user(user, password='', createdb=False):
     #sudo('apt-get upgrade')
     # wsgi user needs pg access to the db
     if not fabtools.postgres.user_exists(user):
         fabtools.postgres.create_user(
-            user,
+            name=user,
             password=password,
-            createdb=False,
+            superuser=False,
+            createdb=True,
             createrole=False,
-            connection_limit=20)
+            inherit=True,
+            login=True,
+            connection_limit=None,
+            encrypted_password=False)
 
 
 def setup_postgres_superuser(user, password=''):
@@ -401,7 +405,7 @@ def create_user():
 
 
 @task
-def setup_kandan(branch='master', password='kandan'):
+def setup_kandan(branch='master', user='kandan', password='kandan'):
     """Set up the kandan chat server - see https://github.com/kandanapp/kandan.
 
     .. note:: I recommend setting up kandan in a vagrant instance."""
@@ -437,16 +441,10 @@ def setup_kandan(branch='master', password='kandan'):
         run('git pull')
 
     fabtools.require.postgres.server()
-    fabtools.require.postgres.create_user(
-        name='kandan',
+    require_postgres_user(
+        user=user,
         password=password,
-        superuser=False,
         createdb=True,
-        createrole=False,
-        inherit=True,
-        login=True,
-        connection_limit=None,
-        encrypted_password=False
     )
 
     with cd(code_path):
@@ -456,8 +454,10 @@ def setup_kandan(branch='master', password='kandan'):
         fabtools.require.deb.package('libpq-dev')
         fabtools.require.deb.package('libsqlite3-dev')
         fabtools.require.deb.package('nodejs')
-        fabtools.require.deb.package('bundler')
-        fabtools.require.deb.package('')
+        # Newer distros
+        #fabtools.require.deb.package('bundler')
+        # ub 12.04
+        fabtools.require.deb.package('ruby-bundler')
         fabtools.require.deb.package('')
         sudo('gem install execjs')
         append('config/database.yml', 'production:')
@@ -468,7 +468,8 @@ def setup_kandan(branch='master', password='kandan'):
         append('config/database.yml', 'timeout: 5000')
         append('config/database.yml', 'username: kandan')
         append('config/database.yml', 'password: %s' % password)
-        run('bundle exec rake db:create db:migrate kandan:bootstrap')
+        run('RUBYLIB=/usr/lib/ruby/1.9.1/rubygems bundle exec rake db:create '
+            'db:migrate kandan:bootstrap')
 
     fastprint('Kandan server setup is complete. Use ')
     fastprint('fab <target> fabgis.fabgis.start_kandan')
