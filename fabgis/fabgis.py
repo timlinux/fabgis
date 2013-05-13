@@ -83,6 +83,7 @@ def setup_latex():
     fabtools.deb.update_index(quiet=True)
     fabtools.require.deb.package('texlive-latex-extra')
     fabtools.require.deb.package('texinfo')
+    fabtools.require.deb.package('texlive-fonts-recommended')
 
 
 @task
@@ -153,31 +154,6 @@ def clone_qgis(branch='master'):
 
 
 @task
-def install_qgis1_8():
-    """Install QGIS 1.8 under /usr/local/qgis-1.8."""
-    setup_env()
-    add_ubuntugis_ppa()
-    setup_ccache()
-    sudo('apt-get build-dep -y qgis')
-    fabtools.require.deb.package('cmake-curses-gui')
-    fabtools.require.deb.package('git')
-    fabtools.require.deb.package('python-gdal')
-    clone_qgis(branch='release-1_8')
-    workspace = '%s/cpp' % env.fg.workspace
-    code_path = '%s/Quantum-GIS' % workspace
-    build_path = '%s/build-qgis18' % code_path
-    build_prefix = '/usr/local/qgis-1.8'
-    fabtools.require.directory(build_path)
-    with cd(build_path):
-        fabtools.require.directory(
-            build_prefix,
-            use_sudo=True,
-            owner=env.fg.user)
-        run('cmake .. -DCMAKE_INSTALL_PREFIX=%s' % build_prefix)
-        run('make install')
-
-
-@task
 def setup_ccache():
     """Setup ccache."""
     fabtools.require.deb.package('ccache')
@@ -195,30 +171,10 @@ def setup_inasafe():
     fabtools.require.deb.package('python-nosexcover')
 
 
-@task
-def install_qgis2():
-    """Install QGIS 2 under /usr/local/qgis-master.
-
-    TODO: create one function from this and the 1.8 function above for DRY.
-
-    """
-    setup_env()
-    setup_ccache()
-    add_ubuntugis_ppa()
-
-    sudo('apt-get build-dep -y qgis')
-
+def compile_qgis(build_path, build_prefix):
+    fabtools.require.deb.package('python-gdal')
     fabtools.require.deb.package('cmake-curses-gui')
     fabtools.require.deb.package('git')
-    fabtools.require.deb.package('python-qscintilla2')
-    fabtools.require.deb.package('libqscintilla2-dev')
-    fabtools.require.deb.package('libspatialindex-dev')
-    fabtools.require.deb.package('python-gdal')
-    clone_qgis(branch='master')
-    workspace = '%s/cpp' % env.fg.workspace
-    code_path = '%s/Quantum-GIS' % workspace
-    build_path = '%s/build-master' % code_path
-    build_prefix = '/usr/local/qgis-master'
     fabtools.require.directory(build_path)
     with cd(build_path):
         fabtools.require.directory(
@@ -239,9 +195,56 @@ def install_qgis2():
                  '-DWITH_INTERNAL_SPATIALITE=ON '
                  '%s'
                  % (build_prefix, extra))
-        run('cmake .. -DCMAKE_INSTALL_PREFIX=%s' % build_prefix)
+        run('cmake .. %s' % cmake)
+        processor_count = run('cat /proc/cpuinfo | grep processor | wc -l')
+        run('time make -j %s install' % processor_count)
 
-        run('make install')
+
+@task
+def install_qgis1_8():
+    """Install QGIS 1.8 under /usr/local/qgis-1.8."""
+    setup_env()
+    add_ubuntugis_ppa()
+    setup_ccache()
+    sudo('apt-get build-dep -y qgis')
+    clone_qgis(branch='release-1_8')
+    workspace = '%s/cpp' % env.fg.workspace
+    code_path = '%s/Quantum-GIS' % workspace
+    build_path = '%s/build-qgis18' % code_path
+    build_prefix = '/usr/local/qgis-1.8'
+    compile_qgis(build_path, build_prefix)
+
+
+@task
+def install_qgis2():
+    """Install QGIS 2 under /usr/local/qgis-master.
+
+    TODO: create one function from this and the 1.8 function above for DRY.
+
+    """
+    setup_env()
+    setup_ccache()
+    add_ubuntugis_ppa()
+    sudo('apt-get build-dep -y qgis')
+
+    fabtools.require.deb.package('python-pyspatialite')
+    fabtools.require.deb.package('python-psycopg2')
+    fabtools.require.deb.package('python-qscintilla2')
+    fabtools.require.deb.package('libqscintilla2-dev')
+    fabtools.require.deb.package('libspatialindex-dev')
+
+    clone_qgis(branch='master')
+    workspace = '%s/cpp' % env.fg.workspace
+    code_path = '%s/Quantum-GIS' % workspace
+    build_path = '%s/build-master' % code_path
+    build_prefix = '/usr/local/qgis-master'
+    compile_qgis(build_path, build_prefix)
+
+
+@task
+def setup_qgis2_and_postgis():
+    create_postgis_1_5_db('gis', env.user)
+    install_qgis2()
 
 
 @task
@@ -269,7 +272,7 @@ def setup_postgres_superuser(user, password=''):
 
 
 @task
-def setup_postgis():
+def setup_postgis_1_5():
     """Set up postgis.
 
     You can call this multiple times without it actually installing all over
@@ -336,14 +339,14 @@ def create_postgis_1_5_template():
 @task
 def create_postgis_1_5_db(dbname, user):
     """Create a postgis database."""
-    setup_postgis()
-    require_postgres_user(user)
+    setup_postgis_1_5()
     setup_postgres_superuser(env.user)
+    require_postgres_user(user)
     create_user()
     fabtools.require.postgres.database(
         '%s' % dbname, owner='%s' % user, template='template_postgis')
 
-    grant_sql = 'grant all on schema public to %s;' % user
+    grant_sql = 'GRANT ALL ON schema public to %s;' % user
     # assumption is env.repo_alias is also database name
     run('psql %s -c "%s"' % (dbname, grant_sql))
     grant_sql = (
