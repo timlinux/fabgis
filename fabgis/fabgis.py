@@ -30,6 +30,7 @@ def setup_env():
         env.fg.workspace = os.path.join(env.fg.home, 'dev')
         env.fg.inasafe_git_url = 'git://github.com/AIFDR/inasafe.git'
         env.fg.qgis_git_url = 'git://github.com/qgis/Quantum-GIS.git'
+        env.fg.kandan_git_url = 'git://github.com/kandanapp/kandan.git'
         env.fg.inasafe_checkout_alias = 'inasafe-fabric'
         env.fg.qgis_checkout_alias = 'qgis-fabric'
         env.fg.inasafe_code_path = os.path.join(
@@ -396,6 +397,94 @@ def create_user():
     """
     fabtools.require.users.user(env.user)
     fabtools.require.users.sudoer(env.user)
+
+
+@task
+def setup_kandan(branch='master', password='kandan'):
+    """Set up the kandan chat server - see https://github.com/kandanapp/kandan.
+
+    .. note:: I recommend setting up kandan in a vagrant instance."""
+    setup_env()
+    fabtools.require.deb.package('git')
+    code_base = '%s/ruby' % env.fg.workspace
+    code_path = '%s/kandan' % code_base
+    if not exists(code_path):
+        fastprint('Repo checkout does not exist, creating.')
+        run('mkdir -p %s' % code_base)
+        with cd(code_base):
+            run('git clone %s' % env.fg.kandan_git_url)
+    else:
+        fastprint('Repo checkout does exist, updating.')
+        with cd(code_path):
+            # Get any updates first
+            run('git fetch')
+            # Get rid of any local changes
+            run('git reset --hard')
+            # Get back onto master branch
+            run('git checkout master')
+            # Remove any local changes in master
+            run('git reset --hard')
+            # Delete all local branches
+            run('git branch | grep -v \* | xargs git branch -D')
+
+    with cd(code_path):
+        if branch != 'master':
+            run('git branch --track %s origin/%s' % (branch, branch))
+            run('git checkout %s' % branch)
+        else:
+            run('git checkout master')
+        run('git pull')
+
+    fabtools.require.postgres.server()
+    fabtools.require.postgres.create_user(
+        name='kandan',
+        password=password,
+        superuser=False,
+        createdb=True,
+        createrole=False,
+        inherit=True,
+        login=True,
+        connection_limit=None,
+        encrypted_password=False
+    )
+
+    with cd(code_path):
+        fabtools.require.deb.package('ruby1.9.1-dev')
+        fabtools.require.deb.package('libxslt-dev')
+        fabtools.require.deb.package('libxml2-dev')
+        fabtools.require.deb.package('libpq-dev')
+        fabtools.require.deb.package('libsqlite3-dev')
+        fabtools.require.deb.package('nodejs')
+        fabtools.require.deb.package('bundler')
+        fabtools.require.deb.package('')
+        fabtools.require.deb.package('')
+        sudo('gem install execjs')
+        append('config/database.yml', 'production:')
+        append('config/database.yml', 'adapter: postgresql')
+        append('config/database.yml', 'host: localhost')
+        append('config/database.yml', 'database: kandan_production')
+        append('config/database.yml', 'pool: 5')
+        append('config/database.yml', 'timeout: 5000')
+        append('config/database.yml', 'username: kandan')
+        append('config/database.yml', 'password: %s' % password)
+        run('bundle exec rake db:create db:migrate kandan:bootstrap')
+
+    fastprint('Kandan server setup is complete. Use ')
+    fastprint('fab <target> fabgis.fabgis.start_kandan')
+    fastprint('to start the server.')
+
+
+@task
+def start_kandan():
+    """Start the kandan server - it will run on port 3000."""
+    setup_env()
+    code_base = '%s/ruby' % env.fg.workspace
+    code_path = '%s/kandan' % code_base
+    if not exists(code_path):
+        setup_kandan()
+    else:
+        with code_path:
+            run('bundle exec thin start')
 
 
 @task

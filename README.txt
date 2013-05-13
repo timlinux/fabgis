@@ -88,3 +88,11 @@ Here is how we might create a new postgis 1.5 instance on the target host::
     fab vagrant create_postgis_1_5_db:dbname=test
 
 
+
+Automated Install of QGIS 2.0 example
+-------------------------------------
+
+This one command will download fabgis and checkout QGIS and all dependencies
+and install it on your system under /usr/local/qgis-master::
+
+    wget https://raw.github.com/timlinux/fabgis/master/install_fabgis.sh -O - | bash
