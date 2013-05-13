@@ -123,6 +123,7 @@ def clone_qgis(branch='master'):
     # Add this to the users git config so that we don't get repeated
     # authentication requests when using ssl
     run('git config --global credential.helper \'cache --timeout=3600\'')
+    run('git config --global push.default simple')
 
     code_base = '%s/cpp' % env.fg.workspace
     code_path = '%s/Quantum-GIS' % code_base
