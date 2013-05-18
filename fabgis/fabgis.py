@@ -417,6 +417,7 @@ def build_gdal(with_ecw=False, with_mrsid=False):
     fabtools.require.deb.package('libhdf4g-dev')
     fabtools.require.deb.package('libjpeg62-dev')
     fabtools.require.deb.package('libtiff4-dev')
+    fabtools.require.deb.package('python-dev')
 
     code_base = '%s/cpp' % env.fg.workspace
     code_path = '%s/gdal' % code_base
@@ -469,7 +470,7 @@ def build_gdal(with_ecw=False, with_mrsid=False):
         with settings(warn_only=True):
             run('make clean')
         run('CXXFLAGS=-fPIC ./configure %s' % flags)
-        run('time make -j %s' % processor_count)
+        run('make -j %s' % processor_count)
         sudo('make install')
 
 
