@@ -402,7 +402,7 @@ def restore_postgres_dump(dbname, user=None):
 
 
 @task
-def build_gdal(with_ecw=False):
+def build_gdal(with_ecw=False, with_mrsid=False):
     """Clone or update GDAL from svn then build it.
 
     :rtype: None
@@ -430,22 +430,45 @@ def build_gdal(with_ecw=False):
         with cd(code_path):
             # Get any updates first
             run('svn update')
-    ecw_dir = '/usr/local/GeoExpressSDK'
-    # Currently you need to have downloaded the ECW to remote home dir
+
+    flags = (
+        '--with-libtiff=internal '
+        '--with-geotiff=internal '
+        '--with-python '
+        '--without-jp2mrs '
+        '--with-spatialite '
+        '--without-libtool')
+
+    processor_count = run('cat /proc/cpuinfo | grep processor | wc -l')
+
+    # Currently you need to have downloaded the MRSID sdk to remote home dir
+    if with_mrsid:
+        mrsid_dir = '/usr/local/GeoExpressSDK'
+        if not exists(mrsid_dir):
+            sudo('tar xfz /home/%s/Geo_DSDK-7.0.0.2167.linux.x86-64.gcc41.'
+                 'tar.gz -C /tmp' % env.user)
+            sudo('mv /tmp/Geo_DSDK-7.0.0.2167 %s' % mrsid_dir)
+        flags += ' --with-mrsid=%s' % mrsid_dir
+
+    # Currently you need to have downloaded the ECW sdk to remote home dir
     if with_ecw:
-        sudo('mkdir %s' % ecw_dir)
-        with cd(ecw_dir):
-            run('tar xfz ${HOME}/Geo_DSDK-7.0.0.2167.linux.x86-64.gcc41.tar.gz')
+        ecw_dir = '%s/ecw/libecwj2-3.3' % code_base
+        ecw_archive = 'ecw.tar.bz2'
+        if not exists(ecw_dir):
+            with cd(code_base):
+                run('tar xfj ~/%s' % ecw_archive)
+        if not exists('/usr/local/include/ECW.h'):
+            with cd(ecw_dir):
+                run('./configure')
+                run('make -j %s' % processor_count)
+                sudo('make install')
+        flags += ' --with-ecw=/usr/local'
 
     with cd(code_path):
-        run('make clean')
-        flags = (
-            '--with-libtiff=internal --with-geotiff=internal --with-python '
-            '--with-jpeg=internal --with-jpeg12 ')
-        if with_ecw:
-            flags += '--with-ecw=' % ecw_dir
-        run('export CXXFLAGS=-fPIC ./configure %s' % flags)
-        processor_count = run('cat /proc/cpuinfo | grep processor | wc -l')
+        # Dont fail if make clean does not work
+        with settings(warn_only=True):
+            run('make clean')
+        run('CXXFLAGS=-fPIC ./configure %s' % flags)
         run('time make -j %s' % processor_count)
         sudo('make install')
 
