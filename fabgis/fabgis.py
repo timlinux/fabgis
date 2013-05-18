@@ -12,6 +12,10 @@ env.roledefs = {
     'production': ['none@none.com']
 }
 
+# Use ssh config if present
+#if os.path.exists('~/.ssh/config'):
+env.use_ssh_config = True
+
 env.fg = None
 
 
@@ -31,6 +35,7 @@ def setup_env():
         env.fg.inasafe_git_url = 'git://github.com/AIFDR/inasafe.git'
         env.fg.qgis_git_url = 'git://github.com/qgis/Quantum-GIS.git'
         env.fg.kandan_git_url = 'git://github.com/kandanapp/kandan.git'
+        env.fg.gdal_svn_url = 'https://svn.osgeo.org/gdal/trunk/gdal'
         env.fg.inasafe_checkout_alias = 'inasafe-fabric'
         env.fg.qgis_checkout_alias = 'qgis-fabric'
         env.fg.inasafe_code_path = os.path.join(
@@ -394,6 +399,55 @@ def restore_postgres_dump(dbname, user=None):
         template='template_postgis',
         encoding='UTF8')
     run('pg_restore /tmp/%s | psql %s' % (my_file, dbname))
+
+
+@task
+def build_gdal(with_ecw=False):
+    """Clone or update GDAL from svn then build it.
+
+    :rtype: None
+    """
+    setup_env()
+    add_ubuntugis_ppa()
+    fabtools.require.deb.package('subversion')
+    fabtools.require.deb.package('build-essential')
+    setup_ccache()
+    fabtools.require.deb.package('libhdf5-serial-dev')
+    fabtools.require.deb.package('libhdf5-serial-1.8.4')
+    fabtools.require.deb.package('libhdf4g-dev')
+    fabtools.require.deb.package('libjpeg62-dev')
+    fabtools.require.deb.package('libtiff4-dev')
+
+    code_base = '%s/cpp' % env.fg.workspace
+    code_path = '%s/gdal' % code_base
+    if not exists(code_path):
+        fastprint('Repo checkout does not exist, creating.')
+        run('mkdir -p %s' % code_base)
+        with cd(code_base):
+            run('svn co %s gdal' % env.fg.gdal_svn_url)
+    else:
+        fastprint('Repo checkout does exist, updating.')
+        with cd(code_path):
+            # Get any updates first
+            run('svn update')
+    ecw_dir = '/usr/local/GeoExpressSDK'
+    # Currently you need to have downloaded the ECW to remote home dir
+    if with_ecw:
+        sudo('mkdir %s' % ecw_dir)
+        with cd(ecw_dir):
+            run('tar xfz ${HOME}/Geo_DSDK-7.0.0.2167.linux.x86-64.gcc41.tar.gz')
+
+    with cd(code_path):
+        run('make clean')
+        flags = (
+            '--with-libtiff=internal --with-geotiff=internal --with-python '
+            '--with-jpeg=internal --with-jpeg12 ')
+        if with_ecw:
+            flags += '--with-ecw=' % ecw_dir
+        run('export CXXFLAGS=-fPIC ./configure %s' % flags)
+        processor_count = run('cat /proc/cpuinfo | grep processor | wc -l')
+        run('time make -j %s' % processor_count)
+        sudo('make install')
 
 
 @task

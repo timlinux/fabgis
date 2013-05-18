@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/fabgis.iml" filepath="$PROJECT_DIR$/.idea/fabgis.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../../../web/mappingthesacred/.idea/mappingthesacred.iml" filepath="$PROJECT_DIR$/../../../../web/mappingthesacred/.idea/mappingthesacred.iml" />
     </modules>
   </component>
 </project>
