@@ -577,6 +577,22 @@ def ssh_copy_id():
 
 
 @task
+def setup_mosh():
+    mosh_file = '/etc/ufw/applications.d/mosh'
+    if not exists(mosh_file):
+        sudo('touch %s' % mosh_file)
+
+        append(mosh_file, '[mosh]', use_sudo=True)
+        append(mosh_file, ('title=Mobile shell that supports roaming and '
+                           'intelligent local echo.'), use_sudo=True)
+        append(mosh_file, ('description=The mosh provides alternative remote '
+                           'shell that supports roaming and intelligent local '
+                           'echo.'), use_sudo=True)
+        append(mosh_file, 'ports=60000:61000/udp', use_sudo=True)
+    fabtools.require.deb.package('mosh')
+
+
+@task
 def harden(ssh_port=22):
     """Harden the server a little.
 
@@ -591,18 +607,7 @@ def harden(ssh_port=22):
 
     # Set up ufw and mosh
     fabtools.require.deb.package('ufw')
-    mosh_file = '/etc/ufw/applications.d/mosh'
-    if not exists(mosh_file):
-        sudo('touch %s' % mosh_file)
-
-        append(mosh_file, '[mosh]', use_sudo=True)
-        append(mosh_file, ('title=Mobile shell that supports roaming and '
-                           'intelligent local echo.'), use_sudo=True)
-        append(mosh_file, ('description=The mosh provides alternative remote '
-                           'shell that supports roaming and intelligent local '
-                           'echo.'), use_sudo=True)
-        append(mosh_file, 'ports=60000:61000/udp', use_sudo=True)
-    fabtools.require.deb.package('mosh')
+    setup_mosh()
 
     sudo('ufw default deny incoming')
     sudo('ufw default allow outgoing')
