@@ -5,6 +5,7 @@ from fabric.contrib.files import contains, exists, append, sed
 import fabtools
 # Don't remove even though its unused
 from fabtools.vagrant import vagrant
+
 env.roledefs = {
     'test': ['localhost'],
     'dev': ['none@none.com'],
@@ -786,3 +787,132 @@ def setup_bridge():
         sudo('ifup eth0')
 
     fabtools.require.deb.package('dhcp3-server')
+
+
+@task
+def add_jenkins_repository():
+    """Add the Jenkins latest repository"""
+    jenkins_url = "http://pkg.jenkins-ci.org/"
+    jenkins_key = jenkins_url + "debian/jenkins-ci.org.key"
+    jenkins_repo = jenkins_url + "debian binary/"
+    jenkins_apt_file = '/etc/apt/sources.list.d/jenkins-repository.list'
+
+    run('wget -q -O - %s | sudo apt-key add -' % jenkins_key)
+
+    if not exists(jenkins_apt_file):
+        sudo('touch %s' % jenkins_apt_file)
+    append_if_not_present(
+        jenkins_apt_file, 'deb ' + jenkins_repo, use_sudo=True)
+
+
+@task
+def configure_jenkins():
+    """Add jenkins out of the box without adding jenkins repository"""
+    run('jenkins-cli -s http://localhost:8080 install-plugin git')
+    run('jenkins-cli -s http://localhost:8080 install-plugin github')
+    run('jenkins-cli -s http://localhost:8080 install-plugin xvfb')
+    run('jenkins-cli -s http://localhost:8080 install-plugin violations')
+    run('jenkins-cli -s http://localhost:8080 install-plugin statusmonitor')
+    run('jenkins-cli -s http://localhost:8080 install-plugin sounds')
+    run('jenkins-cli -s http://localhost:8080 install-plugin covcomplplot')
+    run('jenkins-cli -s http://localhost:8080 install-plugin cobertura')
+    run('jenkins-cli -s http://localhost:8080 install-plugin dashboard-view')
+    run('jenkins-cli -s http://localhost:8080 install-plugin sloccount')
+    run('jenkins-cli -s http://localhost:8080 safe-restart')
+
+
+@task
+def install_jenkins(use_upstream_repo=False):
+    """Add latest jenkins with adding jenkins project repository.
+
+    .. note:: If you install only the distribution packaged version,
+    some of the plugins listed in the configure_jenkins target may not install.
+
+    Args:
+        use_upstream_repo - bool: (defaults to False). Whether to use the
+        official jenkins repo or not. In the case of False,
+        the distribution repo version will be used instead.
+
+    Example:
+        Using the upstream jenkins repo:
+        fab -H localhost fabgis.fabgis.install_jenkins:use_upstream_repo=True
+
+    """
+    if use_upstream_repo:
+        if fabtools.deb.is_installed('jenkins'):
+            fabtools.deb.uninstall(['jenkins', 'jenkins-common'], purge=True)
+        add_jenkins_repository()
+        fabtools.deb.update_index(quiet=True)
+        sudo('apt-get install jenkins')
+    fabtools.require.deb.package('jenkins')
+    configure_jenkins()
+
+
+@task
+def initialise_jenkins_site():
+    """Initialise jenkins with local proxy if we dont want to use port 8080"""
+
+    fabtools.require.deb.package('apache2')
+    env.hostname = run('hostname')
+    jenkins_apache_conf = ('jenkings.' + env.hostname + '.conf')
+
+    with cd('/etc/apache2/sites-available/'):
+        if not exists(jenkins_apache_conf):
+            sudo('touch %s' % jenkins_apache_conf)
+            append_if_not_present(
+                jenkins_apache_conf, '<VirtualHost *:80>', use_sudo=True)
+            append_if_not_present(
+                jenkins_apache_conf, '  ServerAdmin '
+                                     'root@' + env.hostname, use_sudo=True)
+            append_if_not_present(
+                jenkins_apache_conf, '  ServerName '
+                                     'jenkins.' + env.hostname, use_sudo=True)
+            append_if_not_present(
+                jenkins_apache_conf, '  ServerAlias '
+                                     'jenkins.localhost', use_sudo=True)
+            append_if_not_present(
+                jenkins_apache_conf, '  ProxyPass		/ '
+                                     'http://localhost:8080/', use_sudo=True)
+            append_if_not_present(
+                jenkins_apache_conf, '  ProxyPassReverse		/ '
+                                     'http://localhost:8080/', use_sudo=True)
+            append_if_not_present(
+                jenkins_apache_conf, '  ProxyRequests		Off ',
+                use_sudo=True)
+            append_if_not_present(
+                jenkins_apache_conf, '  <Proxy http://localhost:8080/*>',
+                use_sudo=True)
+            append_if_not_present(
+                jenkins_apache_conf, '  Order deny,allow', use_sudo=True)
+            append_if_not_present(
+                jenkins_apache_conf, '  Allow from all', use_sudo=True)
+            append_if_not_present(
+                jenkins_apache_conf, '  </Proxy>', use_sudo=True)
+            append_if_not_present(
+                jenkins_apache_conf, '  LogLevel warn', use_sudo=True)
+            append_if_not_present(
+                jenkins_apache_conf, '  ErrorLog /var/log/apache2/jenkins'
+                                     '.' + env.hostname + '.error.log',
+                use_sudo=True)
+            append_if_not_present(
+                jenkins_apache_conf, '  CustomLog /var/log/apache2/jenkins'
+                                     '.' + env.hostname + '.access.log combined',use_sudo=True)
+            append_if_not_present(
+                jenkins_apache_conf, '  ServerSignature Off', use_sudo=True)
+            append_if_not_present(
+                jenkins_apache_conf, '</VirtualHost>', use_sudo=True)
+
+    # Add a hosts entry for local testing - only really useful for localhost
+    hosts = '/etc/hosts'
+    if not contains(hosts, 'jenkins.%s' % env.hostname):
+        append_if_not_present(hosts, '127.0.1.1 jenkins.%s' % env.hostname,
+                              use_sudo=True)
+        append_if_not_present(hosts, '127.0.0.1 jenkins.localhost',
+                              use_sudo=True)
+        # For doing Reverse Proxy we need to enable 2 apache modules
+    sudo('a2enmod proxy')
+    sudo('a2enmod proxy_http')
+    sudo('a2ensite %s' % jenkins_apache_conf)
+
+    #sudo('a2enmod rewrite')
+    sudo('service apache2 reload')
