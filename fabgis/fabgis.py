@@ -1,4 +1,5 @@
 import os
+import time
 from fabric.api import *
 from fabric.utils import _AttributeDict as fdict
 from fabric.contrib.files import contains, exists, append, sed
@@ -806,19 +807,69 @@ def add_jenkins_repository():
 
 
 @task
-def configure_jenkins():
-    """Add jenkins out of the box without adding jenkins repository"""
-    run('jenkins-cli -s http://localhost:8080 install-plugin git')
-    run('jenkins-cli -s http://localhost:8080 install-plugin github')
-    run('jenkins-cli -s http://localhost:8080 install-plugin xvfb')
-    run('jenkins-cli -s http://localhost:8080 install-plugin violations')
-    run('jenkins-cli -s http://localhost:8080 install-plugin statusmonitor')
-    run('jenkins-cli -s http://localhost:8080 install-plugin sounds')
-    run('jenkins-cli -s http://localhost:8080 install-plugin covcomplplot')
-    run('jenkins-cli -s http://localhost:8080 install-plugin cobertura')
-    run('jenkins-cli -s http://localhost:8080 install-plugin dashboard-view')
-    run('jenkins-cli -s http://localhost:8080 install-plugin sloccount')
-    run('jenkins-cli -s http://localhost:8080 safe-restart')
+def configure_jenkins(repo):
+    """Configure Jenkins with the needed plugins, use the stable ones known
+    to work.
+    We have to update the json file if we want to switch between distribution
+    provided jenkins and upstream jenkins
+    """
+    distribution = repo
+    command1 = "curl -L http://updates.jenkins-ci.org/update-center.json"
+    command2 = "sed '1d;$d' > /var/lib/jenkins/updates/default.json"
+    jenkins = "jenkins"
+    sudo('mkdir -p /var/lib/jenkins/updates', user=jenkins)
+    sudo('%s > /var/lib/jenkins/updates/default.json' % command1,
+         user=jenkins)
+    sudo('%s | %s' % (command1, command2), user=jenkins)
+
+    if distribution == "upstream":
+        command = "java -jar /var/cache/jenkins/war/WEB-INF/jenkins-cli.jar"
+        webpath = "http://updates.jenkins-ci.org/download/plugins"
+
+        run('%s -s http://localhost:8080 install-plugin %s/git/1.4.0/git.hpi'
+            % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin %s/github/1.6/github'
+            '.hpi' % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin %s/xvfb/1.0.7/xvfb'
+            '.hpi' % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin %s/violation-columns/1'
+            '.5/violation-columns.hpi' % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin %s/statusmonitor/1'
+            '.3/statusmonitor'
+            '.hpi' % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin %s/sounds/0.4/sounds'
+            '.hpi' % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin %s/maven-plugin/1'
+            '.515/maven-plugin'
+            '.hpi' % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin %s/covcomplplot/1.1'
+            '.1/covcomplplot'
+            '.hpi' % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin %s/cobertura/1'
+            '.9/cobertura.hpi' % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin %s/dashboard-view/2'
+            '.6/dashboard-view'
+            '.hpi' % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin %s/sloccount/1'
+            '.10/sloccount.hpi' % (command, webpath))
+        sudo('sudo service jenkins restart')
+    else:
+        command = "jenkins-cli"
+
+        run('%s -s http://localhost:8080 install-plugin git' % command)
+        run('%s -s http://localhost:8080 install-plugin github' % command)
+        run('%s -s http://localhost:8080 install-plugin xvfb' % command)
+        run('%s -s http://localhost:8080 install-plugin violations' % command)
+        run('%s -s http://localhost:8080 install-plugin statusmonitor' %
+            command)
+        run('%s -s http://localhost:8080 install-plugin sounds' % command)
+        run('%s -s http://localhost:8080 install-plugin maven-plugin' % command)
+        run('%s -s http://localhost:8080 install-plugin covcomplplot' % command)
+        run('%s -s http://localhost:8080 install-plugin cobertura' % command)
+        run('%s -s http://localhost:8080 install-plugin dashboard-view' %
+            command)
+        run('%s -s http://localhost:8080 install-plugin sloccount' % command)
+        sudo('sudo service jenkins restart')
 
 
 @task
@@ -839,13 +890,32 @@ def install_jenkins(use_upstream_repo=False):
 
     """
     if use_upstream_repo:
+        repo = "upstream"
         if fabtools.deb.is_installed('jenkins'):
-            fabtools.deb.uninstall(['jenkins', 'jenkins-common'], purge=True)
+            fabtools.deb.uninstall(['jenkins', 'jenkins-common',
+                                    'jenkins-cli',
+                                    'libjenkins-remoting-java'], purge=True)
         add_jenkins_repository()
         fabtools.deb.update_index(quiet=True)
         sudo('apt-get install jenkins')
-    fabtools.require.deb.package('jenkins')
-    configure_jenkins()
+        #Jenkins needs time to come up
+        time.sleep(5)
+        configure_jenkins(repo)
+    else:
+        repo = "distribution"
+        if os.path.exists('/etc/apt/sources.list.d/jenkins-repository.list'):
+            sudo('rm /etc/apt/sources.list.d/jenkins-repository.list')
+        fabtools.deb.update_index(quiet=True)
+        if fabtools.deb.is_installed('jenkins'):
+            fabtools.deb.uninstall(['jenkins', 'jenkins-common',
+                                    'jenkins-cli',
+                                    'libjenkins-remoting-java'], purge=True)
+        fabtools.require.deb.package('jenkins')
+        fabtools.require.deb.package('jenkins-common')
+        fabtools.require.deb.package('jenkins-cli')
+        #Jenkins needs time to come up
+        time.sleep(5)
+        configure_jenkins(repo)
 
 
 @task
@@ -895,8 +965,9 @@ def initialise_jenkins_site():
                                      '.' + env.hostname + '.error.log',
                 use_sudo=True)
             append_if_not_present(
-                jenkins_apache_conf, '  CustomLog /var/log/apache2/jenkins'
-                                     '.' + env.hostname + '.access.log combined',use_sudo=True)
+                jenkins_apache_conf, '  CustomLog /var/log/apache2/jenkins.'
+                                     + env.hostname + '.access.log combined',
+                use_sudo=True)
             append_if_not_present(
                 jenkins_apache_conf, '  ServerSignature Off', use_sudo=True)
             append_if_not_present(
