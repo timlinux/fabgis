@@ -117,7 +117,7 @@ def setup_devtools():
 
 
 @task
-def clone_qgis(branch='master'):
+def clone_qgis(branch='master', delete_local_branches=False):
     """Clone or update QGIS from git.
 
     :param branch: the name of the branch to build from. Defaults to 'master'
@@ -150,8 +150,8 @@ def clone_qgis(branch='master'):
             run('git checkout master')
             # Remove any local changes in master
             run('git reset --hard')
-            # Delete all local branches
-            run('git branch | grep -v \* | xargs git branch -D')
+            if delete_local_branches:
+                run('git branch | grep -v \* | xargs git branch -D')
 
     with cd(code_path):
         if branch != 'master':
@@ -180,10 +180,15 @@ def setup_inasafe():
     fabtools.require.deb.package('python-nosexcover')
 
 
-def compile_qgis(build_path, build_prefix):
-    fabtools.require.deb.package('python-gdal')
+def compile_qgis(build_path, build_prefix, gdal_from_source=False):
+
     fabtools.require.deb.package('cmake-curses-gui')
+    fabtools.require.deb.package('grass-dev')
+    fabtools.require.deb.package('grass')
     fabtools.require.deb.package('git')
+    # Ensure we always have a clean build dir
+    if exists(build_path):
+        run('rm -rf %s' % build_path)
     fabtools.require.directory(build_path)
     with cd(build_path):
         fabtools.require.directory(
@@ -196,12 +201,16 @@ def compile_qgis(build_path, build_prefix):
             extra = '-DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython2.7.so'
         else:
             extra = ''
+        if gdal_from_source:
+            build_gdal()  # see that task for ecw and mrsid support
+            extra += '-DGDAL_CONFIG=/usr/local/bin/gdal-config '
         cmake = ('cmake .. '
                  '-DCMAKE_INSTALL_PREFIX=%s '
                  '-DCMAKE_CXX_COMPILER:FILEPATH=/usr/local/bin/g++ '
                  '-DQT_QMAKE_EXECUTABLE=/usr/bin/qmake-qt4 '
                  '-DWITH_MAPSERVER=ON '
                  '-DWITH_INTERNAL_SPATIALITE=ON '
+                 '-DWITH_GRASS=ON '
                  '%s'
                  % (build_prefix, extra))
         run('cmake .. %s' % cmake)
@@ -210,7 +219,7 @@ def compile_qgis(build_path, build_prefix):
 
 
 @task
-def install_qgis1_8():
+def install_qgis1_8(gdal_from_source=False):
     """Install QGIS 1.8 under /usr/local/qgis-1.8."""
     setup_env()
     add_ubuntugis_ppa()
@@ -221,11 +230,11 @@ def install_qgis1_8():
     code_path = '%s/Quantum-GIS' % workspace
     build_path = '%s/build-qgis18' % code_path
     build_prefix = '/usr/local/qgis-1.8'
-    compile_qgis(build_path, build_prefix)
+    compile_qgis(build_path, build_prefix, gdal_from_source)
 
 
 @task
-def install_qgis2():
+def install_qgis2(gdal_from_source=False):
     """Install QGIS 2 under /usr/local/qgis-master.
 
     TODO: create one function from this and the 1.8 function above for DRY.
@@ -247,7 +256,7 @@ def install_qgis2():
     code_path = '%s/Quantum-GIS' % workspace
     build_path = '%s/build-master' % code_path
     build_prefix = '/usr/local/qgis-master'
-    compile_qgis(build_path, build_prefix)
+    compile_qgis(build_path, build_prefix, gdal_from_source)
 
 
 @task
@@ -415,7 +424,7 @@ def build_gdal(with_ecw=False, with_mrsid=False):
     fabtools.require.deb.package('build-essential')
     setup_ccache()
     fabtools.require.deb.package('libhdf5-serial-dev')
-    fabtools.require.deb.package('libhdf5-serial-1.8.4')
+    fabtools.require.deb.package('libhdf5-7')
     fabtools.require.deb.package('libhdf4g-dev')
     fabtools.require.deb.package('libjpeg62-dev')
     fabtools.require.deb.package('libtiff4-dev')
@@ -474,6 +483,11 @@ def build_gdal(with_ecw=False, with_mrsid=False):
         run('CXXFLAGS=-fPIC ./configure %s' % flags)
         run('make -j %s' % processor_count)
         sudo('make install')
+    # Write to ld path too so libs are loaded nicely
+    ld_file = '/etc/ld.so.conf.d/usr_local_lib.conf'
+    sudo('rm %s' % ld_file)
+    append(ld_file, '/usr/local/lib', use_sudo=True)
+    sudo('ldconfig')
 
 
 @task
@@ -485,7 +499,11 @@ def create_user():
 
 
 @task
-def setup_kandan(branch='master', user='kandan', password='kandan'):
+def setup_kandan(
+        branch='master',
+        user='kandan',
+        password='kandan',
+        delete_local_branches=False):
     """Set up the kandan chat server - see https://github.com/kandanapp/kandan.
 
     .. note:: I recommend setting up kandan in a vagrant instance."""
@@ -509,8 +527,8 @@ def setup_kandan(branch='master', user='kandan', password='kandan'):
             run('git checkout master')
             # Remove any local changes in master
             run('git reset --hard')
-            # Delete all local branches
-            run('git branch | grep -v \* | xargs git branch -D')
+            if delete_local_branches:
+                run('git branch | grep -v \* | xargs git branch -D')
 
     with cd(code_path):
         if branch != 'master':
