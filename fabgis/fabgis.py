@@ -485,7 +485,8 @@ def build_gdal(with_ecw=False, with_mrsid=False):
         sudo('make install')
     # Write to ld path too so libs are loaded nicely
     ld_file = '/etc/ld.so.conf.d/usr_local_lib.conf'
-    sudo('rm %s' % ld_file)
+    with settings(warn_only=True):
+        sudo('rm %s' % ld_file)
     append(ld_file, '/usr/local/lib', use_sudo=True)
     sudo('ldconfig')
 
