@@ -938,71 +938,81 @@ def install_jenkins(use_upstream_repo=False):
 
 
 @task
-def initialise_jenkins_site():
-    """Initialise jenkins with local proxy if we dont want to use port 8080"""
-
+def initialise_jenkins_site(site_url=None):
+    """
+    Initialise jenkins with local proxy if we are not going to use port
+    8080
+    """
+    setup_env()
     fabtools.require.deb.package('apache2')
-    env.hostname = run('hostname')
-    jenkins_apache_conf = ('jenkings.' + env.hostname + '.conf')
+    sitename = site_url
+
+    if not sitename:
+        sitename = "jenkins"
+    else:
+        sitename = site_url
+
+    jenkins_apache_conf = ('fabgis.%s.%s.apache.conf' % (sitename,
+                                                         env.fg.hostname))
+    jenkins_apache_conf_template = "fabgis.jenkins.apache.conf.templ"
 
     with cd('/etc/apache2/sites-available/'):
         if not exists(jenkins_apache_conf):
-            sudo('touch %s' % jenkins_apache_conf)
-            append_if_not_present(
-                jenkins_apache_conf, '<VirtualHost *:80>', use_sudo=True)
-            append_if_not_present(
-                jenkins_apache_conf, '  ServerAdmin '
-                                     'root@' + env.hostname, use_sudo=True)
-            append_if_not_present(
-                jenkins_apache_conf, '  ServerName '
-                                     'jenkins.' + env.hostname, use_sudo=True)
-            append_if_not_present(
-                jenkins_apache_conf, '  ServerAlias '
-                                     'jenkins.localhost', use_sudo=True)
-            append_if_not_present(
-                jenkins_apache_conf, '  ProxyPass		/ '
-                                     'http://localhost:8080/', use_sudo=True)
-            append_if_not_present(
-                jenkins_apache_conf, '  ProxyPassReverse		/ '
-                                     'http://localhost:8080/', use_sudo=True)
-            append_if_not_present(
-                jenkins_apache_conf, '  ProxyRequests		Off ',
+            local_dir = os.path.dirname(__file__)
+            local_file = os.path.abspath(os.path.join(
+                local_dir,
+                '..',
+                'resources',
+                'server_config',
+                'apache',
+                jenkins_apache_conf_template))
+            put(local_file,
+                "/etc/apache2/sites-available/%s" %
+                jenkins_apache_conf_template,
                 use_sudo=True)
-            append_if_not_present(
-                jenkins_apache_conf, '  <Proxy http://localhost:8080/*>',
-                use_sudo=True)
-            append_if_not_present(
-                jenkins_apache_conf, '  Order deny,allow', use_sudo=True)
-            append_if_not_present(
-                jenkins_apache_conf, '  Allow from all', use_sudo=True)
-            append_if_not_present(
-                jenkins_apache_conf, '  </Proxy>', use_sudo=True)
-            append_if_not_present(
-                jenkins_apache_conf, '  LogLevel warn', use_sudo=True)
-            append_if_not_present(
-                jenkins_apache_conf, '  ErrorLog /var/log/apache2/jenkins'
-                                     '.' + env.hostname + '.error.log',
-                use_sudo=True)
-            append_if_not_present(
-                jenkins_apache_conf, '  CustomLog /var/log/apache2/jenkins.'
-                                     + env.hostname + '.access.log combined',
-                use_sudo=True)
-            append_if_not_present(
-                jenkins_apache_conf, '  ServerSignature Off', use_sudo=True)
-            append_if_not_present(
-                jenkins_apache_conf, '</VirtualHost>', use_sudo=True)
+
+        replace_tokens(jenkins_apache_conf_template, sitename)
 
     # Add a hosts entry for local testing - only really useful for localhost
     hosts = '/etc/hosts'
-    if not contains(hosts, 'jenkins.%s' % env.hostname):
-        append_if_not_present(hosts, '127.0.1.1 jenkins.%s' % env.hostname,
+    if not contains(hosts, '%s.%s' % (sitename, env.fg.hostname)):
+        append_if_not_present(hosts,
+                              '127.0.1.1 %s.%s' % (sitename, env.fg.hostname),
                               use_sudo=True)
-        append_if_not_present(hosts, '127.0.0.1 jenkins.localhost',
+        append_if_not_present(hosts,
+                              '127.0.0.1 %s.localhost' % env.fg.hostname,
                               use_sudo=True)
         # For doing Reverse Proxy we need to enable 2 apache modules
     sudo('a2enmod proxy')
     sudo('a2enmod proxy_http')
     sudo('a2ensite %s' % jenkins_apache_conf)
-
-    #sudo('a2enmod rewrite')
     sudo('service apache2 reload')
+
+
+def replace_tokens(conf_file, sitename):
+
+    if '.templ' == conf_file[-6:]:
+        templ_file = conf_file
+        conf_file = conf_file.replace('.templ', '')
+        conf_file = conf_file.replace('apache', '%s.apache' % env.fg.hostname)
+    sudo(
+        'cp %(templ_file)s %(conf_file)s' % {
+            'templ_file': templ_file,
+            'conf_file': conf_file})
+
+    # We need to replace these 3 things in the conf file:
+    # [SERVERNAME] - web site base url e.g. foo.com
+    # [ESCAPEDSERVERNAME] - the site base url with escaping e.g. foo\.com
+    # [SITEBASE] - dir under which the site is deployed e.g. /home/web
+    # [SITENAME] - should match env.repo_alias
+    # [SITEUSER] - user apache wsgi process should run as
+    # [CODEBASE] - concatenation of site base and site name e.g. /home/web/app
+    # escaped_name = env.repo_site_name.replace('.', '\\\.')
+    # fastprint('Escaped server name: %s' % escaped_name)
+    base_path, file_name = os.path.split(conf_file)
+    with cd(base_path):
+        sudo("sed -i.bak -r -e 's/\[SERVERNAME\]/%s/g' %s" % (
+            env.fg.hostname, conf_file))
+        sudo("sed -i.bak -r -e 's/\[SITENAME\]/%s/g' %s" % (
+            sitename, conf_file))
+        sudo('rm *.templ *.bak')
