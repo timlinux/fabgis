@@ -210,7 +210,7 @@ def compile_qgis(build_path, build_prefix, gdal_from_source=False):
                  '-DQT_QMAKE_EXECUTABLE=/usr/bin/qmake-qt4 '
                  '-DWITH_MAPSERVER=ON '
                  '-DWITH_INTERNAL_SPATIALITE=ON '
-                 '-DWITH_GRASS=ON '
+                 '-DWITH_GRASS=OFF '
                  '%s'
                  % (build_prefix, extra))
         run('cmake .. %s' % cmake)
