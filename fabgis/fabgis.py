@@ -38,6 +38,8 @@ def setup_env():
         env.fg.qgis_git_url = 'git://github.com/qgis/Quantum-GIS.git'
         env.fg.kandan_git_url = 'git://github.com/kandanapp/kandan.git'
         env.fg.gdal_svn_url = 'https://svn.osgeo.org/gdal/trunk/gdal'
+        env.fg.tilemill_tarball_url = (
+            'http://tilemill.s3.amazonaws.com/latest/install-tilemill.tar.gz')
         env.fg.inasafe_checkout_alias = 'inasafe-fabric'
         env.fg.qgis_checkout_alias = 'qgis-fabric'
         env.fg.inasafe_code_path = os.path.join(
@@ -410,6 +412,26 @@ def restore_postgres_dump(dbname, user=None):
         template='template_postgis',
         encoding='UTF8')
     run('pg_restore /tmp/%s | psql %s' % (my_file, dbname))
+
+
+@task
+def add_developmentseed_ppa():
+    """Ensure we have development seed ppa (makers of mapbox, tilemill etc.."""
+    fabtools.deb.update_index(quiet=True)
+    fabtools.require.deb.ppa(
+        #'ppa:developmentseed/mapbox', auto_yes=True)
+        'ppa:developmentseed/mapbox')
+
+
+@task
+def setup_tilemill():
+    """Set up tile mill - see http://www.mapbox.com/tilemill/ ."""
+    # Note raring seems not to be supported yet...
+    setup_env()
+    add_developmentseed_ppa()
+    fabtools.require.deb.package('tilemill')
+    fabtools.require.deb.package('libmapnik')
+    fabtools.require.deb.package('nodejs')
 
 
 @task
