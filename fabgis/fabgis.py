@@ -435,6 +435,25 @@ def setup_tilemill():
 
 
 @task
+def start_tilemill():
+    """Start the tilemill service - ensure it is installed first."""
+    sudo('start tilemill')
+    fastprint('You may need to port forward to port 20009 or set up your '
+              'vagrant instance to do so....')
+    # Note port forward seems not to work well
+    # Using this config on the vhost:
+    #{
+    #  "listenHost": "0.0.0.0",
+    #  "coreUrl": "192.168.1.115:20009",
+    #  "tileUrl": "192.168.1.115:20008",
+    #  "files": "/usr/share/mapbox",
+    #  "server": true
+    #}
+    # Worked, accessible from http://192.168.1.115:20009/
+
+
+
+@task
 def build_gdal(with_ecw=False, with_mrsid=False):
     """Clone or update GDAL from svn then build it.
 

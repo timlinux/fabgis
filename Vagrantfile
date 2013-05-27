@@ -13,6 +13,8 @@ Vagrant.configure("2") do |config|
   config.vm.hostname = "fabgis"
   config.vm.network :public_network
   config.vm.network :forwarded_port, guest: 80, host: 8080
+  # For tilemill
+  config.vm.network :forwarded_port, guest: 20009, host: 20008
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
 end
