@@ -774,6 +774,45 @@ def append_if_not_present(filename, text, use_sudo=False):
 
 
 @task
+def update_git_checkout(code_path, url, repo_alias, branch='master'):
+    """Make sure there is a read only git checkout.
+    Args:
+        branch: str - a string representing the name of the branch to build
+            from. Defaults to 'master'
+    To run e.g.::
+        fab -H 188.40.123.80:8697 remote update_git_checkout
+    """
+    setup_env()
+    repo_path = os.path.join(code_path, repo_alias)
+    fabtools.require.deb.package('git')
+    if not exists(code_path):
+        fastprint('Repo checkout does not exist, creating.')
+        run('mkdir -p %s' % repo_path)
+        with cd(repo_path):
+            run('git clone %s %s' % (url, repo_alias))
+    else:
+        fastprint('Repo checkout does exist, updating.')
+        with cd(code_path):
+            # Get any updates first
+            run('git fetch')
+            # Get rid of any local changes
+            run('git reset --hard')
+            # Get back onto master branch
+            run('git checkout master')
+            # Remove any local changes in master
+            # run('git reset --hard')
+
+    with cd(code_path):
+        if branch != 'master':
+            run('git branch --track %s origin/%s' %
+                (branch, branch))
+            run('git checkout %s' % branch)
+        else:
+            run('git checkout master')
+        run('git pull')
+
+
+@task
 def masquerade():
     """Set up masquerading so that a box with two nics can act as a router.
     """
@@ -825,7 +864,6 @@ def add_jenkins_repository():
         jenkins_apt_file, 'deb ' + jenkins_repo, use_sudo=True)
 
 
-@task
 def configure_jenkins(repo):
     """Configure Jenkins with the needed plugins, use the stable ones known
     to work.
@@ -836,6 +874,15 @@ def configure_jenkins(repo):
     command1 = "curl -L http://updates.jenkins-ci.org/update-center.json"
     command2 = "sed '1d;$d' > /var/lib/jenkins/updates/default.json"
     jenkins = "jenkins"
+    webpath = "http://updates.jenkins-ci.org/download/plugins"
+
+    # We need some additional tools to run jenkins checks
+    fabtools.require.deb.package('xvfb')
+    fabtools.require.deb.package('pep8')
+    fabtools.require.deb.package('pylint')
+    fabtools.require.deb.package('pyflakes')
+    fabtools.require.deb.package('sloccount')
+
     sudo('mkdir -p /var/lib/jenkins/updates', user=jenkins)
     sudo('%s > /var/lib/jenkins/updates/default.json' % command1,
          user=jenkins)
@@ -843,10 +890,7 @@ def configure_jenkins(repo):
 
     if distribution == "upstream":
         command = "java -jar /var/cache/jenkins/war/WEB-INF/jenkins-cli.jar"
-        webpath = "http://updates.jenkins-ci.org/download/plugins"
 
-        run('%s -s http://localhost:8080 install-plugin %s/git/1.4.0/git.hpi'
-            % (command, webpath))
         run('%s -s http://localhost:8080 install-plugin %s/github/1.6/github'
             '.hpi' % (command, webpath))
         run('%s -s http://localhost:8080 install-plugin %s/xvfb/1.0.7/xvfb'
@@ -875,14 +919,15 @@ def configure_jenkins(repo):
     else:
         command = "jenkins-cli"
 
-        run('%s -s http://localhost:8080 install-plugin git' % command)
-        run('%s -s http://localhost:8080 install-plugin github' % command)
+        run('%s -s http://localhost:8080 install-plugin %s/github/1.6/github'
+            '.hpi' % (command, webpath))
         run('%s -s http://localhost:8080 install-plugin xvfb' % command)
         run('%s -s http://localhost:8080 install-plugin violations' % command)
         run('%s -s http://localhost:8080 install-plugin statusmonitor' %
             command)
         run('%s -s http://localhost:8080 install-plugin sounds' % command)
-        run('%s -s http://localhost:8080 install-plugin maven-plugin' % command)
+        run('%s -s http://localhost:8080 install-plugin %s/maven-plugin/1.480'
+            '.3/maven-plugin' % (command, webpath))
         run('%s -s http://localhost:8080 install-plugin covcomplplot' % command)
         run('%s -s http://localhost:8080 install-plugin cobertura' % command)
         run('%s -s http://localhost:8080 install-plugin dashboard-view' %
@@ -943,6 +988,7 @@ def initialise_jenkins_site(site_url=None):
     Initialise jenkins with local proxy if we are not going to use port
     8080
     """
+    install_jenkins()
     setup_env()
     fabtools.require.deb.package('apache2')
     sitename = site_url
