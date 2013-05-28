@@ -263,12 +263,21 @@ def install_qgis2(gdal_from_source=False):
 
 @task
 def setup_qgis2_and_postgis():
+    """
+    Install qgis2 and postgis 1.5 as a fully working setup
+    """
     create_postgis_1_5_db('gis', env.user)
     install_qgis2()
 
 
 @task
 def require_postgres_user(user, password='', createdb=False):
+    """ Require a postgres username to create a database
+    :param user: username
+    :param password: password
+    :param createdb:  (default=False)
+    :return:
+    """
     #sudo('apt-get upgrade')
     # wsgi user needs pg access to the db
     if not fabtools.postgres.user_exists(user):
@@ -553,32 +562,8 @@ def setup_kandan(
     fabtools.require.deb.package('git')
     code_base = '%s/ruby' % env.fg.workspace
     code_path = '%s/kandan' % code_base
-    if not exists(code_path):
-        fastprint('Repo checkout does not exist, creating.')
-        run('mkdir -p %s' % code_base)
-        with cd(code_base):
-            run('git clone %s' % env.fg.kandan_git_url)
-    else:
-        fastprint('Repo checkout does exist, updating.')
-        with cd(code_path):
-            # Get any updates first
-            run('git fetch')
-            # Get rid of any local changes
-            run('git reset --hard')
-            # Get back onto master branch
-            run('git checkout master')
-            # Remove any local changes in master
-            run('git reset --hard')
-            if delete_local_branches:
-                run('git branch | grep -v \* | xargs git branch -D')
 
-    with cd(code_path):
-        if branch != 'master':
-            run('git branch --track %s origin/%s' % (branch, branch))
-            run('git checkout %s' % branch)
-        else:
-            run('git checkout master')
-        run('git pull')
+    update_git_checkout(code_base, env.fg.kandan_git_url, 'kandan', branch)
 
     fabtools.require.postgres.server()
     require_postgres_user(
@@ -640,6 +625,11 @@ def ssh_copy_id():
 
 @task
 def setup_mosh():
+    """ Install mosh as a nice and always working kind of replacement to ssh
+    """
+    """
+    :return:
+    """
     mosh_file = '/etc/ufw/applications.d/mosh'
     if not exists(mosh_file):
         sudo('touch %s' % mosh_file)
@@ -818,6 +808,10 @@ def append_if_not_present(filename, text, use_sudo=False):
 def update_git_checkout(code_path, url, repo_alias, branch='master'):
     """Make sure there is a read only git checkout.
     Args:
+        code_path: str - string which is the path to where the repo should be
+        url: str - the complete http url for cloning/checking out the repo
+        repo_alias: str - the alias name under which the repo should be
+        checked out.
         branch: str - a string representing the name of the branch to build
             from. Defaults to 'master'
     To run e.g.::
@@ -825,15 +819,16 @@ def update_git_checkout(code_path, url, repo_alias, branch='master'):
     """
     setup_env()
     repo_path = os.path.join(code_path, repo_alias)
+
     fabtools.require.deb.package('git')
     if not exists(code_path):
-        fastprint('Repo checkout does not exist, creating.')
-        run('mkdir -p %s' % repo_path)
-        with cd(repo_path):
+        fastprint('Basic codepath checkout does not exist, creating.')
+        run('mkdir -p %s' % code_path)
+        with cd(code_path):
             run('git clone %s %s' % (url, repo_alias))
     else:
         fastprint('Repo checkout does exist, updating.')
-        with cd(code_path):
+        with cd(repo_path):
             # Get any updates first
             run('git fetch')
             # Get rid of any local changes
@@ -843,7 +838,7 @@ def update_git_checkout(code_path, url, repo_alias, branch='master'):
             # Remove any local changes in master
             # run('git reset --hard')
 
-    with cd(code_path):
+    with cd(repo_path):
         if branch != 'master':
             run('git branch --track %s origin/%s' %
                 (branch, branch))
@@ -1024,12 +1019,12 @@ def install_jenkins(use_upstream_repo=False):
 
 
 @task
-def initialise_jenkins_site(site_url=None):
+def initialise_jenkins_site(site_url=None, use_upstream_repo=False):
     """
     Initialise jenkins with local proxy if we are not going to use port
     8080
     """
-    install_jenkins()
+    install_jenkins(use_upstream_repo)
     setup_env()
     fabtools.require.deb.package('apache2')
     sitename = site_url
@@ -1039,9 +1034,9 @@ def initialise_jenkins_site(site_url=None):
     else:
         sitename = site_url
 
-    jenkins_apache_conf = ('fabgis.%s.%s.apache.conf' % (sitename,
+    jenkins_apache_conf = ('fabgis.%s.%s.conf' % (sitename,
                                                          env.fg.hostname))
-    jenkins_apache_conf_template = "fabgis.jenkins.apache.conf.templ"
+    jenkins_apache_conf_template = "fabgis.jenkins.conf.templ"
 
     with cd('/etc/apache2/sites-available/'):
         if not exists(jenkins_apache_conf):
@@ -1058,7 +1053,12 @@ def initialise_jenkins_site(site_url=None):
                 jenkins_apache_conf_template,
                 use_sudo=True)
 
-        replace_tokens(jenkins_apache_conf_template, sitename)
+        my_tokens = {
+            'SERVERNAME': env.doc_site_name,  # Web Url e.g. foo.com
+            'WEBMASTER': 'werner@linfiniti.com',  # email of web master
+            'SITENAME': sitename,  # Choosen name of jenkins 'root'
+        }
+        replace_tokens(jenkins_apache_conf_template, my_tokens)
 
     # Add a hosts entry for local testing - only really useful for localhost
     hosts = '/etc/hosts'
@@ -1076,30 +1076,50 @@ def initialise_jenkins_site(site_url=None):
     sudo('service apache2 reload')
 
 
-def replace_tokens(conf_file, sitename):
+def replace_tokens(conf_file, tokens):
+    """Prepare a template config file by replacing its tokens.
+
+    Args:
+        * conf_file (str): Either a full path to a conf file name or just the
+            file name. In the latter case, it assumes the file is then in the
+            current working directory.
+        * tokens (dict): A dictionary of key-values that should be replaced
+            in the conf file.
+
+    Returns:
+        None
+
+    Example tokens:
+
+    my_tokens = {
+        'SERVERNAME': env.doc_site_name,  # Web Url e.g. foo.com
+        'WEBMASTER': 'werner@linfiniti.com',  # email of web master
+        'DOCUMENTROOT': webdir,  # Content root .e.g. /var/www
+    }
+
+    """
 
     if '.templ' == conf_file[-6:]:
         templ_file = conf_file
         conf_file = conf_file.replace('.templ', '')
-        conf_file = conf_file.replace('apache', '%s.apache' % env.fg.hostname)
-    sudo(
-        'cp %(templ_file)s %(conf_file)s' % {
+        sudo(
+            'cp %(templ_file)s %(conf_file)s' % {
             'templ_file': templ_file,
             'conf_file': conf_file})
 
-    # We need to replace these 3 things in the conf file:
-    # [SERVERNAME] - web site base url e.g. foo.com
-    # [ESCAPEDSERVERNAME] - the site base url with escaping e.g. foo\.com
-    # [SITEBASE] - dir under which the site is deployed e.g. /home/web
-    # [SITENAME] - should match env.repo_alias
-    # [SITEUSER] - user apache wsgi process should run as
-    # [CODEBASE] - concatenation of site base and site name e.g. /home/web/app
-    # escaped_name = env.repo_site_name.replace('.', '\\\.')
-    # fastprint('Escaped server name: %s' % escaped_name)
     base_path, file_name = os.path.split(conf_file)
-    with cd(base_path):
-        sudo("sed -i.bak -r -e 's/\[SERVERNAME\]/%s/g' %s" % (
-            env.fg.hostname, conf_file))
-        sudo("sed -i.bak -r -e 's/\[SITENAME\]/%s/g' %s" % (
-            sitename, conf_file))
-        sudo('rm *.templ *.bak')
+    if base_path is not '':
+        # The file is not in the current working dir.
+        with cd(base_path):
+            for key, value in tokens.iteritems():
+                sudo("sed -i.bak -r -e 's/\[%s\]/%s/g' %s" % (
+                    key, value, file_name))
+            sudo('rm %s.bak' % file_name)
+    else:
+        # filename only, not full path - assumes the current working dir is
+        # the same as where the conf file is located
+        for key, value in tokens.iteritems():
+            sudo("sed -i.bak -r -e 's/\[%s\]/%s/g' %s" % (
+                    key, value, file_name))
+            sudo('rm %s.bak' % file_name)
+
