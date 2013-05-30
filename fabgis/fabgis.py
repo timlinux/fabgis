@@ -131,37 +131,21 @@ def clone_qgis(branch='master', delete_local_branches=False):
     fabtools.require.deb.package('git')
     # Add this to the users git config so that we don't get repeated
     # authentication requests when using ssl
-    run('git config --global credential.helper \'cache --timeout=3600\'')
-    run('git config --global push.default simple')
+    #run('git config --global credential.helper \'cache --timeout=3600\'')
+    #run('git config --global push.default simple')
 
     code_base = '%s/cpp' % env.fg.workspace
     code_path = '%s/Quantum-GIS' % code_base
-    if not exists(code_path):
-        fastprint('Repo checkout does not exist, creating.')
-        run('mkdir -p %s' % code_base)
-        with cd(code_base):
-            run('git clone %s' % env.fg.qgis_git_url)
-    else:
-        fastprint('Repo checkout does exist, updating.')
+
+    update_git_checkout(
+        code_base,
+        env.fg.qgis_git_url,
+        'Quantum-GIS',
+        branch)
+    if exists(code_path):
         with cd(code_path):
-            # Get any updates first
-            run('git fetch')
-            # Get rid of any local changes
-            run('git reset --hard')
-            # Get back onto master branch
-            run('git checkout master')
-            # Remove any local changes in master
-            run('git reset --hard')
             if delete_local_branches:
                 run('git branch | grep -v \* | xargs git branch -D')
-
-    with cd(code_path):
-        if branch != 'master':
-            run('git branch --track %s origin/%s' % (branch, branch))
-            run('git checkout %s' % branch)
-        else:
-            run('git checkout master')
-        run('git pull')
 
 
 @task
@@ -180,7 +164,10 @@ def setup_inasafe():
     fabtools.require.deb.package('pylint')
     fabtools.require.deb.package('python-nose')
     fabtools.require.deb.package('python-nosexcover')
-
+    fabtools.require.deb.package('python-pip')
+    fabtools.require.deb.package('python-numpy')
+    fabtools.require.deb.package('python-qt4')
+    fabtools.require.deb.package('python-nose')
 
 def compile_qgis(build_path, build_prefix, gdal_from_source=False):
 
@@ -188,6 +175,7 @@ def compile_qgis(build_path, build_prefix, gdal_from_source=False):
     fabtools.require.deb.package('grass-dev')
     fabtools.require.deb.package('grass')
     fabtools.require.deb.package('git')
+    fabtools.require.deb.package('python-gdal')
     # Ensure we always have a clean build dir
     if exists(build_path):
         run('rm -rf %s' % build_path)
@@ -198,7 +186,7 @@ def compile_qgis(build_path, build_prefix, gdal_from_source=False):
             use_sudo=True,
             owner=env.fg.user)
         os_version = run('cat /etc/issue.net')
-        os_version == float(os_version.split(' ')[1])
+        os_version = float(os_version.split(' ')[1])
         if os_version > 13:
             extra = '-DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython2.7.so'
         else:
@@ -821,8 +809,8 @@ def update_git_checkout(code_path, url, repo_alias, branch='master'):
     repo_path = os.path.join(code_path, repo_alias)
 
     fabtools.require.deb.package('git')
-    if not exists(code_path):
-        fastprint('Basic codepath checkout does not exist, creating.')
+    if not exists(repo_path):
+        fastprint('Basic Repository does not exist, creating.')
         run('mkdir -p %s' % code_path)
         with cd(code_path):
             run('git clone %s %s' % (url, repo_alias))
@@ -832,7 +820,7 @@ def update_git_checkout(code_path, url, repo_alias, branch='master'):
             # Get any updates first
             run('git fetch')
             # Get rid of any local changes
-            run('git reset --hard')
+            # run('git reset --hard')
             # Get back onto master branch
             run('git checkout master')
             # Remove any local changes in master
@@ -840,9 +828,13 @@ def update_git_checkout(code_path, url, repo_alias, branch='master'):
 
     with cd(repo_path):
         if branch != 'master':
-            run('git branch --track %s origin/%s' %
-                (branch, branch))
-            run('git checkout %s' % branch)
+            branches = run('git branch')
+            if branch not in branches:
+                print branches
+                run('git branch --track %s origin/%s' %
+                     (branch, branch))
+            if ('* %s' % branch) not in branches:
+                run('git checkout %s' % branch)
         else:
             run('git checkout master')
         run('git pull')
@@ -901,62 +893,69 @@ def add_jenkins_repository():
 
 
 def configure_jenkins(repo):
-    """Configure Jenkins with the needed plugins, use the stable ones known
-    to work.
+    """
     We have to update the json file if we want to switch between distribution
     provided jenkins and upstream jenkins
     """
-    distribution = repo
     command1 = "curl -L http://updates.jenkins-ci.org/update-center.json"
     command2 = "sed '1d;$d' > /var/lib/jenkins/updates/default.json"
     jenkins = "jenkins"
-    webpath = "http://updates.jenkins-ci.org/download/plugins"
-
-    # We need some additional tools to run jenkins checks
-    fabtools.require.deb.package('xvfb')
-    fabtools.require.deb.package('pep8')
-    fabtools.require.deb.package('pylint')
-    fabtools.require.deb.package('pyflakes')
-    fabtools.require.deb.package('sloccount')
+    webpath = "http://updates.jenkins-ci.org"
 
     sudo('mkdir -p /var/lib/jenkins/updates', user=jenkins)
     sudo('%s > /var/lib/jenkins/updates/default.json' % command1,
          user=jenkins)
     sudo('%s | %s' % (command1, command2), user=jenkins)
+    deploy_jenkins_plugins(repo=repo)
 
+@task
+def deploy_jenkins_plugins(repo):
+    """
+    Deploying plugins with jenkins-cli seems not to be reliable
+    For now if the plugins are not getting installed automatically
+    we have to go to the webinterface and  install at least github and xvfb
+    plugin manually before calling setup_jenkins_jobs
+    :param repo: repository to use
+    :return:
+    """
+    distribution = repo
     if distribution == "upstream":
         command = "java -jar /var/cache/jenkins/war/WEB-INF/jenkins-cli.jar"
 
-        run('%s -s http://localhost:8080 install-plugin %s/github/1.6/github'
-            '.hpi' % (command, webpath))
-        run('%s -s http://localhost:8080 install-plugin %s/xvfb/1.0.7/xvfb'
-            '.hpi' % (command, webpath))
-        run('%s -s http://localhost:8080 install-plugin %s/violation-columns/1'
-            '.5/violation-columns.hpi' % (command, webpath))
-        run('%s -s http://localhost:8080 install-plugin %s/statusmonitor/1'
-            '.3/statusmonitor'
-            '.hpi' % (command, webpath))
-        run('%s -s http://localhost:8080 install-plugin %s/sounds/0.4/sounds'
-            '.hpi' % (command, webpath))
-        run('%s -s http://localhost:8080 install-plugin %s/maven-plugin/1'
-            '.515/maven-plugin'
-            '.hpi' % (command, webpath))
-        run('%s -s http://localhost:8080 install-plugin %s/covcomplplot/1.1'
-            '.1/covcomplplot'
-            '.hpi' % (command, webpath))
-        run('%s -s http://localhost:8080 install-plugin %s/cobertura/1'
-            '.9/cobertura.hpi' % (command, webpath))
-        run('%s -s http://localhost:8080 install-plugin %s/dashboard-view/2'
-            '.6/dashboard-view'
-            '.hpi' % (command, webpath))
-        run('%s -s http://localhost:8080 install-plugin %s/sloccount/1'
-            '.10/sloccount.hpi' % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin '
+            '%s/download/plugins/github/1.5/github.hpi'
+            % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin %s/latest/xvfb.hpi'
+            % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin '
+            '%s/latest/violation-columns.hpi'
+            % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin '
+            '%s/latest/statusmonitor.hpi'
+            % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin %s/latest/sounds.hpi'
+            % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin '
+            '%s/latest/maven-plugin.hpi'
+            % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin '
+            '%s/latest/covcomplplot.hpi'
+            % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin %s/latest/cobertura.hpi'
+            % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin '
+            '%s/latest/dashboard-view.hpi'
+            % (command, webpath))
+        run('%s -s http://localhost:8080 install-plugin %s/latest/sloccount.hpi'
+            % (command, webpath))
         sudo('sudo service jenkins restart')
     else:
         command = "jenkins-cli"
-
-        run('%s -s http://localhost:8080 install-plugin %s/github/1.6/github'
-            '.hpi' % (command, webpath))
+        # selecting a specific version
+        run('%s -s http://localhost:8080 install-plugin '
+            '%s/download/plugins/github/1.6/github.hpi' % (command, webpath))
+        # just install the latest ones with jenkins-cli
+        # running jenkins-cli that way not possible with latest jenkins
         run('%s -s http://localhost:8080 install-plugin xvfb' % command)
         run('%s -s http://localhost:8080 install-plugin violations' % command)
         run('%s -s http://localhost:8080 install-plugin statusmonitor' %
@@ -992,7 +991,7 @@ def install_jenkins(use_upstream_repo=False):
     if use_upstream_repo:
         repo = "upstream"
         if fabtools.deb.is_installed('jenkins'):
-            fabtools.deb.uninstall(['jenkins', 'jenkins-common',
+            fabtools.deb.uninstall(['jenkins-common',
                                     'jenkins-cli',
                                     'libjenkins-remoting-java'], purge=True)
         add_jenkins_repository()
@@ -1007,7 +1006,7 @@ def install_jenkins(use_upstream_repo=False):
             sudo('rm /etc/apt/sources.list.d/jenkins-repository.list')
         fabtools.deb.update_index(quiet=True)
         if fabtools.deb.is_installed('jenkins'):
-            fabtools.deb.uninstall(['jenkins', 'jenkins-common',
+            fabtools.deb.uninstall(['jenkins-common',
                                     'jenkins-cli',
                                     'libjenkins-remoting-java'], purge=True)
         fabtools.require.deb.package('jenkins')
@@ -1024,7 +1023,6 @@ def initialise_jenkins_site(site_url=None, use_upstream_repo=False):
     Initialise jenkins with local proxy if we are not going to use port
     8080
     """
-    install_jenkins(use_upstream_repo)
     setup_env()
     fabtools.require.deb.package('apache2')
     sitename = site_url
@@ -1034,8 +1032,7 @@ def initialise_jenkins_site(site_url=None, use_upstream_repo=False):
     else:
         sitename = site_url
 
-    jenkins_apache_conf = ('fabgis.%s.%s.conf' % (sitename,
-                                                         env.fg.hostname))
+    jenkins_apache_conf = ('fabgis.%s.conf' % (sitename))
     jenkins_apache_conf_template = "fabgis.jenkins.conf.templ"
 
     with cd('/etc/apache2/sites-available/'):
