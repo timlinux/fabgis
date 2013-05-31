@@ -819,25 +819,17 @@ def update_git_checkout(code_path, url, repo_alias, branch='master'):
         with cd(repo_path):
             # Get any updates first
             run('git fetch')
-            # Get rid of any local changes
-            # run('git reset --hard')
-            # Get back onto master branch
-            run('git checkout master')
-            # Remove any local changes in master
-            # run('git reset --hard')
-
-    with cd(repo_path):
-        if branch != 'master':
-            branches = run('git branch')
-            if branch not in branches:
-                print branches
-                run('git branch --track %s origin/%s' %
-                     (branch, branch))
-            if ('* %s' % branch) not in branches:
-                run('git checkout %s' % branch)
-        else:
-            run('git checkout master')
-        run('git pull')
+            if branch != 'master':
+                branches = run('git branch')
+                if branch not in branches:
+                    print branches
+                    run('git branch --track %s origin/%s' %
+                         (branch, branch))
+                if ('* %s' % branch) not in branches:
+                    run('git checkout %s' % branch)
+            else:
+                run('git checkout master')
+            run('git pull')
 
 
 @task
@@ -1018,7 +1010,7 @@ def install_jenkins(use_upstream_repo=False):
 
 
 @task
-def initialise_jenkins_site(site_url=None, use_upstream_repo=False):
+def jenkins_deploy_website(site_url=None, use_upstream_repo=False):
     """
     Initialise jenkins with local proxy if we are not going to use port
     8080
@@ -1051,7 +1043,7 @@ def initialise_jenkins_site(site_url=None, use_upstream_repo=False):
                 use_sudo=True)
 
         my_tokens = {
-            'SERVERNAME': env.doc_site_name,  # Web Url e.g. foo.com
+            'SERVERNAME': env.fg.hostname,  # Web Url e.g. foo.com
             'WEBMASTER': 'werner@linfiniti.com',  # email of web master
             'SITENAME': sitename,  # Choosen name of jenkins 'root'
         }
@@ -1092,6 +1084,7 @@ def replace_tokens(conf_file, tokens):
         'SERVERNAME': env.doc_site_name,  # Web Url e.g. foo.com
         'WEBMASTER': 'werner@linfiniti.com',  # email of web master
         'DOCUMENTROOT': webdir,  # Content root .e.g. /var/www
+        'SITENAME': sitename,  # Choosen name of jenkins 'root'
     }
 
     """
