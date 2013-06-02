@@ -1,6 +1,6 @@
 import fabtools
 from fabric.api import fastprint, task, sudo
-from .utilities import setup_env
+from .common import setup_env
 
 
 @task

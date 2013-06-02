@@ -1,12 +1,9 @@
 # ~/fabfile.py
 # A Fabric file for carrying out various administrative tasks with InaSAFE.
 # Tim Sutton, Jan 2013
-from fabric import *
-from fabric.api import *
-from fabric.contrib.files import contains, exists, append, sed
-import fabtools
-import fabgis.fabgis
-from fabgis.fabgis import *
+from fabric.api import task
+from fabgis.common import *
+
 ###############################################################################
 # Next section contains actual tasks
 ###############################################################################

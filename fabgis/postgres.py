@@ -1,8 +1,7 @@
-from fabgis import add_ubuntugis_ppa
-from fabric.api import run, cd, env, task, sudo, get, put
 import fabtools
-from .utilities import setup_env, show_environment
-from .system import create_user
+from fabtools.postgres import create_user
+from fabric.api import run, cd, env, task, sudo, get, put
+from .common import setup_env, show_environment, add_ubuntugis_ppa
 
 
 @task
@@ -20,7 +19,7 @@ def require_postgres_user(user, password='', createdb=False):
             name=user,
             password=password,
             superuser=False,
-            createdb=True,
+            createdb=createdb,
             createrole=False,
             inherit=True,
             login=True,

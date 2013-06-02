@@ -1,40 +1,9 @@
-from fabric.api import *
+import os
+from fabric.api import fastprint, run, cd, env, task, sudo
+from fabric.contrib.files import contains, exists, append
+import fabtools
 
-
-def show_environment():
-    """For diagnostics - show any pertinent info about server."""
-    setup_env()
-    fastprint('\n-------------------------------------------------\n')
-    for key, value in env.fg.iteritems():
-        fastprint('Key: %s \t\t Value: %s' % (key, value))
-    fastprint('-------------------------------------------------\n')
-
-
-def setup_env():
-    """Things to do regardless of whether command is local or remote."""
-    if env.fg is not None:
-        fastprint('Environment already set!\n')
-        return
-
-    fastprint('Setting environment!\n')
-    env.fg = fdict()
-    with hide('output'):
-        env.fg.user = run('whoami')
-        env.fg.hostname = fabtools.system.get_hostname()
-        env.fg.home = os.path.join('/home/', env.fg.user)
-        env.fg.workspace = os.path.join(env.fg.home, 'dev')
-        env.fg.inasafe_git_url = 'git://github.com/AIFDR/inasafe.git'
-        env.fg.qgis_git_url = 'git://github.com/qgis/Quantum-GIS.git'
-        env.fg.kandan_git_url = 'git://github.com/kandanapp/kandan.git'
-        env.fg.gdal_svn_url = 'https://svn.osgeo.org/gdal/trunk/gdal'
-        env.fg.tilemill_tarball_url = (
-            'http://tilemill.s3.amazonaws.com/latest/install-tilemill.tar.gz')
-        env.fg.inasafe_checkout_alias = 'inasafe-fabric'
-        env.fg.qgis_checkout_alias = 'qgis-fabric'
-        env.fg.inasafe_code_path = os.path.join(
-            env.fg.workspace, env.fg.inasafe_checkout_alias)
-        env.fg.qgis_code_path = os.path.join(
-            env.fg.workspace, env.fg.qgis_checkout_alias)
+from .utilities import setup_env
 
 
 def update_git_checkout(code_path, url, repo_alias, branch='master'):
@@ -74,11 +43,11 @@ def update_git_checkout(code_path, url, repo_alias, branch='master'):
                 run('git checkout master')
             run('git pull')
 
+
 def append_if_not_present(filename, text, use_sudo=False):
     """Append to a file if an equivalent line is not already there."""
     if not contains(filename, text):
         append(filename, text, use_sudo=use_sudo)
-
 
 
 def replace_tokens(conf_file, tokens):
@@ -118,15 +87,15 @@ def replace_tokens(conf_file, tokens):
         # The file is not in the current working dir.
         with cd(base_path):
             for key, value in tokens.iteritems():
-                sudo('sed -i.bak -r -e 's/\[%s\]/%s/g' %s' % (
+                sudo('sed -i.bak -r -e "s/\[%s\]/%s/g" %s' % (
                     key, value, file_name))
             sudo('rm %s.bak' % file_name)
     else:
         # filename only, not full path - assumes the current working dir is
         # the same as where the conf file is located
         for key, value in tokens.iteritems():
-            sudo('sed -i.bak -r -e 's/\[%s\]/%s/g' %s' % (
-                    key, value, file_name))
+            sudo('sed -i.bak -r -e "s/\[%s\]/%s/g" %s' % (
+                key, value, file_name))
             sudo('rm %s.bak' % file_name)
 
 

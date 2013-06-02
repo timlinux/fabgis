@@ -1,8 +1,9 @@
 from fabric.contrib.files import exists
 from fabric.api import run, cd, env, task, sudo
 import fabtools
-from fabgis import add_ubuntugis_ppa
-from .utilities import setup_env, update_git_checkout
+from common import add_ubuntugis_ppa
+from .common import setup_env
+from .utilities import update_git_checkout
 from .system import setup_ccache
 from gdal import build_gdal
 from postgres import create_postgis_1_5_db
@@ -45,6 +46,7 @@ def compile_qgis(build_path, build_prefix, gdal_from_source=False):
     fabtools.require.deb.package('grass')
     fabtools.require.deb.package('git')
     fabtools.require.deb.package('python-gdal')
+    fabtools.require.deb.package('libfcgi-dev')
     # Ensure we always have a clean build dir
     if exists(build_path):
         run('rm -rf %s' % build_path)

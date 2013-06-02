@@ -1,9 +1,9 @@
 from fabric.contrib.files import exists
-from .utilities import setup_env
 import fabtools
 from fabric.api import fastprint, run, cd, env, task, sudo
 from .utilities import append_if_not_present, update_git_checkout
 from .postgres import require_postgres_user
+from .common import setup_env
 
 
 @task

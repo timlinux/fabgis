@@ -2,9 +2,11 @@
   <dictionary name="timlinux">
     <words>
       <w>createdb</w>
+      <w>dbname</w>
       <w>debian</w>
       <w>developmentseed</w>
       <w>dhcp</w>
+      <w>fdict</w>
       <w>iface</w>
       <w>ifdown</w>
       <w>ifup</w>

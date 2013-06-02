@@ -1,3 +1,7 @@
+import fabtools
+from fabric.api import task, sudo
+
+
 @task
 def setup_latex():
     """Install latex and friends needed to generate sphinx PDFs."""
@@ -19,4 +23,3 @@ def setup_sphinx():
 def setup_transifex():
     """Install transifex client."""
     sudo('pip install transifex-client')
-

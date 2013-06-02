@@ -3,7 +3,8 @@ import time
 from fabric.contrib.files import contains, exists
 from fabric.api import run, cd, env, task, sudo, put
 import fabtools
-from .utilities import setup_env, append_if_not_present, replace_tokens
+from .utilities import append_if_not_present, replace_tokens
+from .common import setup_env
 
 
 @task

@@ -1,8 +1,7 @@
-from .utilities import setup_env
 from .system import setup_ccache
 import fabtools
 from fabric.contrib.files import exists, append
-from fabgis import add_ubuntugis_ppa
+from common import add_ubuntugis_ppa, setup_env
 from fabric.api import fastprint, run, cd, env, task, sudo, settings
 
 
