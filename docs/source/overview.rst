@@ -1,7 +1,7 @@
 .
 
-FabGIS
-======
+.. image:: _static/fabgis-overview.png
+   :align: center
 
 'Fabric tasks for the busy FOSSGIS professional'
 
@@ -10,6 +10,8 @@ the deployment of FOSSGIS services onto services. By commodotise we mean
 'treat servers as expendible and rapidly replaceable entities that can be
 deployed either singularly or en masse'.
 
+.. note:: This project is still in its infancy, we have not achieved all our
+  goals for initial functionality yet.
 
 .. warning:: While we try our best to make stable and reliable tasks,
   there is the inherant danger that these tasks may break some configuration
