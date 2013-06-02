@@ -1,3 +1,7 @@
+from fabric.contrib.files import contains, exists, append, sed
+import fabtools
+from fabric.api import env, task, sudo, local
+from .utilities import append_if_not_present
 
 
 def setup_developer_tools():
@@ -15,15 +19,12 @@ def setup_ccache():
     sudo('ln -fs /usr/bin/ccache /usr/local/bin/cc')
 
 
-
-
 @task
 def create_user():
     """Create a user on the remote system matching the user running this task.
     """
     fabtools.require.users.user(env.user)
     fabtools.require.users.sudoer(env.user)
-
 
 
 @task
@@ -210,7 +211,6 @@ def harden(ssh_port=22):
     sudo('sysctl -p')
 
 
-
 @task
 def setup_bridge():
     """Setup a network bridge for a machine with two nics."""
@@ -229,7 +229,6 @@ def setup_bridge():
         sudo('ifup eth0')
 
     fabtools.require.deb.package('dhcp3-server')
-
 
 
 @task

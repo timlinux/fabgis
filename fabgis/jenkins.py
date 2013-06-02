@@ -1,3 +1,9 @@
+import os
+import time
+from fabric.contrib.files import contains, exists
+from fabric.api import run, cd, env, task, sudo, put
+import fabtools
+from .utilities import setup_env, append_if_not_present, replace_tokens
 
 
 @task
@@ -22,15 +28,14 @@ def configure_jenkins(repo):
     provided jenkins and upstream jenkins
     """
     command1 = 'curl -L http://updates.jenkins-ci.org/update-center.json'
-    command2 = 'sed '1d;$d' > /var/lib/jenkins/updates/default.json'
+    command2 = 'sed "1d;$d" > /var/lib/jenkins/updates/default.json'
     jenkins = 'jenkins'
-    webpath = 'http://updates.jenkins-ci.org'
-
     sudo('mkdir -p /var/lib/jenkins/updates', user=jenkins)
     sudo('%s > /var/lib/jenkins/updates/default.json' % command1,
          user=jenkins)
     sudo('%s | %s' % (command1, command2), user=jenkins)
     deploy_jenkins_plugins(repo=repo)
+
 
 @task
 def deploy_jenkins_plugins(repo):
@@ -42,6 +47,7 @@ def deploy_jenkins_plugins(repo):
     :param repo: repository to use
     :return:
     """
+    webpath = 'http://updates.jenkins-ci.org'
     distribution = repo
     if distribution == 'upstream':
         command = 'java -jar /var/cache/jenkins/war/WEB-INF/jenkins-cli.jar'
@@ -195,4 +201,3 @@ def jenkins_deploy_website(site_url=None, use_upstream_repo=False):
     sudo('a2enmod proxy_http')
     sudo('a2ensite %s' % jenkins_apache_conf)
     sudo('service apache2 reload')
-

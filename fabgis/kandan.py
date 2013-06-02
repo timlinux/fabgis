@@ -1,10 +1,16 @@
+from fabric.contrib.files import exists
+from .utilities import setup_env
+import fabtools
+from fabric.api import fastprint, run, cd, env, task, sudo
+from .utilities import append_if_not_present, update_git_checkout
+from .postgres import require_postgres_user
+
 
 @task
 def setup_kandan(
         branch='master',
         user='kandan',
-        password='kandan',
-        delete_local_branches=False):
+        password='kandan'):
     """Set up the kandan chat server - see https://github.com/kandanapp/kandan.
 
     .. note:: I recommend setting up kandan in a vagrant instance."""
@@ -35,17 +41,18 @@ def setup_kandan(
         fabtools.require.deb.package('ruby-bundler')
         fabtools.require.deb.package('')
         sudo('gem install execjs')
-        append('config/database.yml', 'production:')
-        append('config/database.yml', 'adapter: postgresql')
-        append('config/database.yml', 'host: localhost')
-        append('config/database.yml', 'database: kandan_production')
-        append('config/database.yml', 'pool: 5')
-        append('config/database.yml', 'timeout: 5000')
-        append('config/database.yml', 'username: kandan')
-        append('config/database.yml', 'password: %s' % password)
+        append_if_not_present('config/database.yml', 'production:')
+        append_if_not_present('config/database.yml', '  adapter: postgresql')
+        append_if_not_present('config/database.yml', '  host: localhost')
+        append_if_not_present(
+            'config/database.yml', '  database: kandan_production')
+        append_if_not_present('config/database.yml', '  pool: 5')
+        append_if_not_present('config/database.yml', '  timeout: 5000')
+        append_if_not_present('config/database.yml', '  username: kandan')
+        append_if_not_present(
+            'config/database.yml', '  password: %s' % password)
         #run('RUBYLIB=/usr/lib/ruby/1.9.1/rubygems bundle exec rake db:create '
-        run('bundle exec rake db:create '
-            'db:migrate kandan:bootstrap')
+        run('bundle exec rake db:create db:migrate kandan:bootstrap')
 
     fastprint('Kandan server setup is complete. Use ')
     fastprint('fab <target> fabgis.fabgis.start_kandan')

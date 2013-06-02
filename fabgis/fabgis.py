@@ -1,11 +1,6 @@
-import os
-import time
-from fabric.api import *
-from fabric.utils import _AttributeDict as fdict
-from fabric.contrib.files import contains, exists, append, sed
+from fabric.api import env, task
 import fabtools
-# Don't remove even though its unused
-from fabtools.vagrant import vagrant
+
 
 env.roledefs = {
     'test': ['localhost'],
@@ -17,7 +12,6 @@ env.roledefs = {
 # Use ssh config if present
 #if os.path.exists('~/.ssh/config'):
 env.use_ssh_config = True
-
 env.fg = None
 
 
@@ -41,4 +35,3 @@ def setup_inasafe():
     fabtools.require.deb.package('python-numpy')
     fabtools.require.deb.package('python-qt4')
     fabtools.require.deb.package('python-nose')
-

@@ -1,17 +1,21 @@
 <component name="ProjectDictionaryState">
   <dictionary name="timlinux">
     <words>
+      <w>createdb</w>
       <w>debian</w>
+      <w>developmentseed</w>
       <w>dhcp</w>
       <w>iface</w>
       <w>ifdown</w>
       <w>ifup</w>
       <w>inet</w>
+      <w>mapbox</w>
       <w>netmask</w>
       <w>qtcreator</w>
       <w>roledefs</w>
       <w>texinfo</w>
       <w>texlive</w>
+      <w>tilemill</w>
       <w>ubuntu</w>
       <w>ubuntugis</w>
       <w>venv</w>

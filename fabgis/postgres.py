@@ -1,3 +1,8 @@
+from fabgis import add_ubuntugis_ppa
+from fabric.api import run, cd, env, task, sudo, get, put
+import fabtools
+from .utilities import setup_env, show_environment
+from .system import create_user
 
 
 @task
@@ -86,17 +91,17 @@ def create_postgis_1_5_template():
             encoding='UTF8')
         sql = ('UPDATE pg_database SET datistemplate = TRUE WHERE datname = '
                '\'template_postgis\';')
-        run('psql template1 -c '%s'' % sql)
+        run('psql template1 -c "%s"' % sql)
         run('psql template_postgis -f /usr/share/postgresql/'
             '9.1/contrib/postgis-1.5/postgis.sql')
         run('psql template_postgis -f /usr/share/postgresql/9'
             '.1/contrib/postgis-1.5/spatial_ref_sys.sql')
         grant_sql = 'GRANT ALL ON geometry_columns TO PUBLIC;'
-        run('psql template_postgis -c '%s'' % grant_sql)
+        run('psql template_postgis -c "%s"' % grant_sql)
         grant_sql = 'GRANT ALL ON geography_columns TO PUBLIC;'
-        run('psql template_postgis -c '%s'' % grant_sql)
+        run('psql template_postgis -c "%s"' % grant_sql)
         grant_sql = 'GRANT ALL ON spatial_ref_sys TO PUBLIC;'
-        run('psql template_postgis -c '%s'' % grant_sql)
+        run('psql template_postgis -c "%s"' % grant_sql)
 
 
 @task
@@ -111,14 +116,14 @@ def create_postgis_1_5_db(dbname, user):
 
     grant_sql = 'GRANT ALL ON schema public to %s;' % user
     # assumption is env.repo_alias is also database name
-    run('psql %s -c '%s'' % (dbname, grant_sql))
+    run('psql %s -c "%s"' % (dbname, grant_sql))
     grant_sql = (
         'GRANT ALL ON ALL TABLES IN schema public to %s;' % user)
     # assumption is env.repo_alias is also database name
-    run('psql %s -c '%s'' % (dbname, grant_sql))
+    run('psql %s -c "%s"' % (dbname, grant_sql))
     grant_sql = (
         'GRANT ALL ON ALL SEQUENCES IN schema public to %s;' % user)
-    run('psql %s -c '%s'' % (dbname, grant_sql))
+    run('psql %s -c "%s"' % (dbname, grant_sql))
 
 
 @task
@@ -151,4 +156,3 @@ def restore_postgres_dump(dbname, user=None):
         template='template_postgis',
         encoding='UTF8')
     run('pg_restore /tmp/%s | psql %s' % (my_file, dbname))
-

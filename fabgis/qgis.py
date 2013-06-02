@@ -1,3 +1,12 @@
+from fabric.contrib.files import exists
+from fabric.api import run, cd, env, task, sudo
+import fabtools
+from fabgis import add_ubuntugis_ppa
+from .utilities import setup_env, update_git_checkout
+from .system import setup_ccache
+from gdal import build_gdal
+from postgres import create_postgis_1_5_db
+
 
 @task
 def clone_qgis(branch='master', delete_local_branches=False):
@@ -116,4 +125,3 @@ def setup_qgis2_and_postgis():
     """
     create_postgis_1_5_db('gis', env.user)
     install_qgis2()
-
