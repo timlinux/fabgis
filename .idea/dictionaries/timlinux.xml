@@ -8,6 +8,13 @@
       <w>ifup</w>
       <w>inet</w>
       <w>netmask</w>
+      <w>qtcreator</w>
+      <w>roledefs</w>
+      <w>texinfo</w>
+      <w>texlive</w>
+      <w>ubuntu</w>
+      <w>ubuntugis</w>
+      <w>venv</w>
     </words>
   </dictionary>
 </component>
