@@ -3,7 +3,7 @@ from fabric.api import fastprint, run, cd, env, task, sudo
 from fabric.contrib.files import contains, exists, append
 import fabtools
 
-from .utilities import setup_env
+from .common import setup_env
 
 
 def update_git_checkout(code_path, url, repo_alias, branch='master'):
