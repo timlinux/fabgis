@@ -169,6 +169,7 @@ def setup_inasafe():
     fabtools.require.deb.package('python-qt4')
     fabtools.require.deb.package('python-nose')
 
+
 def compile_qgis(build_path, build_prefix, gdal_from_source=False):
 
     fabtools.require.deb.package('cmake-curses-gui')
@@ -344,17 +345,17 @@ def create_postgis_1_5_template():
             encoding='UTF8')
         sql = ('UPDATE pg_database SET datistemplate = TRUE WHERE datname = '
                '\'template_postgis\';')
-        run('psql template1 -c "%s"' % sql)
+        run('psql template1 -c '%s'' % sql)
         run('psql template_postgis -f /usr/share/postgresql/'
             '9.1/contrib/postgis-1.5/postgis.sql')
         run('psql template_postgis -f /usr/share/postgresql/9'
             '.1/contrib/postgis-1.5/spatial_ref_sys.sql')
         grant_sql = 'GRANT ALL ON geometry_columns TO PUBLIC;'
-        run('psql template_postgis -c "%s"' % grant_sql)
+        run('psql template_postgis -c '%s'' % grant_sql)
         grant_sql = 'GRANT ALL ON geography_columns TO PUBLIC;'
-        run('psql template_postgis -c "%s"' % grant_sql)
+        run('psql template_postgis -c '%s'' % grant_sql)
         grant_sql = 'GRANT ALL ON spatial_ref_sys TO PUBLIC;'
-        run('psql template_postgis -c "%s"' % grant_sql)
+        run('psql template_postgis -c '%s'' % grant_sql)
 
 
 @task
@@ -369,14 +370,14 @@ def create_postgis_1_5_db(dbname, user):
 
     grant_sql = 'GRANT ALL ON schema public to %s;' % user
     # assumption is env.repo_alias is also database name
-    run('psql %s -c "%s"' % (dbname, grant_sql))
+    run('psql %s -c '%s'' % (dbname, grant_sql))
     grant_sql = (
         'GRANT ALL ON ALL TABLES IN schema public to %s;' % user)
     # assumption is env.repo_alias is also database name
-    run('psql %s -c "%s"' % (dbname, grant_sql))
+    run('psql %s -c '%s'' % (dbname, grant_sql))
     grant_sql = (
         'GRANT ALL ON ALL SEQUENCES IN schema public to %s;' % user)
-    run('psql %s -c "%s"' % (dbname, grant_sql))
+    run('psql %s -c '%s'' % (dbname, grant_sql))
 
 
 @task
@@ -440,14 +441,13 @@ def start_tilemill():
     # Note port forward seems not to work well
     # Using this config on the vhost:
     #{
-    #  "listenHost": "0.0.0.0",
-    #  "coreUrl": "192.168.1.115:20009",
-    #  "tileUrl": "192.168.1.115:20008",
-    #  "files": "/usr/share/mapbox",
-    #  "server": true
+    #  'listenHost': '0.0.0.0',
+    #  'coreUrl': '192.168.1.115:20009',
+    #  'tileUrl': '192.168.1.115:20008',
+    #  'files': '/usr/share/mapbox',
+    #  'server': true
     #}
     # Worked, accessible from http://192.168.1.115:20009/
-
 
 
 @task
@@ -824,8 +824,7 @@ def update_git_checkout(code_path, url, repo_alias, branch='master'):
                 branches = run('git branch')
                 if branch not in branches:
                     print branches
-                    run('git branch --track %s origin/%s' %
-                         (branch, branch))
+                    run('git branch --track %s origin/%s' % (branch, branch))
                 if ('* %s' % branch) not in branches:
                     run('git checkout %s' % branch)
             else:
@@ -835,18 +834,18 @@ def update_git_checkout(code_path, url, repo_alias, branch='master'):
 
 @task
 def masquerade():
-    """Set up masquerading so that a box with two nics can act as a router.
+    """Set up masquerading so that a box with two NICs can act as a router.
     """
     # Set up masquerade so that one host can act as a NAT gateway for a network
     # of hosts.
     #http://forums.fedoraforum.org/archive/index.php/t-178224.html
     rc_file = '/etc/rc.local'
-    masq1 = '/sbin/iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE'
-    masq2 = 'echo 1 > /proc/sys/net/ipv4/ip_forward'
-    if not contains(rc_file, masq1):
+    rule_1 = '/sbin/iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE'
+    rule_2 = 'echo 1 > /proc/sys/net/ipv4/ip_forward'
+    if not contains(rc_file, rule_1):
         sed(rc_file, '^exit 0', '#exit 0', use_sudo=True)
-        append(rc_file, masq1, use_sudo=True)
-        append(rc_file, masq2, use_sudo=True)
+        append(rc_file, rule_1, use_sudo=True)
+        append(rc_file, rule_2, use_sudo=True)
 
 
 @task
@@ -872,9 +871,9 @@ def setup_bridge():
 @task
 def add_jenkins_repository():
     """Add the Jenkins latest repository"""
-    jenkins_url = "http://pkg.jenkins-ci.org/"
-    jenkins_key = jenkins_url + "debian/jenkins-ci.org.key"
-    jenkins_repo = jenkins_url + "debian binary/"
+    jenkins_url = 'http://pkg.jenkins-ci.org/'
+    jenkins_key = jenkins_url + 'debian/jenkins-ci.org.key'
+    jenkins_repo = jenkins_url + 'debian binary/'
     jenkins_apt_file = '/etc/apt/sources.list.d/jenkins-repository.list'
 
     run('wget -q -O - %s | sudo apt-key add -' % jenkins_key)
@@ -890,10 +889,10 @@ def configure_jenkins(repo):
     We have to update the json file if we want to switch between distribution
     provided jenkins and upstream jenkins
     """
-    command1 = "curl -L http://updates.jenkins-ci.org/update-center.json"
-    command2 = "sed '1d;$d' > /var/lib/jenkins/updates/default.json"
-    jenkins = "jenkins"
-    webpath = "http://updates.jenkins-ci.org"
+    command1 = 'curl -L http://updates.jenkins-ci.org/update-center.json'
+    command2 = 'sed '1d;$d' > /var/lib/jenkins/updates/default.json'
+    jenkins = 'jenkins'
+    webpath = 'http://updates.jenkins-ci.org'
 
     sudo('mkdir -p /var/lib/jenkins/updates', user=jenkins)
     sudo('%s > /var/lib/jenkins/updates/default.json' % command1,
@@ -912,8 +911,8 @@ def deploy_jenkins_plugins(repo):
     :return:
     """
     distribution = repo
-    if distribution == "upstream":
-        command = "java -jar /var/cache/jenkins/war/WEB-INF/jenkins-cli.jar"
+    if distribution == 'upstream':
+        command = 'java -jar /var/cache/jenkins/war/WEB-INF/jenkins-cli.jar'
 
         run('%s -s http://localhost:8080 install-plugin '
             '%s/download/plugins/github/1.5/github.hpi'
@@ -943,7 +942,7 @@ def deploy_jenkins_plugins(repo):
             % (command, webpath))
         sudo('sudo service jenkins restart')
     else:
-        command = "jenkins-cli"
+        command = 'jenkins-cli'
         # selecting a specific version
         run('%s -s http://localhost:8080 install-plugin '
             '%s/download/plugins/github/1.6/github.hpi' % (command, webpath))
@@ -982,7 +981,7 @@ def install_jenkins(use_upstream_repo=False):
 
     """
     if use_upstream_repo:
-        repo = "upstream"
+        repo = 'upstream'
         if fabtools.deb.is_installed('jenkins'):
             fabtools.deb.uninstall(['jenkins-common',
                                     'jenkins-cli',
@@ -994,7 +993,7 @@ def install_jenkins(use_upstream_repo=False):
         time.sleep(5)
         configure_jenkins(repo)
     else:
-        repo = "distribution"
+        repo = 'distribution'
         if os.path.exists('/etc/apt/sources.list.d/jenkins-repository.list'):
             sudo('rm /etc/apt/sources.list.d/jenkins-repository.list')
         fabtools.deb.update_index(quiet=True)
@@ -1021,12 +1020,12 @@ def jenkins_deploy_website(site_url=None, use_upstream_repo=False):
     sitename = site_url
 
     if not sitename:
-        sitename = "jenkins"
+        sitename = 'jenkins'
     else:
         sitename = site_url
 
     jenkins_apache_conf = ('fabgis.%s.conf' % (sitename))
-    jenkins_apache_conf_template = "fabgis.jenkins.conf.templ"
+    jenkins_apache_conf_template = 'fabgis.jenkins.conf.templ'
 
     with cd('/etc/apache2/sites-available/'):
         if not exists(jenkins_apache_conf):
@@ -1039,7 +1038,7 @@ def jenkins_deploy_website(site_url=None, use_upstream_repo=False):
                 'apache',
                 jenkins_apache_conf_template))
             put(local_file,
-                "/etc/apache2/sites-available/%s" %
+                '/etc/apache2/sites-available/%s' %
                 jenkins_apache_conf_template,
                 use_sudo=True)
 
@@ -1103,14 +1102,14 @@ def replace_tokens(conf_file, tokens):
         # The file is not in the current working dir.
         with cd(base_path):
             for key, value in tokens.iteritems():
-                sudo("sed -i.bak -r -e 's/\[%s\]/%s/g' %s" % (
+                sudo('sed -i.bak -r -e 's/\[%s\]/%s/g' %s' % (
                     key, value, file_name))
             sudo('rm %s.bak' % file_name)
     else:
         # filename only, not full path - assumes the current working dir is
         # the same as where the conf file is located
         for key, value in tokens.iteritems():
-            sudo("sed -i.bak -r -e 's/\[%s\]/%s/g' %s" % (
+            sudo('sed -i.bak -r -e 's/\[%s\]/%s/g' %s' % (
                     key, value, file_name))
             sudo('rm %s.bak' % file_name)
 
