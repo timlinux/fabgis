@@ -581,7 +581,8 @@ def setup_kandan(
         append('config/database.yml', 'timeout: 5000')
         append('config/database.yml', 'username: kandan')
         append('config/database.yml', 'password: %s' % password)
-        run('RUBYLIB=/usr/lib/ruby/1.9.1/rubygems bundle exec rake db:create '
+        #run('RUBYLIB=/usr/lib/ruby/1.9.1/rubygems bundle exec rake db:create '
+        run('bundle exec rake db:create '
             'db:migrate kandan:bootstrap')
 
     fastprint('Kandan server setup is complete. Use ')
