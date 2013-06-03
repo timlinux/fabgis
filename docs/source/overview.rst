@@ -1,4 +1,3 @@
-.
 
 .. image:: _static/fabgis-overview.png
    :align: center
@@ -52,17 +51,15 @@ use Ubuntu. The procedures will probably work on other debian derivatives.
 Support for other operating systems is not yet available.
 
 
-To get started, you need to install fabric and fabtools. This command will
-take care of that for you::
+Warning: These are examples and you should always test any proposed
+automated deployments thoroughly before trying them on a production server.
+I strongly recommend using vagrant for this kind of sandbox testing.
 
-    sudo pip install -r requirements.txt
+To use this fabfile, you should first install fabric and fabtools. The
+requirements file provided in this directory will let you do this easily by
+typing e.g.::
 
-We assume you have pip installed and that you are happy to install these as
-system packages. If not, consider deploying a venv in the fabgis root
-directory and activating it before trying any of the examples listed below.
-
-Testing with Vagrant
---------------------
+    sudo pip install requirements.txt
 
 You need to have a server to deploy to. The simplest use case is to deploy
 directly onto localhost. For testing we recommend and support using Vagrant
@@ -74,29 +71,33 @@ the Vagrant instance. A Vagrantfile is provided in this repository so that
 you can try out the tools provided by fabgis is a sandbox with no risk of
 damaging your production systems.
 
-To start you need to install vagrant on your system::
+To install vagrant, download the latest version from
+http://downloads.vagrantup.com/ (use the packages they provide rather than
+apt as the ubuntu package is old). The commands below will automate the
+installation of Vagrant on ubuntu.::
 
     wget -c http://files.vagrantup.com/packages/a7853fe7b7f08dbedbc934eb9230d33be6bf746f/vagrant_1.2.1_x86_64.deb
     sudo dpkg -i vagrant_1.2.1_x86_64.deb
 
 The download is around 20mb.
 
-.. note:: Don't use the one in apt - it is old (at the time of writing anyway).
+Assuming you are using a vagrant sandbox, you can use the Vagrantfile
+supplied with this repo to create your vagrant box. Note that there is a
+one time download of around 400mb to add the base image to your boxes
+collection. This command will initialise your vagrant sandbox.::
 
+    vagrant up
 
-Some examples
--------------
+Now you are ready to run your first fabgis task! Lets install QGIS master
+and PostgreSQL into our vagrant sandbox!::
 
-Here is how we might create a new postgis 1.5 instance on the target host::
+    fab vagrant build_server
 
-    fab vagrant create_postgis_1_5_db:dbname=test
+Now go off and have a cup of tea, when it is done your vagrant box should
+have everything set up. If you would like to try out your new QGIS you
+could do something like this::
 
+    ssh localhost -p 2222 -X /usr/local/qgis-master/bin/qgis
 
-
-Automated Install of QGIS 2.0 example
--------------------------------------
-
-This one command will download fabgis and checkout QGIS and all dependencies
-and install it on your system under /usr/local/qgis-master::
-
-    wget https://raw.github.com/timlinux/fabgis/master/install_fabgis.sh -O - | bash
+That will run your newly built QGIS instance and forward the display back
+to your local X-xerver.

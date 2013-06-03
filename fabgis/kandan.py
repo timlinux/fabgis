@@ -68,5 +68,5 @@ def start_kandan():
     if not exists(code_path):
         setup_kandan()
     else:
-        with code_path:
+        with cd(code_path):
             run('bundle exec thin start')
