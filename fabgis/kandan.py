@@ -13,6 +13,17 @@ def setup_kandan(
         password='kandan'):
     """Set up the kandan chat server - see https://github.com/kandanapp/kandan.
 
+    2  sudo apt-get install nodejs
+    3  sudo apt-get install ruby1.9.1-dev libxslt-dev libxml2-dev libpq-dev libsqlite3-dev
+    4  cd dev/ruby/kandan/
+    5  gem install execjs
+    6  sudo gem install execjs
+    7  bundle install
+    9  bundle exec rake db:create db:migrate kandan:bootstrap
+   10  bundle exec thin start
+
+
+
     .. note:: I recommend setting up kandan in a vagrant instance."""
     setup_env()
     fabtools.require.deb.package('git')
@@ -39,7 +50,6 @@ def setup_kandan(
         #fabtools.require.deb.package('bundler')
         # ub 12.04
         fabtools.require.deb.package('ruby-bundler')
-        fabtools.require.deb.package('')
         sudo('gem install execjs')
         append_if_not_present('config/database.yml', 'production:')
         append_if_not_present('config/database.yml', '  adapter: postgresql')

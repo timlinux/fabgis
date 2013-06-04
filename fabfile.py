@@ -71,7 +71,7 @@ def build_server():
         creation of your user on the remote host.
     """
     create_postgis_1_5_db('gis')
-    install_qgis2()
+    install_qgis2(gdal_from_source=True)
 
 
 @task

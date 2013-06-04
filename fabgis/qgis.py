@@ -58,13 +58,16 @@ def compile_qgis(build_path, build_prefix, gdal_from_source=False):
             owner=env.fg.user)
         os_version = run('cat /etc/issue.net')
         os_version = float(os_version.split(' ')[1])
+
         if os_version > 13:
             extra = '-DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython2.7.so'
         else:
             extra = ''
+
         if gdal_from_source:
             build_gdal()  # see that task for ecw and mrsid support
             extra += '-DGDAL_CONFIG=/usr/local/bin/gdal-config '
+
         cmake = ('cmake .. '
                  '-DCMAKE_INSTALL_PREFIX=%s '
                  '-DCMAKE_CXX_COMPILER:FILEPATH=/usr/local/bin/g++ '
@@ -89,7 +92,7 @@ def install_qgis1_8(gdal_from_source=False):
     clone_qgis(branch='release-1_8')
     workspace = '%s/cpp' % env.fg.workspace
     code_path = '%s/Quantum-GIS' % workspace
-    build_path = '%s/build-qgis18' % code_path
+    build_path = '%s/build-qgis18-fabgis' % code_path
     build_prefix = '/usr/local/qgis-1.8'
     compile_qgis(build_path, build_prefix, gdal_from_source)
 
@@ -115,7 +118,7 @@ def install_qgis2(gdal_from_source=False):
     clone_qgis(branch='master')
     workspace = '%s/cpp' % env.fg.workspace
     code_path = '%s/Quantum-GIS' % workspace
-    build_path = '%s/build-master' % code_path
+    build_path = '%s/build-master-fabgis' % code_path
     build_prefix = '/usr/local/qgis-master'
     compile_qgis(build_path, build_prefix, gdal_from_source)
 
