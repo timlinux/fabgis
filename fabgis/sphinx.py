@@ -15,7 +15,16 @@ def setup_latex():
 def setup_sphinx():
     """Install sphinx from pip.
 
-    We prefer from pip as ubuntu packages are usually old."""
+    We prefer packages from pip as ubuntu packages are usually old.
+    To build the Documentation we also need to check and update the
+    subjacent docutils installation"""
+    if fabtools.is_installed(docutils-common):
+        sudo('apt-get remove docutils-common')
+    if fabtools.is_installed(docutils-doc):
+        sudo('apt-get remove docutils-doc')
+    if fabtools.is_installed(python-docutils):
+        sudo('apt-get remove python-docutils')
+    sudo('pip install --upgrade docutils==0.10')
     sudo('pip install sphinx')
 
 
