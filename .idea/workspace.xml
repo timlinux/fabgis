@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2af6930f-ee2d-4716-a299-d7084d11f744" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/source/conf.py" afterPath="$PROJECT_DIR$/docs/source/conf.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/source/_static/bootstrap-2.3.1/css/bootstrap.min.css" afterPath="$PROJECT_DIR$/docs/source/_static/bootstrap-2.3.1/css/bootstrap.min.css" />
     </list>
     <ignored path="fabgis.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -28,6 +28,7 @@
     <file path="/utilities.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1371961402083" ignored="false" />
     <file path="/fabgis.apache.conf.templ" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1371963296612" ignored="false" />
     <file path="/conf.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1371964327421" ignored="false" />
+    <file path="/bootstrap.min.css" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1371964459953" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,10 +57,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="conf.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="conf.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/docs/source/conf.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="59" column="14" selection-start="1900" selection-end="1900" vertical-scroll-proportion="0.7456829">
+            <state line="59" column="14" selection-start="1900" selection-end="1900" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="bootstrap.min.css" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/docs/source/_static/bootstrap-2.3.1/css/bootstrap.min.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="8" column="126643" selection-start="126943" selection-end="126943" vertical-scroll-proportion="0.25938568">
               <folding />
             </state>
           </provider>
@@ -118,6 +128,7 @@
         <option value="$PROJECT_DIR$/resources/server_config/apache/fabgis.apache.conf.templ" />
         <option value="$PROJECT_DIR$/fabfile.py" />
         <option value="$PROJECT_DIR$/docs/source/conf.py" />
+        <option value="$PROJECT_DIR$/docs/source/_static/bootstrap-2.3.1/css/bootstrap.min.css" />
       </list>
     </option>
   </component>
@@ -267,6 +278,58 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="source" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fabgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fabgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="docs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="source" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="_static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fabgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fabgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="docs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="source" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="_static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bootstrap-2.3.1" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="css" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -469,13 +532,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/fabgis/utilities.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="0" selection-start="2361" selection-end="2361" vertical-scroll-proportion="0.57575756">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CHANGES.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state line="1" column="4" selection-start="81" selection-end="81" vertical-scroll-proportion="0.030497592">
@@ -579,7 +635,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/docs/source/conf.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="59" column="14" selection-start="1900" selection-end="1900" vertical-scroll-proportion="0.7456829">
+        <state line="59" column="14" selection-start="1900" selection-end="1900" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/source/_static/bootstrap-2.3.1/css/bootstrap.min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="126643" selection-start="126943" selection-end="126943" vertical-scroll-proportion="0.25938568">
           <folding />
         </state>
       </provider>
