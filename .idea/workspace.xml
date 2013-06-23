@@ -7,7 +7,7 @@
     <ignored path="fabgis.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1371960483199" ignored="false" />
-    <file path="/fabfile.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1371963853304" ignored="false" />
+    <file path="/fabfile.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1371964276696" ignored="false" />
     <file path="/requirements.txt" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1371963054730" ignored="false" />
     <file path="/README.rst" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366959712298" ignored="false" />
     <file path="$PROJECT_DIR$/../inasafe-dev/safe_qgis/dock.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366705422982" ignored="false" />
@@ -49,7 +49,16 @@
       <file leaf-file-name="fabfile.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fabfile.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="98" column="55" selection-start="3136" selection-end="3136" vertical-scroll-proportion="0.9123077">
+            <state line="42" column="43" selection-start="1538" selection-end="1538" vertical-scroll-proportion="0.3276923">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sphinx.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fabgis/sphinx.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="16" selection-start="361" selection-end="373" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -449,13 +458,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/fabgis/postgres.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="176" column="48" selection-start="6118" selection-end="6118" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.rst">
       <provider selected="true" editor-type-id="text-editor">
         <state line="83" column="13" selection-start="3445" selection-end="3445" vertical-scroll-proportion="0.0">
@@ -557,9 +559,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/fabgis/sphinx.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="16" selection-start="361" selection-end="373" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/fabfile.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="98" column="55" selection-start="3136" selection-end="3136" vertical-scroll-proportion="0.9123077">
+        <state line="42" column="43" selection-start="1538" selection-end="1538" vertical-scroll-proportion="0.3276923">
           <folding />
         </state>
       </provider>

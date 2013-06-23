@@ -40,13 +40,13 @@
 #
 # Tim Sutton, Jan 2013
 #
-from fabric.api import task, hosts
+from fabric.api import task, hosts, cd, run
 from fabgis.postgres import create_postgis_1_5_db, get_postgres_dump
 from fabgis.qgis import install_qgis2
 from fabgis.system import create_user
 # You can also make generic tasks available at the command line simply by
 # importing them. e.g.
-from fabgis.kandan import start_kandan
+from fabgis.sphinx import setup_sphinx
 
 # For vagrant support you need to do this:
 from fabtools.vagrant import vagrant
