@@ -2,19 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2af6930f-ee2d-4716-a299-d7084d11f744" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fabgis/kandan.py" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CHANGES.txt" afterPath="$PROJECT_DIR$/CHANGES.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/source/api.rst" afterPath="$PROJECT_DIR$/docs/source/api.rst" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fabgis/jenkins.py" afterPath="$PROJECT_DIR$/fabgis/jenkins.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/source/overview.rst" afterPath="$PROJECT_DIR$/docs/source/overview.rst" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fabgis/utilities.py" afterPath="$PROJECT_DIR$/fabgis/utilities.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/server_config/apache/fabgis.apache.conf.templ" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/requirements.txt" afterPath="$PROJECT_DIR$/requirements.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="fabgis.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1371960483199" ignored="false" />
     <file path="/fabfile.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1367140672673" ignored="false" />
-    <file path="/requirements.txt" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366704108895" ignored="false" />
+    <file path="/requirements.txt" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1371963054730" ignored="false" />
     <file path="/README.rst" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366959712298" ignored="false" />
     <file path="$PROJECT_DIR$/../inasafe-dev/safe_qgis/dock.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366705422982" ignored="false" />
     <file path="$PROJECT_DIR$/../inasafe-dev/realtime/shake_event.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1366705422982" ignored="false" />
@@ -32,6 +28,7 @@
     <file path="/postgres.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1371959916876" ignored="false" />
     <file path="/CHANGES.txt" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1371960947464" ignored="false" />
     <file path="/utilities.py" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1371961402083" ignored="false" />
+    <file path="/fabgis.apache.conf.templ" changelist="2af6930f-ee2d-4716-a299-d7084d11f744" time="1371963296612" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,28 +48,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="overview.rst" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/docs/source/overview.rst">
+      <file leaf-file-name="fabgis.apache.conf.templ" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/resources/server_config/apache/fabgis.apache.conf.templ">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="50" column="4" selection-start="2244" selection-end="2244" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="api.rst" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/docs/source/api.rst">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="0" selection-start="403" selection-end="403" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="jenkins.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/fabgis/jenkins.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="110" column="8" selection-start="4673" selection-end="4673" vertical-scroll-proportion="0.38">
+            <state line="0" column="18" selection-start="18" selection-end="18" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -100,7 +79,6 @@
       <list>
         <option value="$PROJECT_DIR$/test.sh" />
         <option value="$PROJECT_DIR$/Vagrantfile" />
-        <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/scrap.py" />
         <option value="$PROJECT_DIR$/README.rst" />
         <option value="$PROJECT_DIR$/fabfile.py" />
@@ -111,6 +89,8 @@
         <option value="$PROJECT_DIR$/fabgis/utilities.py" />
         <option value="$PROJECT_DIR$/docs/source/api.rst" />
         <option value="$PROJECT_DIR$/fabgis/jenkins.py" />
+        <option value="$PROJECT_DIR$/requirements.txt" />
+        <option value="$PROJECT_DIR$/resources/server_config/apache/fabgis.apache.conf.templ" />
       </list>
     </option>
   </component>
@@ -173,6 +153,60 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fabgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fabgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="server_config" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fabgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fabgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="server_config" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apache" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fabgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fabgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="fabgis" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -222,6 +256,11 @@
     <property name="FullScreen" value="false" />
     <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources/server_config/apache" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration default="true" type="tests" factoryName="Nosetests">
@@ -403,30 +442,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../inasafe-dev/fabfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="96" column="79" selection-start="0" selection-end="15238" vertical-scroll-proportion="0.43734014" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="28" selection-start="52" selection-end="52" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Vagrantfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="0" selection-start="511" selection-end="511" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="9" selection-start="23" selection-end="23" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fabgis/postgres.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="176" column="48" selection-start="6118" selection-end="6118" vertical-scroll-proportion="0.0">
@@ -493,23 +508,51 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/docs/source/overview.rst">
+    <entry file="file://$PROJECT_DIR$/fabgis/jenkins.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="4" selection-start="2244" selection-end="2244" vertical-scroll-proportion="0.0">
+        <state line="110" column="8" selection-start="4673" selection-end="4673" vertical-scroll-proportion="0.38">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="6" selection-start="69" selection-end="69" vertical-scroll-proportion="0.087692305">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/server_config/apache/fabgis.jenkins.conf.templ">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="2" selection-start="763" selection-end="782" vertical-scroll-proportion="0.76">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/server_config/apache/fabgis.django.apache.conf.templ">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="0" selection-start="1003" selection-end="1079" vertical-scroll-proportion="0.83516484">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/docs/source/api.rst">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="0" selection-start="403" selection-end="403" vertical-scroll-proportion="0.0">
+        <state line="36" column="0" selection-start="403" selection-end="403" vertical-scroll-proportion="0.35692307">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fabgis/jenkins.py">
+    <entry file="file://$PROJECT_DIR$/docs/source/overview.rst">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="110" column="8" selection-start="4673" selection-end="4673" vertical-scroll-proportion="0.38">
+        <state line="50" column="4" selection-start="2244" selection-end="2244" vertical-scroll-proportion="0.029827315">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/server_config/apache/fabgis.apache.conf.templ">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="18" selection-start="18" selection-end="18" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
