@@ -69,7 +69,7 @@
       <file leaf-file-name="bootstrap.min.css" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/docs/source/_static/bootstrap-2.3.1/css/bootstrap.min.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="126643" selection-start="126943" selection-end="126943" vertical-scroll-proportion="0.25938568">
+            <state line="8" column="1275" selection-start="1569" selection-end="1573" vertical-scroll-proportion="0.25938568">
               <folding />
             </state>
           </provider>
@@ -642,7 +642,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/docs/source/_static/bootstrap-2.3.1/css/bootstrap.min.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="126643" selection-start="126943" selection-end="126943" vertical-scroll-proportion="0.25938568">
+        <state line="8" column="1275" selection-start="1569" selection-end="1573" vertical-scroll-proportion="0.25938568">
           <folding />
         </state>
       </provider>
