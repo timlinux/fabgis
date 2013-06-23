@@ -94,5 +94,5 @@ Utilities
 
 Helper utilities.
 
-.. automodule:: fabgis.utilitities
+.. automodule:: fabgis.utilities
    :members:
