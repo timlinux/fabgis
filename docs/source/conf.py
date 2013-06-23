@@ -57,7 +57,7 @@ copyright = u'2013, Tim Sutton, Werner Macho'
 # built documents.
 #
 # The short X.Y version.
-version = '0'
+version = '0.8'
 # The full version, including alpha/beta/rc tags.
 release = '0.8'
 
