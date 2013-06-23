@@ -89,3 +89,11 @@ def get_gis_dump():
 
     """
     get_postgres_dump('gis')
+
+@task
+def update_website():
+    """Update the website docs for fabgis."""
+    with cd('~/dev/python/fabgis/docs'):
+        run('git pull')
+        run('make clean')
+        run('../venv/bin/sphinx-build source build/html')
