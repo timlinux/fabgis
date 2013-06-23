@@ -8,15 +8,24 @@ from .common import setup_env
 
 def update_git_checkout(code_path, url, repo_alias, branch='master'):
     """Make sure there is a read only git checkout.
-    Args:
-        code_path: str - string which is the path to where the repo should be
-        url: str - the complete http url for cloning/checking out the repo
-        repo_alias: str - the alias name under which the repo should be
-        checked out.
-        branch: str - a string representing the name of the branch to build
-            from. Defaults to 'master'
+
+    :param code_path: the path to where the repo should be
+    :type code_path: str
+
+    :param url: complete http url for cloning/checking out the repo
+    :type url: str
+
+    :param repo_alias: alias name under which the repo should be checked out.
+    :type repo_alias: str
+
+    :param branch: string representing the name of the branch to build from.
+        Defaults to 'master'
+    :type branch: str
+
     To run e.g.::
+
         fab -H 188.40.123.80:8697 remote update_git_checkout
+
     """
     setup_env()
     repo_path = os.path.join(code_path, repo_alias)
@@ -53,24 +62,23 @@ def append_if_not_present(filename, text, use_sudo=False):
 def replace_tokens(conf_file, tokens):
     """Prepare a template config file by replacing its tokens.
 
-    Args:
-        * conf_file (str): Either a full path to a conf file name or just the
-            file name. In the latter case, it assumes the file is then in the
-            current working directory.
-        * tokens (dict): A dictionary of key-values that should be replaced
-            in the conf file.
+    :param conf_file: Either a full path to a conf file name or just the
+        file name. In the latter case, it assumes the file is then in the
+        current working directory.
+    :type conf_file: str
 
-    Returns:
-        None
+    :param tokens: A dictionary of key-values that should be replaced
+        in the conf file.
+    :type tokens: dic
 
-    Example tokens:
+    Example tokens::
 
-    my_tokens = {
-        'SERVERNAME': env.doc_site_name,  # Web Url e.g. foo.com
-        'WEBMASTER': 'werner@linfiniti.com',  # email of web master
-        'DOCUMENTROOT': webdir,  # Content root .e.g. /var/www
-        'SITENAME': sitename,  # Choosen name of jenkins 'root'
-    }
+        my_tokens = {
+            'SERVERNAME': env.doc_site_name,  # Web Url e.g. foo.com
+            'WEBMASTER': 'werner@linfiniti.com',  # email of web master
+            'DOCUMENTROOT': webdir,  # Content root .e.g. /var/www
+            'SITENAME': sitename,  # Choosen name of jenkins 'root'
+        }
 
     """
 

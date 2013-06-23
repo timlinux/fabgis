@@ -107,7 +107,8 @@ def install_jenkins(use_upstream_repo=False):
     """Add latest jenkins with adding jenkins project repository.
 
     .. note:: If you install only the distribution packaged version,
-    some of the plugins listed in the configure_jenkins target may not install.
+        some of the plugins listed in the configure_jenkins target may not
+        install.
 
     Args:
         use_upstream_repo - bool: (defaults to False). Whether to use the

@@ -47,8 +47,8 @@ Getting started
 ---------------
 
 .. note:: All documentation here assumes that your host and target systems
-use Ubuntu. The procedures will probably work on other debian derivatives.
-Support for other operating systems is not yet available.
+    use Ubuntu. The procedures will probably work on other debian derivatives.
+    Support for other operating systems is not yet available.
 
 
 Warning: These are examples and you should always test any proposed

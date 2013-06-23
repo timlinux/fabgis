@@ -36,15 +36,6 @@ Tools for deploying Jenkins CI
    :members:
 
 
-Kandan
--------
-
-Tools for deploying kandan chat server.
-
-.. automodule:: fabgis.kandan
-   :members:
-
-
 PostgreSQL
 ----------
 
