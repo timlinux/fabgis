@@ -1,3 +1,4 @@
+import os
 import fabtools
 from fabtools.postgres import create_user
 from fabric.api import run, cd, env, task, sudo, get, put
@@ -126,32 +127,92 @@ def create_postgis_1_5_db(dbname, user):
 
 
 @task
-def get_postgres_dump(dbname):
-    """Get a dump of the database from teh server."""
+def get_postgres_dump(dbname, ignore_permissions=False, file_name=None):
+    """Get a dump of the database from the server.
+
+    :param dbname: name of the database to restore the dump into.
+    :type dbname: str
+
+    :param ignore_permissions: whether permissions in the created dump
+        should be preserved.
+    :type ignore_permissions: bool (default False)
+
+    :param file_name: optional file name for the dump. The file name should
+        exclude any path. If file_name is ommitted, the dump will be written to
+        resources/sql/dumps/<dbname>->date>.dmp
+        where date is in the form dd-mm-yyyy. This is the default naming
+        convention used by the :func:`restore_postgres_dump` function below.
+    :type file_name: str
+    """
     setup_env()
-    date = run('date +%d-%B-%Y')
-    my_file = '%s-%s.dmp' % (dbname, date)
-    run('pg_dump -Fc -f /tmp/%s %s' % (my_file, dbname))
+
+    if file_name is None or file_name == '':
+        date = run('date +%d-%B-%Y')
+        my_file = '%s-%s.dmp' % (dbname, date)
+    else:
+        my_file = os.path.split(file_name)[1]
+        put(file_name, '/tmp/%s' % my_file)
+
+    if not ignore_permissions:
+        extra_args = ''
+    else:
+        extra_args = '-x -O'
+
+    run('pg_dump %s -Fc -f /tmp/%s %s' % (extra_args, my_file, dbname))
     get('/tmp/%s' % my_file, 'resources/sql/dumps/%s' % my_file)
 
 
 @task
-def restore_postgres_dump(dbname, user=None):
-    """Upload dump to host, remove existing db, recreate then restore dump."""
+def restore_postgres_dump(
+        dbname,
+        user=None,
+        ignore_permissions=False,
+        file_name=None):
+    """Upload dump to host, remove existing db, recreate then restore dump.
+
+    :param dbname: name of the database to restore the dump into.
+    :type dbname: str
+
+    :param user: user that the db should be restored for. The db user
+        will be used when restoring the db and the user will be created first
+        if needed.
+    :type user: str
+
+    :param ignore_permissions: whether permissions in the restored dump
+        should be retained.
+    :type ignore_permissions: bool (default False)
+
+    :param file_name: optional file name for the dump. If ommitted,
+        the dump will be assumed to exist in
+        resources/sql/dumps/<dbname>->date>.dmp
+        where date is in the form dd-mm-yyyy. This is the default naming
+        convention used by the :func:`get_postgres_dump` function above.
+    :type file_name: str
+    """
     setup_env()
     if user is None:
         user = env.fg.user
     show_environment()
     require_postgres_user(user)
-    create_user()
-    date = run('date +%d-%B-%Y')
-    my_file = '%s-%s.dmp' % (dbname, date)
-    put('resources/sql/dumps/%s' % my_file, '/tmp/%s' % my_file)
+    if file_name is None or file_name == '':
+        date = run('date +%d-%B-%Y')
+        my_file = '%s-%s.dmp' % (dbname, date)
+        put('resources/sql/dumps/%s' % my_file, '/tmp/%s' % my_file)
+    else:
+        my_file = os.path.split(file_name)[1]
+        put(file_name, '/tmp/%s' % my_file)
+
     if fabtools.postgres.database_exists(dbname):
         run('dropdb %s' % dbname)
+
     fabtools.require.postgres.database(
         '%s' % dbname,
         owner='%s' % user,
         template='template_postgis',
         encoding='UTF8')
-    run('pg_restore /tmp/%s | psql %s' % (my_file, dbname))
+
+    if not ignore_permissions:
+        extra_args = ''
+    else:
+        extra_args = '-x -O'
+    run('pg_restore %s /tmp/%s | psql %s' % (extra_args, my_file, dbname))
