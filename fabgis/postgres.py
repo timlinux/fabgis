@@ -164,6 +164,7 @@ def get_postgres_dump(dbname, ignore_permissions=False, file_name=None):
 def restore_postgres_dump(
         dbname,
         user=None,
+        password='',
         ignore_permissions=False,
         file_name=None):
     """Upload dump to host, remove existing db, recreate then restore dump.
@@ -175,6 +176,9 @@ def restore_postgres_dump(
         will be used when restoring the db and the user will be created first
         if needed.
     :type user: str
+
+    :param password: password to use for db connection - defaults to ''
+    :type password: str
 
     :param ignore_permissions: whether permissions in the restored dump
         should be retained.
@@ -191,7 +195,7 @@ def restore_postgres_dump(
     if user is None:
         user = env.fg.user
     show_environment()
-    require_postgres_user(user)
+    require_postgres_user(user, password=password)
     if file_name is None or file_name == '':
         date = run('date +%d-%B-%Y')
         my_file = '%s-%s.dmp' % (dbname, date)
