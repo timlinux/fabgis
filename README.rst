@@ -10,13 +10,13 @@ deployed either singularly or en masse'.
 
 
 .. warning:: While we try our best to make stable and reliable tasks,
-there is the inherant danger that these tasks may break some configuration
+    there is the inherant danger that these tasks may break some configuration
     on a running server. Before using in any production environment, test,
     test and test again in a sandboxed environment. We take NO RESPONSIBILITY
     for any bad things that may happen on your system.
 
 .. warning:: Yeah I know we are going a bit overboard with our warnings but
-please note that these scripts do not harden your server against intrusion
+    please note that these scripts do not harden your server against intrusion
     / maximum security - that is YOUR RESPONSIBILITY.
 
 To achieve this we use the wonderful fabric library (http://fabfile.org). If
