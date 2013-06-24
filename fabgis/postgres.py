@@ -83,7 +83,6 @@ def setup_postgis_1_5():
 def create_postgis_1_5_template():
     """Create the postgis template db."""
     if not fabtools.postgres.database_exists('template_postgis'):
-        create_user()
         setup_postgres_superuser(env.user)
         fabtools.require.postgres.database(
             'template_postgis',
@@ -110,7 +109,6 @@ def create_postgis_1_5_db(dbname, user):
     setup_postgis_1_5()
     setup_postgres_superuser(env.user)
     require_postgres_user(user)
-    create_user()
     fabtools.require.postgres.database(
         '%s' % dbname, owner='%s' % user, template='template_postgis')
 
