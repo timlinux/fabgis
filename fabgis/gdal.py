@@ -3,13 +3,19 @@ import fabtools
 from fabric.contrib.files import exists, append
 from common import add_ubuntugis_ppa, setup_env
 from fabric.api import fastprint, run, cd, env, task, sudo, settings
+from fabgis.proj4 import build_proj4
 
 
 @task
 def build_gdal(with_ecw=False, with_mrsid=False):
     """Clone or update GDAL from svn then build it.
 
-    :rtype: None
+    :param with_ecw: Whether to build with ecw support.
+    :type with_ecw: bool
+
+    :param with_mrsid: Whether to build with mrsid support.
+    :type with_mrsid: bool
+
     """
     setup_env()
     add_ubuntugis_ppa()
@@ -22,6 +28,10 @@ def build_gdal(with_ecw=False, with_mrsid=False):
     fabtools.require.deb.package('libjpeg62-dev')
     fabtools.require.deb.package('libtiff4-dev')
     fabtools.require.deb.package('python-dev')
+
+    # Note that gdal does not compile against proj4, only uses the .so at
+    # runtime
+    build_proj4()
 
     code_base = '%s/cpp' % env.fg.workspace
     code_path = '%s/gdal' % code_base
