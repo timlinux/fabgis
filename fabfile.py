@@ -41,10 +41,19 @@
 # Tim Sutton, Jan 2013
 #
 from fabric.api import task, hosts, cd, run
-from fabgis.postgres import create_postgis_1_5_db, get_postgres_dump
+from fabgis.postgres import (
+    create_postgis_1_5_db,
+    get_postgres_dump,
+    setup_nightly_backups)
 from fabgis.qgis import install_qgis2
 from fabgis.proj4 import build_proj4
 from fabgis.hdf import build_hdf5
+from fabgis.dropbox import (
+    setup_dropbox,
+    setup_dropbox_daemon,
+    dropbox_status,
+    start_dropbox,
+    stop_dropbox)
 from fabgis.system import create_user
 # You can also make generic tasks available at the command line simply by
 # importing them. e.g.

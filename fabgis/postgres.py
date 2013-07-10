@@ -1,8 +1,12 @@
+# coding=utf-8
+"""Postgres related fabric tasks and helpers."""
 import os
 import fabtools
+from fabric.contrib.files import exists
 from fabtools.postgres import create_user
 from fabric.api import run, cd, env, task, sudo, get, put
 from .common import setup_env, show_environment, add_ubuntugis_ppa
+from .utilities import replace_tokens
 
 
 @task
@@ -16,6 +20,7 @@ def require_postgres_user(user, password='', createdb=False):
     #sudo('apt-get upgrade')
     # wsgi user needs pg access to the db
     if not fabtools.postgres.user_exists(user):
+        # noinspection PyArgumentEqualDefault
         fabtools.postgres.create_user(
             name=user,
             password=password,
@@ -29,7 +34,12 @@ def require_postgres_user(user, password='', createdb=False):
 
 
 def setup_postgres_superuser(user, password=''):
-    if not fabtools.postgres.user_exists(env.user):
+    """Create a super user for postgresql.
+
+    :param user: User name for new super user.
+    :param password:  Password for new user.
+    """
+    if not fabtools.postgres.user_exists(user):
         fabtools.postgres.create_user(
             user,
             password=password,
@@ -84,6 +94,7 @@ def create_postgis_1_5_template():
     """Create the postgis template db."""
     if not fabtools.postgres.database_exists('template_postgis'):
         setup_postgres_superuser(env.user)
+        # noinspection PyArgumentEqualDefault
         fabtools.require.postgres.database(
             'template_postgis',
             owner='%s' % env.user,
@@ -105,7 +116,10 @@ def create_postgis_1_5_template():
 
 @task
 def create_postgis_1_5_db(dbname, user):
-    """Create a postgis database."""
+    """Create a postgis database.
+    :param dbname: Name of database to create.
+    :param user: User who should own the created db
+    """
     setup_postgis_1_5()
     setup_postgres_superuser(env.user)
     require_postgres_user(user)
@@ -203,6 +217,7 @@ def restore_postgres_dump(
     if fabtools.postgres.database_exists(dbname):
         run('dropdb %s' % dbname)
 
+    # noinspection PyArgumentEqualDefault
     fabtools.require.postgres.database(
         '%s' % dbname,
         owner='%s' % user,
@@ -214,3 +229,39 @@ def restore_postgres_dump(
     else:
         extra_args = '-x -O'
     run('pg_restore %s /tmp/%s | psql %s' % (extra_args, my_file, dbname))
+
+
+@task
+def setup_nightly_backups():
+    """Setup nightly backups for all postgresql databases.
+
+    The template script :file:`resources/server_config/cron/pg_backups` will
+    place the last 21 days of backups in the remote user's Dropbox directory
+    and will maintain 6 months of backups in their home directory.
+
+    .. seealso:: fabgis.dropbox for help on setting up dropbox on your server.
+    """
+    setup_env()
+    setup_postgres_superuser(env.fg.user)
+    with cd('/etc/cron.daily/'):
+        if exists('pg_backups'):
+            sudo('rm pg_backups')
+
+        local_dir = os.path.dirname(__file__)
+        local_file = os.path.abspath(os.path.join(
+            local_dir,
+            '..',
+            'resources',
+            'server_config',
+            'cron',
+            'pg_backups.templ'))
+        put(local_file,
+            '/etc/cron.daily/pg_backups',
+            use_sudo=True)
+
+        my_tokens = {'USER': env.fg.user, }
+        replace_tokens('/etc/cron.daily/pg_backups', my_tokens)
+
+    sudo('chmod +x /etc/cron.daily/pg_backups')
+    # Run once to verify it works
+    sudo('/etc/cron.daily/pg_backups')

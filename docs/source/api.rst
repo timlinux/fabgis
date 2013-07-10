@@ -80,10 +80,48 @@ Tools for deploying TileMill.
    :members:
 
 
+Proj4
+-----
+
+Tools for deploying proj4.
+
+.. automodule:: fabgis.proj4
+   :members:
+
+Hdf
+----
+
+Tools for deploying hdf support.
+
+.. automodule:: fabgis.hdf
+   :members:
+
 Utilities
 ---------
 
 Helper utilities.
 
 .. automodule:: fabgis.utilities
+   :members:
+
+Dropbox
+-------
+
+Tools to help you set up drop box on your server.
+
+Unfortunately we can't run this fully automated due to an issue with fabric
+that prevents using ctrl-c on the remove host (needed to halt the initial
+dropboxd command needed to set up the dropbox synced account).
+
+So for example you need to do::
+
+    fab vagrant setup_dropbox
+
+Then once your account is linked, press Ctrl-c - which will also
+terminate the above fabric job. Then run::
+
+    fab vagrant setup_dropbox_daemon
+
+
+.. automodule:: fabgis.dropbox
    :members:

@@ -1,12 +1,13 @@
 # coding=utf-8
 """Helpers for installing proj4"""
-from .system import setup_ccache
+
 import fabtools
 from fabric.contrib.files import exists
-from common import setup_env
 from fabric.api import fastprint, run, cd, env, task, sudo, settings
-from utilities import append_if_not_present
 
+from .system import setup_ccache
+from .common import setup_env
+from .utilities import append_if_not_present
 
 @task
 def build_proj4(version='4.8.0'):

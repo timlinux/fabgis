@@ -1,3 +1,4 @@
+v0.11.0, 10 July 2013 == Added tools for dropbox, proj, pg backups, hdf
 v0.9.1, 24 June 2013 -- Fixed version numbers
 v0.9, 24 June 2013 -- Removed bogus create user calls in pg template creation.
 v0.8, 23 June 2013 -- Added build_gdal task. Added permissions options to db

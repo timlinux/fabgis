@@ -1,9 +1,12 @@
-from .system import setup_ccache
+# coding=utf-8
+"""Module for gdal related tasks"""
 import fabtools
 from fabric.contrib.files import exists, append
-from common import add_ubuntugis_ppa, setup_env
 from fabric.api import fastprint, run, cd, env, task, sudo, settings
-from fabgis.proj4 import build_proj4
+
+from .common import add_ubuntugis_ppa, setup_env
+from .system import setup_ccache
+from .proj4 import build_proj4
 
 
 @task

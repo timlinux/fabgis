@@ -1,0 +1,42 @@
+#!/bin/bash
+
+#################################################################
+#
+# Template script to automatically perform posgres backups on a
+# nightly basis. The USER tokens below (including square brackets)
+# will be replaced by the user name that the backups should be
+# done by. This is done by the fabric script.
+#
+# Tim Sutton, July 2013
+#
+#################################################################
+MYDATE=`date +%d-%B-%Y`
+BASEDIR=/home/[USER]/sql_backups/
+MYBACKUPDIR=$BASEDIR/$(date +%Y)/$(date +%B)
+mkdir -p $MYBACKUPDIR
+sudo chown -R [USER].[USER] $BASEDIR
+
+DBLIST=$(sudo -u [USER] psql -l | awk '{print $1}' | grep -v "+" | grep -v "Name" | grep -v "List" | grep -v "(" | grep -v "template" | grep -v "postgres" | grep -v "|")
+for DB in ${DBLIST}
+do
+  echo "Backing up $DB"
+  FILENAME=${MYBACKUPDIR}/PG_${DB}.${MYDATE}.dmp
+  sudo -u [USER] pg_dump -i -Fc -f ${FILENAME} -x -O ${DB}
+done
+
+# We keep two backup directories:
+# ~/Dropbox/sql_backups - contains backups made in the last 21 days
+# ~/sql_backups - contains backups for the last 6 months
+
+# Copy backups over to [USER]s dropbox
+DROPBOXDIR=/home/[USER]/Dropbox/sql_backups
+mkdir -p $DROPBOXDIR
+LATEST=$(find $BASEDIR -mtime -7 -type f)
+cp $LATEST $DROPBOXDIR
+# Delete older backups
+find $DROPBOXDIR -mtime +21 -type f -delete
+# Set proper permissions
+sudo chown -R [USER].[USER] $DROPBOXDIR
+
+# Now clean away older backups from the $BASEDIR
+find $BASEDIR -mtime +180 -type f -delete
