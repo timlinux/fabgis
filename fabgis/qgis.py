@@ -1,3 +1,5 @@
+# coding=utf-8
+"""QGIS related build tools."""
 from fabric.contrib.files import exists
 from fabric.api import run, cd, env, task, sudo
 import fabtools
@@ -13,10 +15,12 @@ from postgres import create_postgis_1_5_db
 def clone_qgis(branch='master', delete_local_branches=False):
     """Clone or update QGIS from git.
 
-    :param branch: the name of the branch to build from. Defaults to 'master'
-    :type branch: basestring
+    :param branch: Name of the branch to build from. Defaults to 'master'
+    :type branch: str
 
-    :rtype: None
+    :param delete_local_branches: Whether existing local branches should be
+        pruned away from git.
+    :type delete_local_branches: bool
     """
     setup_env()
     fabtools.require.deb.package('git')
@@ -40,6 +44,22 @@ def clone_qgis(branch='master', delete_local_branches=False):
 
 
 def compile_qgis(build_path, build_prefix, gdal_from_source=False):
+    """Compile QGIS including installation of built tools and dependencies.
+
+
+    :param build_path: Path to the cmake build dir that should be used. Path
+        must point to under the QGIS git checkout dir. e.g.
+        Quantum-GIS/build-fabgis.
+    :type build_path: str
+
+    :param build_prefix: Path where the QGIS binaries should be installed to.
+        e.g. /usr/local/qgis-master
+    :type build_prefix: str
+
+    :param gdal_from_source: Whether gdal should be built from source.
+        Default False.
+    :type gdal_from_source: bool
+    """
 
     fabtools.require.deb.package('cmake-curses-gui')
     fabtools.require.deb.package('grass-dev')
@@ -84,7 +104,15 @@ def compile_qgis(build_path, build_prefix, gdal_from_source=False):
 
 @task
 def install_qgis1_8(gdal_from_source=False):
-    """Install QGIS 1.8 under /usr/local/qgis-1.8."""
+    """
+    Install QGIS 1.8 under /usr/local/qgis-1.8.
+
+    :param gdal_from_source: Whether gdal should be built from source.
+        Default False.
+    :type gdal_from_source: bool
+
+
+    """
     setup_env()
     add_ubuntugis_ppa()
     setup_ccache()
@@ -101,6 +129,10 @@ def install_qgis1_8(gdal_from_source=False):
 def install_qgis2(gdal_from_source=False):
     """Install QGIS 2 under /usr/local/qgis-master.
 
+    :param gdal_from_source: Whether gdal should be built from source.
+        Default False.
+    :type gdal_from_source: bool
+
     TODO: create one function from this and the 1.8 function above for DRY.
 
     """
@@ -109,7 +141,7 @@ def install_qgis2(gdal_from_source=False):
     add_ubuntugis_ppa()
     sudo('apt-get build-dep -y qgis')
 
-    fabtools.require.deb.package('python-pyspatialite')
+    #fabtools.require.deb.package('python-pyspatialite')
     fabtools.require.deb.package('python-psycopg2')
     fabtools.require.deb.package('python-qscintilla2')
     fabtools.require.deb.package('libqscintilla2-dev')
