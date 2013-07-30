@@ -22,13 +22,16 @@ def setup_ccache():
 
 
 @task
-def create_user(password):
+def create_user(user, password):
     """Create a user on the remote system matching the user running this task.
+
+    :param user: User name for the new user
+    :type user: str
 
     :param password: Password for new user
     :type password: str
     """
-    fabtools.require.users.user(env.user, password=password)
+    fabtools.require.users.user(user, password=password)
     fabtools.require.users.sudoer(env.user)
 
 
@@ -72,12 +75,14 @@ def harden(ssh_port=22):
     """
     # Create a user name because after we are done remote login as root will
     # be disabled. Username will match your local user.
+    user = prompt('Choose a user name')
     password = prompt('Choose a password for the new user')
-    create_user(password)
+
+    create_user(user, password)
     ssh_copy_id()  # this does not work on OSX
     if not contains('/etc/group', 'admin'):
         sudo('groupadd admin')
-    sudo('usermod -a -G admin %s' % env.user)
+    sudo('usermod -a -G admin %s' % user)
     sudo('dpkg-statoverride --update --add root admin 4750 /bin/su')
 
     fabtools.deb.update_index(quiet=True)
