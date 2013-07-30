@@ -20,6 +20,8 @@ def setup_tilemill():
     add_developmentseed_ppa()
     fabtools.require.deb.package('tilemill')
     fabtools.require.deb.package('libmapnik')
+    # TODO: switch to using nodeenv
+    # SEE: https://github.com/ekalinin/nodeenv
     fabtools.require.deb.package('nodejs')
 
 
