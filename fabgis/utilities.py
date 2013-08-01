@@ -64,12 +64,17 @@ def replace_tokens(conf_file, tokens):
 
     :param conf_file: Either a full path to a conf file name or just the
         file name. In the latter case, it assumes the file is then in the
-        current working directory.
+        current working directory. It the file name ends in '.templ',
+        a copy will be made and the takens replaced in the copy. Otherwise
+        the original file will be manipulated.
     :type conf_file: str
 
     :param tokens: A dictionary of key-values that should be replaced
         in the conf file.
     :type tokens: dic
+
+    :returns: Path to the replaced file.
+    :rtype: str
 
     Example tokens::
 
@@ -105,7 +110,7 @@ def replace_tokens(conf_file, tokens):
             sudo('sed -i.bak -r -e "s/\[%s\]/%s/g" %s' % (
                 key, value, file_name))
             sudo('rm %s.bak' % file_name)
-
+    return file_name
 
 @task
 def setup_venv(requirements_file='requirements.txt'):

@@ -62,6 +62,17 @@ def setup_mosh():
     fabtools.require.deb.package('mosh')
 
 
+def get_ip_address():
+    """Get the ip address of the remote host.
+
+    :returns: Ip address of the remote host.
+    :rtype: str
+    """
+    host_ip = sudo(
+        "ifconfig eth0 | grep 'inet addr:'| "
+        "cut -d: -f2 | awk '{print $1}'")
+    return host_ip
+
 @task
 def harden(ssh_port=22):
     """Harden the server a little.

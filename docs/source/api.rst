@@ -71,6 +71,14 @@ System related tools.
    :members:
 
 
+Tilestream
+----------
+
+Tools for deploying Tilestream
+
+.. automodule:: fabgis.tilestream
+   :members:
+
 Tilemill
 --------
 

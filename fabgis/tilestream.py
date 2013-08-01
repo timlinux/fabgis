@@ -10,11 +10,12 @@
 """
 import os
 
-from fabric.api import fastprint, task, sudo, run, cd, env
-import fabtools
+from fabric.api import fastprint, task, sudo, run, cd, env, put
 from fabtools.files import exists
 from fabtools import require
 from .common import setup_env
+from .utilities import replace_tokens
+from .system import get_ip_address
 
 
 @task
@@ -67,8 +68,112 @@ def setup_tilestream():
 
 
 @task
+def setup_tilestream_daemon(
+        tile_dir=None, ui_port=8888, tiles_port=8888, tile_host=None):
+    """Start the tilestream service - ensure it is installed first.
+
+    :param tile_dir: Optional directory on the remote tile_host that holds one or
+        more mbtiles files to be published. If ommitted the default of
+        `~/Documents/MapBox/tiles` will be used by tilestream. Be sure to
+        escape and paths given here. e.g.:
+
+            fab vagrant setup_tilestream_daemon:tile_dir='\/vagrant'
+
+    :type tile_dir: str
+
+    :param ui_port: Port on which the tilestream ui should be available.
+    :type ui_port: int
+
+    :param tiles_port: Port on which tilestream tile service should be
+        available. You may want to use a different port here and then run a
+        CDN such as cloudflare in front of the tile service.
+    :type tiles_port: int
+
+    :param tile_host: Host name under which the service will run. Must match the
+        hostname to which requests are made (even if you run it behind mod
+        proxy). If none it will be set to the IP address of the tile_host.
+    :type tile_host: str
+
+
+    ############################
+    ############################
+     This task doesnt work lekker yet!!!
+    ############################
+    ############################
+
+
+    """
+    setup_env()
+    params = _build_parameters(tile_host, tile_dir, tiles_port, ui_port)
+    template_file = 'tilestream.templ'
+    template_path = os.path.abspath(os.path.join(
+        os.path.dirname(__file__),
+        os.path.pardir,
+        'resources',
+        'server_config',
+        'tilestream',
+        '%s' % template_file
+    ))
+    remote_path = '/tmp/%s' % template_file
+    fastprint(template_path, remote_path)
+    put(template_path, remote_path)
+    binary = 'index.js'
+    if not tile_host:
+        tile_host = get_ip_address()
+    tokens = {
+        'BINARY': binary,
+        'OPTIONS': params,
+        'USER': env.fg.user,
+        'TILES_DIR': tile_dir,
+        'TILES_PORT': tiles_port,
+        'UI_PORT': ui_port,
+        'HOST': tile_host}
+    replace_tokens(remote_path, tokens)
+    sudo('mv /tmp/tilestream /etc/init.d/')
+    sudo('chmod 755 /etc/init.d/tilestream')
+    sudo('/etc/init.d/tilestream start')
+    sudo('sysv -rc-conf --level 2345 tilestream on')
+
+
+def _build_parameters(host, tile_dir, tiles_port, ui_port):
+    """Helper to build the parameters needed for starting tilestream.
+
+    :param tile_dir: Optional directory on the remote host that holds one or
+        more mbtiles files to be published. If ommitted the default of
+        `~/Documents/MapBox/tiles` will be used by tilestream.
+    :type tile_dir: str
+
+    :param ui_port: Port on which the tilestream ui should be available.
+    :type ui_port: int
+
+    :param tiles_port: Port on which tilestream tile service should be
+        available. You may want to use a different port here and then run a
+        CDN such as cloudflare in front of the tile service.
+    :type tiles_port: int
+
+    :param host: Host name under which the service will run. Must match the
+        hostname to which requests are made (even if you run it behind mod
+        proxy).
+    :type host: str
+
+    :returns: A string containing parameters for starting tilestream.
+    :rtype: str
+    """
+    params = ''
+    if tile_dir is not None:
+        params += ' --tiles=%s' % tile_dir
+    params += ' --uiPort=%i' % ui_port
+    params += ' --tilePort=%i' % tiles_port
+    if host is not None:
+        params += ' --host=%s' % host
+    return params
+
+
+@task
 def start_tilestream(tile_dir=None, ui_port=8888, tiles_port=8888, host=None):
     """Start the tilestream service - ensure it is installed first.
+
+    Use this task when you want to start tilestream manually for testing.
 
     :param tile_dir: Optional directory on the remote host that holds one or
         more mbtiles files to be published. If ommitted the default of
@@ -90,7 +195,8 @@ def start_tilestream(tile_dir=None, ui_port=8888, tiles_port=8888, host=None):
 
     Example invocation of tilestream with all the bells and whistles::
 
-        start --host = 41.74.158.13 \
+        PATH=env/bin:$PATH ./index.js \
+            --host = 41.74.158.13 \
             --accesslog = /tmp/tilestream.log \
             --uiPort=8888 \
             --tilePort = 8889
@@ -99,13 +205,7 @@ def start_tilestream(tile_dir=None, ui_port=8888, tiles_port=8888, host=None):
     dev_dir = '/home/%s/dev/javascript' % env.fg.user
     tile_stream_dir = os.path.join(dev_dir, 'tilestream')
     with cd(tile_stream_dir):
-        params = ''
-        if tile_dir is not None:
-            params += ' --tiles=%s' % tile_dir
-        params += ' --uiPort=%i' % ui_port
-        params += ' --tilePort=%i' % tiles_port
-        if host is not None:
-            params += ' --host=%s' % host
+        params = _build_parameters(host, tile_dir, tiles_port, ui_port)
         run('PATH=env/bin:$PATH ./index.js %s' % params)
 
     fastprint(
