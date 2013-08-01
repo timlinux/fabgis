@@ -12,6 +12,8 @@ Contents:
    :maxdepth: 2
 
    overview
+   getting_started
+   changelog
    api
 
 

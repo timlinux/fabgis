@@ -41,14 +41,28 @@
 # Tim Sutton, Jan 2013
 #
 from fabric.api import task, hosts, cd, run
-from fabgis.postgres import create_postgis_1_5_db, get_postgres_dump
+from fabgis.postgres import (
+    create_postgis_1_5_db,
+    get_postgres_dump,
+    setup_nightly_backups)
+from fabgis.tilemill import setup_tilemill, start_tilemill
+from fabgis.tilestream import setup_tilestream, start_tilestream
 from fabgis.qgis import install_qgis2
+from fabgis.proj4 import build_proj4
+from fabgis.hdf import build_hdf5
+from fabgis.dropbox import (
+    setup_dropbox,
+    setup_dropbox_daemon,
+    dropbox_status,
+    start_dropbox,
+    stop_dropbox)
 from fabgis.system import create_user
 # You can also make generic tasks available at the command line simply by
 # importing them. e.g.
-from fabgis.sphinx import setup_sphinx
+#from fabgis.sphinx import setup_sphinx
 
 # For vagrant support you need to do this:
+# noinspection PyUnresolvedReferences
 from fabtools.vagrant import vagrant
 
 
@@ -70,6 +84,8 @@ def build_server():
         You need to run the create_user task separately to bootstrap the
         creation of your user on the remote host.
     """
+    build_proj4()
+    build_hdf5()
     create_postgis_1_5_db('gis')
     install_qgis2(gdal_from_source=True)
 

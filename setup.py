@@ -1,8 +1,10 @@
+# coding=utf-8
+"""Setup file for distutils / pypi."""
 from distutils.core import setup
 
 setup(
     name='fabgis',
-    version='0.10.0',
+    version='0.11.0',
     author='Tim Sutton',
     author_email='tim@linfiniti.com',
     packages=['fabgis', ],

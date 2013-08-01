@@ -1,4 +1,6 @@
-from fabric.contrib.files import contains, exists, append, sed
+# coding=utf-8
+"""Tools for setting up and hardening a system."""
+from fabric.contrib.files import contains, exists, append, sed, prompt
 import fabtools
 from fabric.api import env, task, sudo, local
 from .utilities import append_if_not_present
@@ -20,10 +22,16 @@ def setup_ccache():
 
 
 @task
-def create_user():
+def create_user(user, password):
     """Create a user on the remote system matching the user running this task.
+
+    :param user: User name for the new user
+    :type user: str
+
+    :param password: Password for new user
+    :type password: str
     """
-    fabtools.require.users.user(env.user)
+    fabtools.require.users.user(user, password=password)
     fabtools.require.users.sudoer(env.user)
 
 
@@ -40,9 +48,6 @@ def ssh_copy_id():
 def setup_mosh():
     """ Install mosh as a nice and always working kind of replacement to ssh
     """
-    """
-    :return:
-    """
     mosh_file = '/etc/ufw/applications.d/mosh'
     if not exists(mosh_file):
         sudo('touch %s' % mosh_file)
@@ -57,18 +62,41 @@ def setup_mosh():
     fabtools.require.deb.package('mosh')
 
 
+def get_ip_address():
+    """Get the ip address of the remote host.
+
+    :returns: Ip address of the remote host.
+    :rtype: str
+    """
+    host_ip = sudo(
+        "ifconfig eth0 | grep 'inet addr:'| "
+        "cut -d: -f2 | awk '{print $1}'")
+    return host_ip
+
 @task
 def harden(ssh_port=22):
     """Harden the server a little.
+
+    :param ssh_port:
 
     Warning: We make no claim that this makes your server intruder proof. You
     should always check any system yourself and make sure that it is
     adequately secured.
 
     """
+    # Create a user name because after we are done remote login as root will
+    # be disabled. Username will match your local user.
+    user = prompt('Choose a user name')
+    password = prompt('Choose a password for the new user')
+
+    create_user(user, password)
+    ssh_copy_id()  # this does not work on OSX
+    if not contains('/etc/group', 'admin'):
+        sudo('groupadd admin')
+    sudo('usermod -a -G admin %s' % user)
+    sudo('dpkg-statoverride --update --add root admin 4750 /bin/su')
+
     fabtools.deb.update_index(quiet=True)
-    #print fabtools.system.get_hostname()
-    #ssh_copy_id()
 
     # Set up ufw and mosh
     fabtools.require.deb.package('ufw')
@@ -98,7 +126,8 @@ def harden(ssh_port=22):
         'X11Forwarding no', use_sudo=True)
     sudo('ufw enable')
 
-    append('/etc/ssh/sshd_config', 'Banner /etc/issue.net', use_sudo=True)
+    append_if_not_present(
+        '/etc/ssh/sshd_config', 'Banner /etc/issue.net', use_sudo=True)
 
     append_if_not_present(
         '/etc/sysctl.conf',
@@ -123,7 +152,8 @@ def harden(ssh_port=22):
         'net.ipv4.icmp_ignore_bogus_error_responses = 1', use_sudo=True)
 
     fabtools.require.deb.package('denyhosts')
-    fabtools.require.deb.package('mailutils')
+    # TODO: Figure out how to prevent interactive prompts
+    #fabtools.require.deb.package('mailutils')
     fabtools.require.deb.package('byobu')
     fabtools.service.restart('ssh')
 
@@ -133,12 +163,7 @@ def harden(ssh_port=22):
     secure_tmp = (
         'tmpfs     /dev/shm     tmpfs     defaults,noexec,'
         'nosuid     0     0')
-    append('/etc/fstab', secure_tmp, use_sudo=True)
-
-    if not contains('/etc/group', 'admin'):
-        sudo('groupadd admin')
-    sudo('usermod -a -G admin %s' % env.user)
-    sudo('dpkg-statoverride --update --add root admin 4750 /bin/su')
+    append_if_not_present('/etc/fstab', secure_tmp, use_sudo=True)
 
     sysctl = '/etc/sysctl.conf'
 
@@ -209,6 +234,11 @@ def harden(ssh_port=22):
         sysctl, 'net.ipv4.icmp_echo_ignore_all = 1', use_sudo=True)
 
     sudo('sysctl -p')
+    sudo('reboot')
+
+    print 'You need to log in and install mailutils yourself as automated ' \
+          'installation causes interactive prompting.'
+    print 'sudo apt-get install mailutils'
 
 
 @task
