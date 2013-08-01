@@ -26,13 +26,18 @@ using FABGIS on your host. The workflow is as follows:
     though you should be able to replicate everything we do here on a windows
     or OSX machine with minimal effort.
 
+For the lazy: You can get all the files and resources for this tutorial from
+here: http://github.com/timlinux/fabgis_tutorial/archive/master.zip (or
+clone the tutorial git repo here http://github.com/timlinux/fabgis_tutorial).
+
+
 Creating a python virtualenv
 ----------------------------
 
 First lets make a working directory::
 
-    mkdir ~/myproject
-    cd ~/myproject
+    mkdir ~/fabgis_tutorial
+    cd ~/fabgis_tutorial
 
 Next ensure that you have virtualenv installed::
 
@@ -47,7 +52,7 @@ Your prompt should now update itself to show that you are in the virtual
 environment. For example, after running the above command, mine looked like
 this::
 
-    (venv)timlinux@waterfall:myproject$
+    (venv)timlinux@waterfall:fabgis_tutorial$
 
 .. note:: You will need to reactivate the venv if you exit the shell and then
     want to continue working on your project.
@@ -124,6 +129,10 @@ Now paste the following into it::
       config.vm.network :public_network
       # For tilestream
       config.vm.network :forwarded_port, guest: 8888, host: 8888
+      # For tilemill
+      config.vm.network :forwarded_port, guest: 20008, host: 20008
+      # For tilemill
+      config.vm.network :forwarded_port, guest: 20009, host: 20009
       config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
     end
@@ -180,7 +189,7 @@ environment. Close gedit and from your command prompt do::
 
 You should see a nice message like this::
 
-    (venv)timlinux@waterfall:myproject$ fab help
+    (venv)timlinux@waterfall:fabgis_tutorial$ fab help
 
     Warning: Command(s) not found:
         help
@@ -222,13 +231,31 @@ some data into the VM for that. Luckily with vagrant and fabgis it is pretty
 simple to do that. Vagrant automatically mounts the host directory where the
 Vagrantfile exists into the guest virtual machine (under `/vagrant`). So for
 testing in the context of vagrant, simply copy a .mbtiles files into your
-working directory (where you created your fabfile and vagrant file). Next we
-start the tilestream FABGIS task again, but this time we are going to tell it
-to to use `/vagrant` as the tiles dir.::
+working directory (where you created your fabfile and vagrant file). Copy
+the fabgis.mbtile file provided at :
+
+http://github.com/timlinux/fabgis_tutorial/archive/master.zip
+
+Next we start the tilestream FABGIS task again, but this time we are going to
+tell it to to use `/vagrant` as the tiles dir.::
 
     fab vagrant start_tilestream:tile_dir=/vagrant
 
 Now point your browser again at http://localhost:8888 and you should see any
 tilesets you placed in your host system available in the web ui.
 
+Wrapping up
+-----------
+
+This concludes this introductory tutorial. If you want to play around more,
+I added a couple more tasks into the fabfile in the tutorial repository that
+will let you play with tilemill too::
+
+    fab vagrant setup_tilemill
+    fab vagrant start_tilemill
+
+Now point your browser at: http://localhost:20009/
+
+You can find out more about tilemill from their
+`website <http://www.mapbox.com/tilemill/>`_.
 
