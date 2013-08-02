@@ -2,4 +2,4 @@ Fabric==1.6.0
 fabtools>=0.13.0
 # only needed for building docs
 sphinx
-sphinx-bootstrap-theme==0.2.3
+-e git+http://github.com/timlinux/sphinx-bootstrap-theme.git#egg=sphinx-bootstrap-theme
