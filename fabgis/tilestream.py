@@ -72,10 +72,12 @@ def setup_tilestream_daemon(
         tile_dir=None, ui_port=8888, tiles_port=8888, tile_host=None):
     """Start the tilestream service - ensure it is installed first.
 
-    :param tile_dir: Optional directory on the remote tile_host that holds one or
-        more mbtiles files to be published. If ommitted the default of
+    .. warning:: This task does not work yet.
+
+    :param tile_dir: Optional directory on the remote tile_host that holds one
+        or more mbtiles files to be published. If ommitted the default of
         `~/Documents/MapBox/tiles` will be used by tilestream. Be sure to
-        escape and paths given here. e.g.:
+        escape and paths given here. e.g.::
 
             fab vagrant setup_tilestream_daemon:tile_dir='\/vagrant'
 
@@ -93,15 +95,6 @@ def setup_tilestream_daemon(
         hostname to which requests are made (even if you run it behind mod
         proxy). If none it will be set to the IP address of the tile_host.
     :type tile_host: str
-
-
-    ############################
-    ############################
-     This task doesnt work lekker yet!!!
-    ############################
-    ############################
-
-
     """
     setup_env()
     params = _build_parameters(tile_host, tile_dir, tiles_port, ui_port)
