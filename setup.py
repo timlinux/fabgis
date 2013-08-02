@@ -4,10 +4,11 @@ from distutils.core import setup
 
 setup(
     name='fabgis',
-    version='0.11.0',
+    version='0.12.0',
     author='Tim Sutton',
     author_email='tim@linfiniti.com',
     packages=['fabgis', ],
+    data_files=[],
     scripts=[],
     url='http://pypi.python.org/pypi/fabgis/',
     license='LICENSE.txt',

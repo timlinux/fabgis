@@ -1,2 +1,3 @@
 include *.txt
-recursive-include resources docs *.txt
+include fabgis_resources/*.*
+

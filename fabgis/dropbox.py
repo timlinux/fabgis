@@ -59,7 +59,7 @@ def setup_dropbox_daemon():
             local_file = os.path.abspath(os.path.join(
                 local_dir,
                 '..',
-                'resources',
+                '../fabgis_resources',
                 'server_config',
                 'dropbox',
                 'dropbox.templ'))

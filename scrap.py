@@ -231,8 +231,8 @@ def setup_venv():
 def setup_mapserver():
     # Clone and replace tokens in mapserver map file
     conf_dirs = [
-        '%s/resources/server_config/mapserver/mapfiles/' % (env.code_path),
-        '%s/resources/server_config/mapserver/apache-include/' % (
+        '%s/fabgis_resources/server_config/mapserver/mapfiles/' % (env.code_path),
+        '%s/fabgis_resources/server_config/mapserver/apache-include/' % (
             env.code_path)]
     for conf_dir in conf_dirs:
         for myFile in os.listdir(conf_dir):

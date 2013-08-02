@@ -1,13 +1,25 @@
-v0.11.0, 10 July 2013 == Added tools for dropbox, proj, pg backups, hdf
+v0.12.0, 2 August 2013 -- Tilemill and tilestream tasks working. Doc updates.
+
+v0.11.0, 10 July 2013 -- Added tools for dropbox, proj, pg backups, hdf
+
 v0.10.0, 24 June 2013 -- Added password option for pg restore dump
+
 v0.9.1, 24 June 2013 -- Fixed version numbers
+
 v0.9, 24 June 2013 -- Removed bogus create user calls in pg template creation.
-v0.8, 23 June 2013 -- Added build_gdal task. Added permissions options to db
-    dump and restore tasks.
+
+v0.8, 23 June 2013 -- Added build_gdal task. Added permissions options to db dump and restore tasks.
+
 v0.7, 13 May 2013 -- Improvements to QGIS setup process, added kandan chat task.
+
 v0.6, 3 May 2013 -- Fix invalid var references in get and restore pg methods
+
 v0.5, 3 May 2013 -- Fix invalid var references in get and restore pg methods
+
 v0.4, 2 May 2013 -- Fixed incorrect source path for QGIS sources.
+
 v0.3, 30 April 2013 -- Renamed setup_postgres_user methods. Add task decorators
+
 v0.2, 29 April 2013 -- Small Fixes
+
 v0.1, 29 April 2013 -- Initial release
