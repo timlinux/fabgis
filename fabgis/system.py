@@ -152,8 +152,9 @@ def harden(ssh_port=22):
         'net.ipv4.icmp_ignore_bogus_error_responses = 1', use_sudo=True)
 
     fabtools.require.deb.package('denyhosts')
-    # TODO: Figure out how to prevent interactive prompts
-    #fabtools.require.deb.package('mailutils')
+    # Must come before mailutils
+    fabtools.require.postfix.server(env.repo_site_name)
+    fabtools.require.deb.package('mailutils')
     fabtools.require.deb.package('byobu')
     fabtools.service.restart('ssh')
 
