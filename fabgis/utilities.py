@@ -116,6 +116,8 @@ def replace_tokens(conf_file, tokens):
 def setup_venv(code_path, requirements_file='requirements.txt'):
     """Initialise or update the virtual environment.
 
+    It will also ensure build-essential is installed, though you may need to
+    install required dev library using your own script.
 
     To run e.g.::
 
@@ -123,6 +125,8 @@ def setup_venv(code_path, requirements_file='requirements.txt'):
 
     """
     setup_env()
+    fabtools.require.deb.package('python-virtualenv')
+    fabtools.require.deb.package('build-essential')
     with cd(code_path):
         # Ensure we have a venv set up
         fabtools.require.python.virtualenv('venv')

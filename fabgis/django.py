@@ -1,7 +1,9 @@
 # coding=utf-8
 """Django related tasks."""
 
-from fabric.api import cd, task, sudo, fastprint
+import os
+from fabric.api import cd, task, sudo, fastprint, run
+from fabric.contrib.files import sed
 from fabric.contrib.files import exists
 from fabtools import require
 from .common import setup_env
@@ -76,3 +78,49 @@ def setup_apache(site_name, code_path, wsgi_user='wsgi'):
 
     require.service.restarted('apache2')
     return conf_file
+
+
+@task
+def build_pil(code_path):
+    """Build pil with proper support for jpeg etc.
+
+    :param code_path: Directory where the code lives.
+    :type code_path: str
+
+    .. note:: Any existing PIL will be uninstalled.
+    """
+    require.deb.package('libjpeg-dev')
+    require.deb.package('libfreetype6')
+    require.deb.package('libfreetype6-dev')
+
+    tcl = 'TCL_ROOT = None'
+    jpg = 'JPEG_ROOT = None'
+    zlib = 'ZLIB_ROOT = None'
+    tiff = 'TIFF_ROOT = None'
+    freetype = 'FREETYPE_ROOT = None'
+
+    tcl_value = (
+        'TCL_ROOT = "\/usr\/lib\/x86_64-linux-gnu\/", "\/usr\/include"')
+    jpg_value = (
+        'JPEG_ROOT = "\/usr\/lib\/x86_64-linux-gnu\/", "\/usr\/include"')
+    zlib_value = (
+        'ZLIB_ROOT = "\/usr\/lib\/x86_64-linux-gnu\/", "\/usr\/include"')
+    tiff_value = (
+        'TIFF_ROOT = "\/usr\/lib\/x86_64-linux-gnu\/", "\/usr\/include"')
+    freetype_value = (
+        'FREETYPE_ROOT = "\/usr\/lib\/x86_64-linux-gnu\/", "\/usr\/include"')
+
+    venv = os.path.join(code_path, 'venv')
+    with cd(venv):
+        run('bin/pip uninstall pil')
+        run('wget -c http://effbot.org/downloads/Imaging-1.1.7.tar.gz')
+        run('tar xfz Imaging-1.1.7.tar.gz')
+        with cd(os.path.join(venv, 'Imaging-1.1.7')):
+            sed('setup.py', tcl, tcl_value)
+            sed('setup.py', jpg, jpg_value)
+            sed('setup.py', zlib, zlib_value)
+            sed('setup.py', tiff, tiff_value)
+            sed('setup.py', freetype, freetype_value)
+            run('../bin/python setyp.py install')
+
+
