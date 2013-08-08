@@ -100,15 +100,15 @@ def build_pil(code_path):
     freetype = 'FREETYPE_ROOT = None'
 
     tcl_value = (
-        'TCL_ROOT = "\/usr\/lib\/x86_64-linux-gnu\/", "\/usr\/include"')
+        'TCL_ROOT = "/usr/lib/x86_64-linux-gnu/", "/usr/include"')
     jpg_value = (
-        'JPEG_ROOT = "\/usr\/lib\/x86_64-linux-gnu\/", "\/usr\/include"')
+        'JPEG_ROOT = "/usr/lib/x86_64-linux-gnu/", "/usr/include"')
     zlib_value = (
-        'ZLIB_ROOT = "\/usr\/lib\/x86_64-linux-gnu\/", "\/usr\/include"')
+        'ZLIB_ROOT = "/usr/lib/x86_64-linux-gnu/", "/usr/include"')
     tiff_value = (
-        'TIFF_ROOT = "\/usr\/lib\/x86_64-linux-gnu\/", "\/usr\/include"')
+        'TIFF_ROOT = "/usr/lib/x86_64-linux-gnu/", "/usr/include"')
     freetype_value = (
-        'FREETYPE_ROOT = "\/usr\/lib\/x86_64-linux-gnu\/", "\/usr\/include"')
+        'FREETYPE_ROOT = "/usr/lib/x86_64-linux-gnu/", "/usr/include"')
 
     venv = os.path.join(code_path, 'venv')
     with cd(venv):
