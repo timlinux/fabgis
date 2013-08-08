@@ -110,10 +110,10 @@ def replace_tokens(conf_file, tokens):
             sudo('sed -i.bak -r -e "s/\[%s\]/%s/g" %s' % (
                 key, value, file_name))
             sudo('rm %s.bak' % file_name)
-    return file_name
+    return conf_file
 
 @task
-def setup_venv(requirements_file='requirements.txt'):
+def setup_venv(code_path, requirements_file='requirements.txt'):
     """Initialise or update the virtual environment.
 
 
@@ -123,7 +123,7 @@ def setup_venv(requirements_file='requirements.txt'):
 
     """
     setup_env()
-    with cd(env.code_path):
+    with cd(code_path):
         # Ensure we have a venv set up
         fabtools.require.python.virtualenv('venv')
         run('venv/bin/pip install -r %s' % requirements_file)

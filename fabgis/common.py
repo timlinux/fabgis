@@ -23,7 +23,7 @@ def show_environment():
     setup_env()
     fastprint('\n-------------------------------------------------\n')
     for key, value in env.fg.iteritems():
-        fastprint('Key: %s \t\t Value: %s' % (key, value))
+        fastprint('Key: %s \t\t Value: %s\n' % (key, value))
     fastprint('-------------------------------------------------\n')
 
 

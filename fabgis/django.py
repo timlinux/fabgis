@@ -43,16 +43,16 @@ def setup_apache(site_name, code_path, wsgi_user='wsgi'):
     # Clone and replace tokens in apache conf
 
     conf_file = (
-        '%s/resources/server_config/apache/%s.apache.conf' % (
+        '%s/resources/server_config/apache/%s.apache.conf.templ' % (
             code_path, site_name))
 
     tokens = {
         'ESCAPEDSERVERNAME': '%s\.linfiniti\.com' % site_name,
         'SERVERNAME': 'changelog.linfiniti.com',
         'SITEUSER': 'wsgi',
-        'CODEPATH': code_path,
+        'CODEPATH': code_path.replace('/', '\/'),
         'SITENAME': site_name}
-
+    fastprint(tokens)
     conf_file = replace_tokens(conf_file, tokens)
 
     with cd('/etc/apache2/sites-available/'):
@@ -66,10 +66,11 @@ def setup_apache(site_name, code_path, wsgi_user='wsgi'):
     media_path = '%s/django_project/core/media' % code_path
     if not exists(media_path):
         sudo('mkdir %s' % media_path)
-        sudo('chown %s.%s %s' % (wsgi_user, wsgi_user, code_path))
+        sudo('chgrp -R %s %s' % (wsgi_user, media_path))
 
     sudo('a2ensite %s.apache.conf' % site_name)
     sudo('a2dissite default')
+    sudo('a2enmod rewrite')
     # Check if apache configs are ok - script will abort if not ok
     sudo('/usr/sbin/apache2ctl configtest')
 
