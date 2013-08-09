@@ -1,3 +1,5 @@
+v0.13.0, 9 August 2013 -- Added django module and PIL build task.
+
 v0.12.0, 2 August 2013 -- Tilemill and tilestream tasks working. Doc updates.
 
 v0.11.0, 10 July 2013 -- Added tools for dropbox, proj, pg backups, hdf

@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name='fabgis',
-    version='0.12.0',
+    version='0.13.0',
     author='Tim Sutton',
     author_email='tim@linfiniti.com',
     packages=['fabgis', ],
