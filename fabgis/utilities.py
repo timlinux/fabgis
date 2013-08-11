@@ -85,6 +85,7 @@ def replace_tokens(conf_file, tokens):
             'SITENAME': sitename,  # Choosen name of jenkins 'root'
         }
 
+    .. deprecated:: You should use fabric.contrib.files.upload_template rather.
     """
 
     if '.templ' == conf_file[-6:]:

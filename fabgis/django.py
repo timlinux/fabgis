@@ -3,11 +3,29 @@
 
 import os
 from fabric.api import cd, task, sudo, fastprint, run
-from fabric.contrib.files import sed
+from fabric.contrib.files import sed, upload_template
 from fabric.contrib.files import exists
 from fabtools import require
 from .common import setup_env
 from .utilities import replace_tokens
+
+
+@task
+def set_media_permissions(code_path, wsgi_user='wsgi'):
+    """Set the django media dir so apache can write to it.
+
+    :param code_path: Path to top level deploy dir. It will be assumed that
+        the media files live in ``<code_path>/django_project/media``.
+    :type code_path: str
+    :param wsgi_user: User that should receive write permissions to the folder.
+        Defaults to 'wsgi'.
+    :type wsgi_user: str
+    """
+
+    media_path = '%s/django_project/media' % code_path
+    if not exists(media_path):
+        sudo('mkdir %s' % media_path)
+    sudo('chgrp -R %s %s' % (wsgi_user, media_path))
 
 
 @task
@@ -43,41 +61,34 @@ def setup_apache(site_name, code_path, wsgi_user='wsgi'):
         comment='System user for running the wsgi process under')
 
     # Clone and replace tokens in apache conf
+    template_dir = '%s/resources/server_config/apache/' % code_path
+    filename = '%s.apache.conf.templ' % site_name
 
-    conf_file = (
-        '%s/resources/server_config/apache/%s.apache.conf.templ' % (
-            code_path, site_name))
+    context = {
+        'escaped_server_name': '%s\.linfiniti\.com' % site_name,
+        'server_name': 'changelog.linfiniti.com',
+        'site_user': 'wsgi',
+        'code_path': code_path.replace('/', '\/'),
+        'site_name': site_name}
+    destination = '/etc/apache2/sites-available/%s.apache.conf' % site_name
+    fastprint(context)
 
-    tokens = {
-        'ESCAPEDSERVERNAME': '%s\.linfiniti\.com' % site_name,
-        'SERVERNAME': 'changelog.linfiniti.com',
-        'SITEUSER': 'wsgi',
-        'CODEPATH': code_path.replace('/', '\/'),
-        'SITENAME': site_name}
-    fastprint(tokens)
-    conf_file = replace_tokens(conf_file, tokens)
+    upload_template(
+        filename,
+        destination,
+        context,
+        template_dir=template_dir,
+        use_sudo=True)
 
-    with cd('/etc/apache2/sites-available/'):
-        if exists('%s.apache.conf' % site_name):
-            sudo('a2dissite %s.apache.conf' % site_name)
-            fastprint('Removing old apache2 conf', False)
-            sudo('rm %s.apache.conf' % site_name)
-
-        sudo('ln -s %s .' % conf_file)
-
-    media_path = '%s/django_project/core/media' % code_path
-    if not exists(media_path):
-        sudo('mkdir %s' % media_path)
-        sudo('chgrp -R %s %s' % (wsgi_user, media_path))
+    set_media_permissions(code_path, wsgi_user)
 
     sudo('a2ensite %s.apache.conf' % site_name)
     sudo('a2dissite default')
     sudo('a2enmod rewrite')
     # Check if apache configs are ok - script will abort if not ok
     sudo('/usr/sbin/apache2ctl configtest')
-
     require.service.restarted('apache2')
-    return conf_file
+    return destination
 
 
 @task
@@ -121,6 +132,6 @@ def build_pil(code_path):
             sed('setup.py', zlib, zlib_value)
             sed('setup.py', tiff, tiff_value)
             sed('setup.py', freetype, freetype_value)
-            run('../bin/python setyp.py install')
+            run('../bin/python setup.py install')
 
 
