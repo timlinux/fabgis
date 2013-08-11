@@ -1,3 +1,5 @@
+v0.14.0, 11 August 2013 -- Refactored to set permissions for media in its own task.
+
 v0.13.0, 9 August 2013 -- Added django module and PIL build task.
 
 v0.12.0, 2 August 2013 -- Tilemill and tilestream tasks working. Doc updates.
