@@ -50,6 +50,29 @@ def setup_postgres_superuser(user, password=''):
 
 
 @task
+def create_postgis_2_template():
+    """Create the postgis 2 template db."""
+    if not fabtools.postgres.database_exists('template_postgis'):
+        setup_postgres_superuser(env.user)
+        # noinspection PyArgumentEqualDefault
+        fabtools.require.postgres.database(
+            'template_postgis',
+            owner='%s' % env.user,
+            encoding='UTF8')
+        sql = ('UPDATE pg_database SET datistemplate = TRUE WHERE datname = '
+               '\'template_postgis\';')
+        run('psql template1 -c "%s"' % sql)
+        sql_path = '/usr/share/postgresql/9.1/contrib/postgis-2.0/'
+        run('psql template_postgis -f %s/postgis.sql' % sql_path)
+        run('psql template_postgis -f %s/spatial_ref_sys.sql' % sql_path)
+        grant_sql = 'GRANT ALL ON geometry_columns TO PUBLIC;'
+        run('psql template_postgis -c "%s"' % grant_sql)
+        grant_sql = 'GRANT ALL ON geography_columns TO PUBLIC;'
+        run('psql template_postgis -c "%s"' % grant_sql)
+        grant_sql = 'GRANT ALL ON spatial_ref_sys TO PUBLIC;'
+        run('psql template_postgis -c "%s"' % grant_sql)
+
+@task
 def setup_postgis_1_5():
     """Set up postgis.
 
