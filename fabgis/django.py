@@ -29,7 +29,7 @@ def set_media_permissions(code_path, wsgi_user='wsgi'):
 
 
 @task
-def setup_apache(site_name, code_path, wsgi_user='wsgi'):
+def setup_apache(site_name, code_path, wsgi_user='wsgi', **kwargs):
     """Set up the apache server for this site.
 
     :param wsgi_user: Name of user wsgi process should run as. The user will
@@ -42,6 +42,11 @@ def setup_apache(site_name, code_path, wsgi_user='wsgi'):
 
     :param code_path: Directory where the code lives.
     :type code_path: str
+
+    :param kwargs: Any extra keyword arguments that should be appended to the
+        token list that will be used when rendering the apache config template.
+        Use this to pass in sensitive data such as passwords.
+    :type kwargs: dict
 
     :returns: Path to the apache conf file.
     :rtype: str
@@ -70,6 +75,7 @@ def setup_apache(site_name, code_path, wsgi_user='wsgi'):
         'site_user': 'wsgi',
         'code_path': code_path.replace('/', '\/'),
         'site_name': site_name}
+    context.update(kwargs)  # merge in any params passed in to this function
     destination = '/etc/apache2/sites-available/%s.apache.conf' % site_name
     fastprint(context)
 

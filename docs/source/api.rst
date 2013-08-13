@@ -1,94 +1,67 @@
+
 API Documentation
 =================
 
-Common
--------
-
-.. automodule:: fabgis.common
-   :members:
-
-GDAL
--------
+.. automodule:: fabgis.hdf
+    :members:
 
 
 .. automodule:: fabgis.gdal
-   :members:
+    :members:
 
-
-InaSAFE
--------
-
-.. automodule:: fabgis.inasafe
-   :members:
-
-
-Jenkins
--------
-
-.. automodule:: fabgis.jenkins
-   :members:
-
-
-PostgreSQL
-----------
-
-.. automodule:: fabgis.postgres
-   :members:
-
-
-QGIS
-----
 
 .. automodule:: fabgis.qgis
-   :members:
+    :members:
 
-Sphinx
-------
-
-.. automodule:: fabgis.sphinx
-   :members:
-
-
-System
--------
-
-.. automodule:: fabgis.system
-   :members:
-
-
-Tilestream
-----------
-
-.. automodule:: fabgis.tilestream
-   :members:
-
-Tilemill
---------
-
-.. automodule:: fabgis.tilemill
-   :members:
-
-
-Proj4
------
-
-.. automodule:: fabgis.proj4
-   :members:
-
-Hdf
-----
-
-.. automodule:: fabgis.hdf
-   :members:
-
-Utilities
----------
-
-.. automodule:: fabgis.utilities
-   :members:
-
-Dropbox
--------
 
 .. automodule:: fabgis.dropbox
-   :members:
+    :members:
+
+
+.. automodule:: fabgis.postgres
+    :members:
+
+
+.. automodule:: fabgis.inasafe
+    :members:
+
+
+.. automodule:: fabgis.tilemill
+    :members:
+
+
+.. automodule:: fabgis.tilestream
+    :members:
+
+
+.. automodule:: fabgis.proj4
+    :members:
+
+
+.. automodule:: fabgis.hetzner
+    :members:
+
+
+.. automodule:: fabgis.common
+    :members:
+
+
+.. automodule:: fabgis.django
+    :members:
+
+
+.. automodule:: fabgis.utilities
+    :members:
+
+
+.. automodule:: fabgis.jenkins
+    :members:
+
+
+.. automodule:: fabgis.system
+    :members:
+
+
+.. automodule:: fabgis.sphinx
+    :members:
+
