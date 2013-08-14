@@ -80,6 +80,7 @@ def setup_postgis_2():
     fabtools.require.deb.package('build-essential')
     fabtools.require.deb.package('postgresql-9.1-postgis')
     fabtools.require.deb.package('postgresql-server-dev-all')
+    create_postgis_2_template()
 
 
 @task
