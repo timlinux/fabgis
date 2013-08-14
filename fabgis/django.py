@@ -1,13 +1,16 @@
 # coding=utf-8
-"""Django related tasks."""
+"""
+Django related tasks
+--------------------
+"""
 
 import os
 from fabric.api import cd, task, sudo, fastprint, run
+from fabric.colors import green
 from fabric.contrib.files import sed, upload_template
 from fabric.contrib.files import exists
 from fabtools import require
 from .common import setup_env
-from .utilities import replace_tokens
 
 
 @task
@@ -29,19 +32,34 @@ def set_media_permissions(code_path, wsgi_user='wsgi'):
 
 
 @task
-def setup_apache(site_name, code_path, wsgi_user='wsgi', **kwargs):
+def setup_apache(
+        site_name,
+        code_path,
+        domain,
+        template_dir=None,
+        wsgi_user='wsgi',
+        **kwargs):
     """Set up the apache server for this site.
-
-    :param wsgi_user: Name of user wsgi process should run as. The user will
-        be created as needed.
-    :type wsgi_user: str
 
     :param site_name: Name of the site e.g. changelogger. Should be a single
         word with only alpha characters in it.
     :type site_name: str
 
-    :param code_path: Directory where the code lives.
+    :param code_path: Directory where the code lives. Will be used to set
+        media etc permissions.
     :type code_path: str
+
+    :param domain: Domain name. If none will be set to hostname.
+    :type domain: str
+
+    :param template_dir: Directory where the template files live. If none
+        will default to ``resources/server_config/apache``. Must be a
+        relative path to the fabfile you are running.
+    :type domain: str
+
+    :param wsgi_user: Name of user wsgi process should run as. The user will
+        be created as needed.
+    :type wsgi_user: str
 
     :param kwargs: Any extra keyword arguments that should be appended to the
         token list that will be used when rendering the apache config template.
@@ -66,13 +84,16 @@ def setup_apache(site_name, code_path, wsgi_user='wsgi', **kwargs):
         comment='System user for running the wsgi process under')
 
     # Clone and replace tokens in apache conf
-    template_dir = '%s/resources/server_config/apache/' % code_path
+    if template_dir is None:
+        template_dir = 'resources/server_config/apache/'
     filename = '%s.apache.conf.templ' % site_name
+    template_path = os.path.join(template_dir, filename)
+    fastprint(green('Using %s for template' % template_path))
 
     context = {
-        'escaped_server_name': '%s\.linfiniti\.com' % site_name,
-        'server_name': 'changelog.linfiniti.com',
-        'site_user': 'wsgi',
+        'escaped_server_name': domain.replace('.', '\.'),
+        'server_name': domain,
+        'site_user': wsgi_user,
         'code_path': code_path.replace('/', '\/'),
         'site_name': site_name}
     context.update(kwargs)  # merge in any params passed in to this function
@@ -80,10 +101,9 @@ def setup_apache(site_name, code_path, wsgi_user='wsgi', **kwargs):
     fastprint(context)
 
     upload_template(
-        filename,
+        template_path,
         destination,
-        context,
-        template_dir=template_dir,
+        context=context,
         use_sudo=True)
 
     set_media_permissions(code_path, wsgi_user)
