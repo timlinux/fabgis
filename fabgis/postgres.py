@@ -72,6 +72,16 @@ def create_postgis_2_template():
         grant_sql = 'GRANT ALL ON spatial_ref_sys TO PUBLIC;'
         run('psql template_postgis -c "%s"' % grant_sql)
 
+
+@task
+def setup_postgis_2():
+    """Set up postgis 2.0 from packages in ubuntugis."""
+    add_ubuntugis_ppa()
+    fabtools.require.deb.package('build-essential')
+    fabtools.require.deb.package('postgresql-9.1-postgis')
+    fabtools.require.deb.package('postgresql-server-dev-all')
+
+
 @task
 def setup_postgis_1_5():
     """Set up postgis.
