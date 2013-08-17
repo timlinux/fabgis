@@ -159,5 +159,3 @@ def build_pil(code_path):
             sed('setup.py', tiff, tiff_value)
             sed('setup.py', freetype, freetype_value)
             run('../bin/python setup.py install')
-
-
