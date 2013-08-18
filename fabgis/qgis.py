@@ -3,12 +3,12 @@
 from fabric.contrib.files import exists
 from fabric.api import run, cd, env, task, sudo
 import fabtools
-from common import add_ubuntugis_ppa
+from .common import add_ubuntugis_ppa
 from .common import setup_env
-from .utilities import update_git_checkout
+from .git import update_git_checkout
 from .system import setup_ccache
-from gdal import build_gdal
-from postgres import create_postgis_1_5_db
+from .gdal import build_gdal
+from .postgres import create_postgis_1_5_db
 
 
 @task
