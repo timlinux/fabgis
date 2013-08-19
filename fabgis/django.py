@@ -9,7 +9,7 @@ from fabric.api import cd, task, sudo, fastprint, run
 from fabric.colors import green
 from fabric.contrib.files import sed, upload_template
 from fabric.contrib.files import exists
-from fabtools import require
+from fabtools import require, fabtools
 from .common import setup_env
 
 
@@ -159,3 +159,34 @@ def build_pil(code_path):
             sed('setup.py', tiff, tiff_value)
             sed('setup.py', freetype, freetype_value)
             run('../bin/python setup.py install')
+
+
+@task
+def setup_celery(project_name, user, password, code_path):
+    """
+    Installs and starts django-celery with rabbitmq server
+
+    Copy celery config files to correct locations and start rabbitmq and
+    celery servers
+    :param password: Password for rabbitmq server
+    :param user: User for rabbitmq server
+    :param project_name: Name for rabbitmq server vhost
+    :param code_path: Directory where the code lives.
+    :type code_path: str
+
+    Note: In a production environment, you will want to daemonize the celery
+    worker:
+    http://docs.celeryproject.org/en/latest/tutorials/daemonizing.html#daemonizing
+    """
+    fabtools.require.deb.package('rabbitmq-server')
+    sudo('rabbitmqctl add_user %s %s' % (user, password))
+    sudo('rabbitmqctl add_vhost %s' % project_name)
+    sudo('rabbitmqctl set_permissions -p %s %s ".*" ".*" ".*"' % (
+        project_name, user))
+    sudo('rabbitmqctl delete_user guest')
+    venv = os.path.join(code_path, 'venv')
+    with cd(venv):
+        run('bin/pip install django-celery')
+    run('celery -A tasks worker --loglevel=info')
+    fabtools.require.service.restarted('celeryd')
+    fabtools.require.service.restarted('rabbitmq-server')
