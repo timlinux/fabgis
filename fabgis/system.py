@@ -1,5 +1,6 @@
 # coding=utf-8
 """Tools for setting up and hardening a system."""
+from fabric.context_managers import cd
 from fabric.contrib.files import contains, exists, append, sed, prompt
 import fabtools
 from fabric.api import env, task, sudo, local
@@ -19,6 +20,29 @@ def setup_ccache():
     sudo('ln -fs /usr/bin/ccache /usr/local/bin/gcc')
     sudo('ln -fs /usr/bin/ccache /usr/local/bin/g++')
     sudo('ln -fs /usr/bin/ccache /usr/local/bin/cc')
+
+
+@task
+def install_modxsend():
+    """
+    Download, compile and activate mod_xsendfile
+    """
+    fabtools.require.deb.package('apache2-threaded-dev')
+    with cd('/tmp'):
+        sudo('wget https://tn123.org/mod_xsendfile/mod_xsendfile.c')
+        sudo('apxs2 -cia mod_xsendfile.c')
+    fabtools.require.service.restarted('apache2')
+
+
+@task
+def install_elasticsearch():
+    """
+    Download and unpack elasticsearch
+    """
+    sudo(
+        'wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.2.deb')
+    sudo('sudo dpkg -i elasticsearch-0.90.2.deb')
+    fabtools.require.service.restarted('elasticsearch')
 
 
 @task
