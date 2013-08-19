@@ -59,6 +59,7 @@ from fabgis.dropbox import (
     start_dropbox,
     stop_dropbox)
 from fabgis.system import create_user
+from fabgis.docker import setup_docker
 # You can also make generic tasks available at the command line simply by
 # importing them. e.g.
 #from fabgis.sphinx import setup_sphinx
