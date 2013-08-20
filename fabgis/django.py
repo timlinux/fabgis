@@ -94,7 +94,7 @@ def setup_apache(
         'escaped_server_name': domain.replace('.', '\.'),
         'server_name': domain,
         'site_user': wsgi_user,
-        'code_path': code_path.replace('/', '\/'),
+        'code_path': code_path,
         'site_name': site_name}
     context.update(kwargs)  # merge in any params passed in to this function
     destination = '/etc/apache2/sites-available/%s.apache.conf' % site_name
