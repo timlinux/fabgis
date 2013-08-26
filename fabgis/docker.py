@@ -7,6 +7,31 @@
 
 As the second article mentions, for ubuntu 12.04 the kernel needs to be
 upgraded to 3.8 - which the setup task will do.
+
+
+Example usage:
+
+In your fabfile.py you might do the initial setup of docker (assuming it isn't
+already installed on your system), create a base image with a root password
+of your choosing and then bring up a container like this::
+
+    setup_docker()
+
+Once it is set up, you might create a new container for your project::
+
+    setup_docker_image()  # called by setup docker case of first install
+    create_docker_container()
+    id = current_docker_container()
+    ssh_port = get_docker_port_mappings(id)[22]
+
+A control file called `fabgis.container.id` will be written to the current
+working directory - it will contain the id of the created container.
+
+After this you can treat the docker container as any other host and run
+fabric tasks against it e.g.::
+
+    fab -H root@localhost:<ssh_port> <command>
+
 """
 
 from fabric.api import run, sudo, task, fastprint, env, prompt, reboot, abort
