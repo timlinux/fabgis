@@ -9,7 +9,7 @@ import fabtools
 @task
 def setup_inasafe():
     """Setup requirements for InaSAFE."""
-    fastprint(blue('Setting up InaSAFE'))
+    fastprint(blue('Setting up InaSAFE dependencies\n'))
     fabtools.require.deb.package('pep8')
     fabtools.require.deb.package('pylint')
     fabtools.require.deb.package('python-nose')
@@ -18,4 +18,4 @@ def setup_inasafe():
     fabtools.require.deb.package('python-numpy')
     fabtools.require.deb.package('python-qt4')
     fabtools.require.deb.package('python-nose')
-    fastprint(green('Setting up InaSAFE completed.'))
+    fastprint(green('Setting up InaSAFE dependencies completed.\n'))

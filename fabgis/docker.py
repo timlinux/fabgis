@@ -254,6 +254,8 @@ def allow_docker_through_ufw():
     """Allow docker networking to communicate out through UFW.
 
 
+         TODO Implement this task fully
+
 
         http://stackoverflow.com/questions/17394241/my-firewall-is-blocking
         -network-connections-from-the-docker-container-to-outside
