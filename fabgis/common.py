@@ -37,7 +37,11 @@ def setup_env():
     env.fg = fdict()
     with hide('output'):
         env.fg.user = run('whoami')
-        env.fg.hostname = fabtools.system.get_hostname()
+        # Workaround for
+        env.fg.hostname = run('hostname')
+        # this which fails in docker - see
+        # https://github.com/dotcloud/docker/issues/1301
+        #env.fg.hostname = fabtools.system.get_hostname()
         env.fg.home = os.path.join('/home/', env.fg.user)
         env.fg.workspace = os.path.join(env.fg.home, 'dev')
         env.fg.inasafe_git_url = 'git://github.com/AIFDR/inasafe.git'
