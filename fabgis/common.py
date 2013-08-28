@@ -1,3 +1,5 @@
+# coding=utf-8
+"""Common helpers to bootstrap fabric."""
 import os
 from fabric.api import env, task, fastprint, run, hide
 from fabric.utils import _AttributeDict as fdict
@@ -62,6 +64,7 @@ def setup_env():
 def add_ubuntugis_ppa():
     """Ensure we have ubuntu-gis repo."""
     fabtools.deb.update_index(quiet=True)
+    fabtools.require.deb.package('software-properties-common')
     fabtools.require.deb.ppa(
         #'ppa:ubuntugis/ubuntugis-unstable', auto_yes=True)
         'ppa:ubuntugis/ubuntugis-unstable')
