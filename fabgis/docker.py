@@ -63,6 +63,10 @@ def docker():
     .. todo:: Behaviour when more than one host is passed to fabric is still
         not defined or tested.
     """
+    host_name = run('hostname')
+    fastprint(green(
+        'Connected on %s preparing ssh tunnel though this gateway\n' %
+        host_name))
     container_id_file = 'fabgis.container.id'
     if exists(container_id_file):
         container_id = run('cat %s' % container_id_file)
@@ -72,10 +76,12 @@ def docker():
     mappings = get_docker_port_mappings(container_id)
 
     ssh_port = mappings[22]
-
     env.port = ssh_port
     env.user = 'root'
     fastprint(env)
+    host_name = run('hostname')
+    fastprint(green(
+        'Connected on %s via ssh tunnel though this gateway\n' % host_name))
 
 
 @task
