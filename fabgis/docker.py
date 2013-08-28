@@ -248,3 +248,28 @@ def current_docker_container():
         return run('cat %s' % container_id_file)
     else:
         return None
+
+@task
+def allow_docker_through_ufw():
+    """Allow docker networking to communicate out through UFW.
+
+
+
+        http://stackoverflow.com/questions/17394241/my-firewall-is-blocking
+        -network-connections-from-the-docker-container-to-outside
+    """
+    before_rules = """
+    # docker rules to enable external network access from the container
+    # forward traffic accross the bridge
+    -A ufw - before - forward - i  docker0 - j  ACCEPT
+    -A ufw - before - forward - i  testbr0 - j  ACCEPT
+    -A ufw - before - forward - m  state - -state
+    RELATED, ESTABLISHED - j ACCEPT"""
+
+    after_rules = """
+    *nat
+    :POSTROUTING ACCEPT [0:0]
+    -A POSTROUTING -s 172.16.42.0/8 -o eth0 -j MASQUERADE
+    # don't delete the 'COMMIT' line or these rules won't be processed
+    COMMIT
+    """
