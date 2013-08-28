@@ -3,7 +3,7 @@
 import fabtools
 from fabric.api import task, sudo, fastprint
 from fabric.colors import green, blue
-
+from fabtools.deb import is_installed
 
 @task
 def setup_latex():
@@ -24,11 +24,11 @@ def setup_sphinx():
     To build the Documentation we also need to check and update the
     subjacent docutils installation"""
     fastprint(blue('Setting up Sphinx\n'))
-    if fabtools.is_installed('docutils-common'):
+    if is_installed('docutils-common'):
         sudo('apt-get remove docutils-common')
-    if fabtools.is_installed('docutils-doc'):
+    if is_installed('docutils-doc'):
         sudo('apt-get remove docutils-doc')
-    if fabtools.is_installed('python-docutils'):
+    if is_installed('python-docutils'):
         sudo('apt-get remove python-docutils')
     sudo('pip install --upgrade docutils==0.10')
     sudo('pip install sphinx')
