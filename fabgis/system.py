@@ -1,7 +1,11 @@
 # coding=utf-8
 """Tools for setting up and hardening a system."""
-from fabric.context_managers import cd
-from fabric.contrib.files import contains, exists, append, sed, prompt
+
+from getpass import getpass
+
+from fabric.api import cd, fastprint, prompt
+from fabric.contrib.files import contains, exists, append, sed
+from fabric.colors import red
 from fabric.api import env, task, sudo, local, reboot
 import fabtools
 from .utilities import append_if_not_present
@@ -40,21 +44,25 @@ def install_elasticsearch():
     Download and unpack elasticsearch
     """
     sudo(
-        'wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.2.deb')
+        'wget https://download.elasticsearch.org/elasticsearch/'
+        'elasticsearch/elasticsearch-0.90.2.deb')
     sudo('sudo dpkg -i elasticsearch-0.90.2.deb')
     fabtools.require.service.restarted('elasticsearch')
 
 
 @task
-def create_user(user, password):
+def create_user(user, password=None):
     """Create a user on the remote system matching the user running this task.
 
-    :param user: User name for the new user
+    :param user: User name for the new user.
     :type user: str
 
-    :param password: Password for new user
+    :param password: Password for new user - will prompt interactively if None.
     :type password: str
     """
+    if password is None:
+        fastprint(red('Please enter a password for the new web user.\n'))
+        password = getpass()
     fabtools.require.users.user(user, password=password)
     fabtools.require.users.sudoer(env.user)
 
