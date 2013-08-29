@@ -64,7 +64,7 @@ def create_user(user, password=None):
         fastprint(red('Please enter a password for the new web user.\n'))
         password = getpass()
     fabtools.require.users.user(user, password=password)
-    fabtools.require.users.sudoer(env.user)
+    fabtools.require.users.sudoer(user)
 
 
 @task
