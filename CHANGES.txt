@@ -1,3 +1,5 @@
+v0.15.0, 11 August 2013 -- Added docker tasks and code cleanups.
+
 v0.14.0, 11 August 2013 -- Refactored to set permissions for media in its own task.
 
 v0.13.0, 9 August 2013 -- Added django module and PIL build task.
