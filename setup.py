@@ -16,6 +16,6 @@ setup(
     long_description=open('README.txt').read(),
     install_requires=[
         "Fabric == 1.6.0",
-        "fabtools >= 0.15.0"
+        "fabtools >= 0.15.1"
     ],
 )

@@ -1,4 +1,6 @@
-v0.15.0, 11 August 2013 -- Added docker tasks and code cleanups.
+v0.15.1, 29 August 2013 -- Fixed bug with claiming sudo in create user task.
+
+v0.15.0, 29 August 2013 -- Added docker tasks and code cleanups.
 
 v0.14.0, 11 August 2013 -- Refactored to set permissions for media in its own task.
 
