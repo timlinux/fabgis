@@ -232,7 +232,7 @@ def create_docker_container(image='fabgis/sshd'):
         sudo('rm %s' % container_id_file)
 
     sudo(
-        'docker run -cidfile=%s -d -p 22 -p 8000 %s /usr/sbin/sshd -D' %
+        'docker run -cidfile=%s -d -p 22 -p 80 %s /usr/sbin/sshd -D' %
         (container_id_file, image))
 
     # now get the id back - this is more reliable than reading from stdout
@@ -254,6 +254,7 @@ def current_docker_container():
         return run('cat %s' % container_id_file)
     else:
         return None
+
 
 @task
 def allow_docker_through_ufw():
