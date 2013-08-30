@@ -5,6 +5,7 @@ from fabric.api import task, sudo, fastprint
 from fabric.colors import green, blue
 from fabtools.deb import is_installed
 
+
 @task
 def setup_latex():
     """Install latex and friends needed to generate sphinx PDFs."""
