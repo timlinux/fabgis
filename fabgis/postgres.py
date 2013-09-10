@@ -78,7 +78,7 @@ def setup_postgis_2():
     """Set up postgis 2.0 from packages in ubuntugis."""
     add_ubuntugis_ppa()
     fabtools.require.deb.package('build-essential')
-    fabtools.require.deb.package('postgresql-9.1-postgis')
+    fabtools.require.deb.package('postgis')
     fabtools.require.deb.package('postgresql-server-dev-all')
     create_postgis_2_template()
 
