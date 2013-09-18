@@ -36,7 +36,7 @@ fabric tasks against it e.g.::
 
 from fabric.api import run, sudo, task, fastprint, env, prompt, reboot, abort
 from fabric.colors import red, green, blue, yellow
-from fabric.contrib.files import exists
+from fabric.contrib.files import exists, sed
 from fabtools.deb import update_index as apt_get_update, is_installed
 from fabtools.require.deb import ppa as require_ppa
 from fabtools.require.deb import package as require_package
@@ -123,10 +123,10 @@ def setup_docker(force=False):
         'lxc-docker'])
     # Ensure ufw forwards traffic.
     # http://docs.docker.io/en/latest/installation/ubuntulinux/#ufw
-    fabric.contrib.files.sed(
+    sed(
         '/etc/default/ufw',
         'DEFAULT_FORWARD_POLICY="DROP"',
-        'DEFAULT_FORWARD_POLICY="DROP"',
+        'DEFAULT_FORWARD_POLICY="ACCEPT"',
         use_sudo=False)
     setup_docker_image()
 
