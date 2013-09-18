@@ -117,6 +117,13 @@ def setup_docker():
     require_packages([
         'software-properties-common',
         'lxc-docker'])
+    # Ensure ufw forwards traffic.
+    # http://docs.docker.io/en/latest/installation/ubuntulinux/#ufw
+    fabric.contrib.files.sed(
+        '/etc/default/ufw',
+        'DEFAULT_FORWARD_POLICY="DROP"',
+        'DEFAULT_FORWARD_POLICY="DROP"',
+        use_sudo=False)
     setup_docker_image()
 
 
