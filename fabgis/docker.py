@@ -110,8 +110,7 @@ def setup_docker():
         response = prompt('Do you wish to continue? y/n :')
         if response is not None:
             reboot()
-    else:
-        require_package('linux-image-extra-%s' % version)
+
     require_ppa('ppa:dotcloud/lxc-docker')
     apt_get_update()
     require_packages([
