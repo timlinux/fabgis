@@ -85,10 +85,15 @@ def docker():
 
 
 @task
-def setup_docker():
-    """Setup docker on the target host."""
+def setup_docker(force=False):
+    """Setup docker on the target host.
+
+    :param force: Whether to continue with installation even if
+        docker already appears to be installed. Defaults to False.
+    :type force: bool
+    """
     fastprint(yellow('Setting up docker on host: %s' % env.host))
-    if is_installed('lxc-docker'):
+    if is_installed('lxc-docker') and not force:
         fastprint(green(
             'This system already appears to have docker installed on it'))
         return
