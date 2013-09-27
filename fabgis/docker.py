@@ -162,7 +162,6 @@ def setup_docker_user(user=None):
         'next log in.' % user))
 
 
-
 @task
 def setup_docker_image():
     """Set up the default docker image to be used in fabgis deployments.
