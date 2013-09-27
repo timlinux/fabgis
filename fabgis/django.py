@@ -11,6 +11,7 @@ from fabric.contrib.files import sed, upload_template
 from fabric.contrib.files import exists
 from fabtools import require, fabtools
 from .common import setup_env
+from . import virtualenv
 
 
 @task
@@ -125,40 +126,13 @@ def build_pil(code_path):
     :type code_path: str
 
     .. note:: Any existing PIL will be uninstalled.
+
+    .. versionchanged:: 0.16.0 - delegate to virtualenv module
+
+    .. deprecated:: 0.16.0
+       Use :func:`virtualenv.build_pil` rather.
     """
-    require.deb.package('libjpeg-dev')
-    require.deb.package('libfreetype6')
-    require.deb.package('libfreetype6-dev')
-
-    tcl = 'TCL_ROOT = None'
-    jpg = 'JPEG_ROOT = None'
-    zlib = 'ZLIB_ROOT = None'
-    tiff = 'TIFF_ROOT = None'
-    freetype = 'FREETYPE_ROOT = None'
-
-    tcl_value = (
-        'TCL_ROOT = "/usr/lib/x86_64-linux-gnu/", "/usr/include"')
-    jpg_value = (
-        'JPEG_ROOT = "/usr/lib/x86_64-linux-gnu/", "/usr/include"')
-    zlib_value = (
-        'ZLIB_ROOT = "/usr/lib/x86_64-linux-gnu/", "/usr/include"')
-    tiff_value = (
-        'TIFF_ROOT = "/usr/lib/x86_64-linux-gnu/", "/usr/include"')
-    freetype_value = (
-        'FREETYPE_ROOT = "/usr/lib/x86_64-linux-gnu/", "/usr/include"')
-
-    venv = os.path.join(code_path, 'venv')
-    with cd(venv):
-        run('bin/pip uninstall pil')
-        run('wget -c http://effbot.org/downloads/Imaging-1.1.7.tar.gz')
-        run('tar xfz Imaging-1.1.7.tar.gz')
-        with cd(os.path.join(venv, 'Imaging-1.1.7')):
-            sed('setup.py', tcl, tcl_value)
-            sed('setup.py', jpg, jpg_value)
-            sed('setup.py', zlib, zlib_value)
-            sed('setup.py', tiff, tiff_value)
-            sed('setup.py', freetype, freetype_value)
-            run('../bin/python setup.py install')
+    virtualenv.build_pil(code_path)
 
 
 @task
@@ -176,7 +150,9 @@ def setup_celery(project_name, user, password, code_path):
 
     Note: In a production environment, you will want to daemonize the celery
     worker:
-    http://docs.celeryproject.org/en/latest/tutorials/daemonizing.html#daemonizing
+
+    http://docs.celeryproject.org/en/latest/tutorials/daemonizing.html#
+    daemonizing
     """
     fabtools.require.deb.package('rabbitmq-server')
     sudo('rabbitmqctl add_user %s %s' % (user, password))
