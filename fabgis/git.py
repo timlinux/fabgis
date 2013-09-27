@@ -44,7 +44,7 @@ def update_git_checkout(code_path, url, repo_alias, branch='master', tag=None):
     fabtools.require.deb.package('git')
     if not exists(repo_path):
         fastprint(green('Repository does not exist, creating.\n'))
-        fabtools.require.directory(code_path, use_sudo=True, env.user)
+        fabtools.require.directory(code_path, use_sudo=True, user=env.user)
         with cd(code_path):
             run('git clone %s %s' % (url, repo_alias))
     else:
