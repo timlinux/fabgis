@@ -36,7 +36,7 @@ fabric tasks against it e.g.::
 
 from fabric.api import run, sudo, task, fastprint, env, prompt, reboot, abort
 from fabric.colors import red, green, blue, yellow
-from fabric.contrib.files import exists, sed
+from fabric.contrib.files import exists, contains, sed
 from fabtools.deb import update_index as apt_get_update, is_installed
 from fabtools.require.deb import ppa as require_ppa
 from fabtools.require.deb import package as require_package
@@ -92,35 +92,36 @@ def setup_docker(force=False):
         docker already appears to be installed. Defaults to False.
     :type force: bool
     """
-    fastprint(yellow('Setting up docker on host: %s' % env.host))
-    if is_installed('lxc-docker') and not force:
+    fastprint(yellow('Setting up docker on host: %s\n' % env.host))
+    if is_installed('lxc-docker'):
         fastprint(green(
-            'This system already appears to have docker installed on it'))
-        return
-    version = run('uname -r')
-    if '3.2' in version:
-        # LTS 3.2 version is too old so we install a backported one
-        # see http://docs.docker.io/en/latest/installation/ubuntulinux/
-        # #ubuntu-precise-12-04-lts-64-bit
-        fastprint(red('Upgrading kernel to 3.8!\n'))
-        response = prompt('Do you wish to continue? y/n :')
-        if response != 'y':
-            fastprint(red('Docker install aborted by user.'))
-            return
-        fastprint(blue('Ok upgrading kernel.'))
+            'This system already appears to have docker installed on it\n'))
+    else:
+        version = run('uname -r')
+        if '3.2' in version:
+            # LTS 3.2 version is too old so we install a backported one
+            # see http://docs.docker.io/en/latest/installation/ubuntulinux/
+            # #ubuntu-precise-12-04-lts-64-bit
+            fastprint(red('Upgrading kernel to 3.8!\n'))
+            response = prompt('Do you wish to continue? y/n :')
+            if response != 'y':
+                fastprint(red('Docker install aborted by user.\n'))
+                return
+            fastprint(blue('Ok upgrading kernel.'))
+            require_packages([
+                'linux-image-generic-lts-raring',
+                'linux-headers-generic-lts-raring'])
+            fastprint(red('\nWe need to reboot the system now!\n'))
+            response = prompt('Do you wish to continue? y/n :')
+            if response is not None:
+                reboot()
+        else:
+            require_package('linux-image-extra-%s' % version)
+        require_ppa('ppa:dotcloud/lxc-docker')
+        apt_get_update()
         require_packages([
-            'linux-image-generic-lts-raring',
-            'linux-headers-generic-lts-raring'])
-        fastprint(red('\nWe need to reboot the system now!\n'))
-        response = prompt('Do you wish to continue? y/n :')
-        if response is not None:
-            reboot()
-
-    require_ppa('ppa:dotcloud/lxc-docker')
-    apt_get_update()
-    require_packages([
-        'software-properties-common',
-        'lxc-docker'])
+            'software-properties-common',
+            'lxc-docker'])
     # Ensure ufw forwards traffic.
     # http://docs.docker.io/en/latest/installation/ubuntulinux/#ufw
     sed(
@@ -129,6 +130,37 @@ def setup_docker(force=False):
         'DEFAULT_FORWARD_POLICY="ACCEPT"',
         use_sudo=False)
     setup_docker_image()
+    setup_docker_user()
+
+
+@task
+def setup_docker_group():
+    """Setup the docker group so that any docker group members dont need sudo.
+
+    Once a user is in the docker group they can issue docker commands without
+    being a sudo user.
+    """
+    if not contains('/etc/group', 'docker'):
+        sudo('groupadd docker')
+        sudo('service docker restart')
+
+
+@task
+def setup_docker_user(user=None):
+    """Setup a user with rights to run docker after their next relogin.
+
+    :param user: The user that should be granted docker rights. If none,
+        env.user will be assumed.
+    :type user: str
+    """
+    setup_docker_group()
+    if user is None:
+        user = env.user
+    sudo('usermod -a -G docker %s' % user)
+    fastprint(red(
+        'User %s will be able to run docker without sudo on their '
+        'next log in.' % user))
+
 
 
 @task
