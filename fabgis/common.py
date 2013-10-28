@@ -47,7 +47,7 @@ def setup_env():
         env.fg.home = os.path.join('/home/', env.fg.user)
         env.fg.workspace = os.path.join(env.fg.home, 'dev')
         env.fg.inasafe_git_url = 'git://github.com/AIFDR/inasafe.git'
-        env.fg.qgis_git_url = 'git://github.com/qgis/Quantum-GIS.git'
+        env.fg.qgis_git_url = 'git://github.com/qgis/QGIS.git'
         env.fg.kandan_git_url = 'git://github.com/kandanapp/kandan.git'
         env.fg.gdal_svn_url = 'https://svn.osgeo.org/gdal/trunk/gdal'
         env.fg.tilemill_tarball_url = (
