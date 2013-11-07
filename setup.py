@@ -9,6 +9,7 @@ setup(
     author_email='tim@linfiniti.com',
     packages=['fabgis', ],
     data_files=[],
+    include_package_data=True,
     scripts=[],
     url='http://pypi.python.org/pypi/fabgis/',
     license='LICENSE.txt',
