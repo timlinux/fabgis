@@ -15,18 +15,22 @@ from . import virtualenv
 
 
 @task
-def set_media_permissions(code_path, wsgi_user='wsgi'):
+def set_media_permissions(code_path, media_dir=None, wsgi_user='wsgi'):
     """Set the django media dir so apache can write to it.
 
-    :param code_path: Path to top level deploy dir. It will be assumed that
-        the media files live in ``<code_path>/django_project/media``.
+    :param code_path: Path to top level deploy dir.
     :type code_path: str
+    :param media_dir: Optional dir underneath code_path if media does not live in
+        ``<code_path>/django_project/media``. No trailing slash.
+    :type media_dir: str
     :param wsgi_user: User that should receive write permissions to the folder.
         Defaults to 'wsgi'.
     :type wsgi_user: str
     """
-
-    media_path = '%s/django_project/media' % code_path
+    if not media_path:
+        media_path = '%s/django_project/media' % code_path
+    else:
+        media_path = '%s/%s' % (code_path, media_dir)
     if not exists(media_path):
         sudo('mkdir %s' % media_path)
     sudo('chgrp -R %s %s' % (wsgi_user, media_path))
