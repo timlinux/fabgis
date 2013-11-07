@@ -290,7 +290,7 @@ def setup_nightly_backups():
         local_file = os.path.abspath(os.path.join(
             local_dir,
             '..',
-            '../fabgis_resources',
+            'fabgis_resources',
             'server_config',
             'cron',
             'pg_backups.templ'))

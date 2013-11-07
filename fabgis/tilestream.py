@@ -102,7 +102,7 @@ def setup_tilestream_daemon(
     template_path = os.path.abspath(os.path.join(
         os.path.dirname(__file__),
         os.path.pardir,
-        '../fabgis_resources',
+        'fabgis_resources',
         'server_config',
         'tilestream',
         '%s' % template_file

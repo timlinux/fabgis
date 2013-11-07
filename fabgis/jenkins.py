@@ -173,7 +173,7 @@ def jenkins_deploy_website(site_url=None, use_upstream_repo=False):
             local_file = os.path.abspath(os.path.join(
                 local_dir,
                 '..',
-                '../fabgis_resources',
+                'fabgis_resources',
                 'server_config',
                 'apache',
                 jenkins_apache_conf_template))

@@ -1,0 +1,2 @@
+recursive-include *.txt
+recursive-include fabgis/fabgis_resources *
