@@ -42,6 +42,7 @@ def setup_apache(
         code_path,
         domain,
         template_dir=None,
+        media_dir=None,
         wsgi_user='wsgi',
         **kwargs):
     """Set up the apache server for this site.
@@ -60,7 +61,11 @@ def setup_apache(
     :param template_dir: Directory where the template files live. If none
         will default to ``resources/server_config/apache``. Must be a
         relative path to the fabfile you are running.
-    :type domain: str
+    :type template_dir: str
+    
+    :param media_dir: Optional dir under code_path if media does not live in 
+        ``<code_path>/django_project/media``. No trailing slash.
+    :type medi_dir: str
 
     :param wsgi_user: Name of user wsgi process should run as. The user will
         be created as needed.
@@ -111,7 +116,7 @@ def setup_apache(
         context=context,
         use_sudo=True)
 
-    set_media_permissions(code_path, wsgi_user)
+    set_media_permissions(code_path, media_dir=media_dir, wsgi_user)
 
     sudo('a2ensite %s.apache.conf' % site_name)
     sudo('a2dissite default')
