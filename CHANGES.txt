@@ -1,3 +1,16 @@
+v0.16.0, 27 September 2013 -- Added task to install qgis 2. Added docker group
+	and user setup commands, and make docker setup a little more robust when run
+	multiple times. Tweaks to git checkout task and added a task to strip
+	local git repo of branches. Added mapserver module. Added pil and gdal 
+ 	tasks to virtualenv. Code formatting cleanups and refactored pil setup to
+	venv module
+
+v0.15.2, 10 September 2013 -- Fixed bug with installation of postgis 2
+
+v0.15.1, 29 August 2013 -- Fixed bug with claiming sudo in create user task.
+
+v0.15.0, 29 August 2013 -- Added docker tasks and code cleanups.
+
 v0.14.0, 11 August 2013 -- Refactored to set permissions for media in its own task.
 
 v0.13.0, 9 August 2013 -- Added django module and PIL build task.

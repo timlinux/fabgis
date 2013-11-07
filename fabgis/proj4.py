@@ -9,6 +9,7 @@ from .system import setup_ccache
 from .common import setup_env
 from .utilities import append_if_not_present
 
+
 @task
 def build_proj4(version='4.8.0'):
     """Get proj4 from tarball and build it.

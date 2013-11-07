@@ -18,11 +18,19 @@ API Documentation
    :members:
 
 
+.. automodule:: fabgis.git
+   :members:
+
+
 .. automodule:: fabgis.postgres
    :members:
 
 
 .. automodule:: fabgis.inasafe
+   :members:
+
+
+.. automodule:: fabgis.virtualenv
    :members:
 
 
@@ -42,11 +50,19 @@ API Documentation
    :members:
 
 
+.. automodule:: fabgis.java
+   :members:
+
+
 .. automodule:: fabgis.common
    :members:
 
 
 .. automodule:: fabgis.django
+   :members:
+
+
+.. automodule:: fabgis.docker
    :members:
 
 

@@ -1,9 +1,13 @@
 # coding=utf-8
 """Tools for setting up and hardening a system."""
-from fabric.context_managers import cd
-from fabric.contrib.files import contains, exists, append, sed, prompt
+
+from getpass import getpass
+
+from fabric.api import cd, fastprint, prompt
+from fabric.contrib.files import contains, exists, append, sed
+from fabric.colors import red
+from fabric.api import env, task, sudo, local, reboot
 import fabtools
-from fabric.api import env, task, sudo, local
 from .utilities import append_if_not_present
 
 
@@ -40,23 +44,27 @@ def install_elasticsearch():
     Download and unpack elasticsearch
     """
     sudo(
-        'wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.2.deb')
+        'wget https://download.elasticsearch.org/elasticsearch/'
+        'elasticsearch/elasticsearch-0.90.2.deb')
     sudo('sudo dpkg -i elasticsearch-0.90.2.deb')
     fabtools.require.service.restarted('elasticsearch')
 
 
 @task
-def create_user(user, password):
+def create_user(user, password=None):
     """Create a user on the remote system matching the user running this task.
 
-    :param user: User name for the new user
+    :param user: User name for the new user.
     :type user: str
 
-    :param password: Password for new user
+    :param password: Password for new user - will prompt interactively if None.
     :type password: str
     """
+    if password is None:
+        fastprint(red('Please enter a password for the new web user.\n'))
+        password = getpass()
     fabtools.require.users.user(user, password=password)
-    fabtools.require.users.sudoer(env.user)
+    fabtools.require.users.sudoer(user)
 
 
 @task
@@ -97,6 +105,7 @@ def get_ip_address():
         "cut -d: -f2 | awk '{print $1}'")
     return host_ip
 
+
 @task
 def harden(ssh_port=22):
     """Harden the server a little.
@@ -107,9 +116,12 @@ def harden(ssh_port=22):
     should always check any system yourself and make sure that it is
     adequately secured.
 
+    .. todo:: Make this work more gracefully if harden has been run previously.
+
     """
     # Create a user name because after we are done remote login as root will
     # be disabled. Username will match your local user.
+
     user = prompt('Choose a user name')
     password = prompt('Choose a password for the new user')
 
@@ -177,7 +189,7 @@ def harden(ssh_port=22):
 
     fabtools.require.deb.package('denyhosts')
     # Must come before mailutils
-    fabtools.require.postfix.server(env.repo_site_name)
+    fabtools.require.postfix.server(env.host)
     fabtools.require.deb.package('mailutils')
     fabtools.require.deb.package('byobu')
     fabtools.service.restart('ssh')
@@ -259,7 +271,7 @@ def harden(ssh_port=22):
         sysctl, 'net.ipv4.icmp_echo_ignore_all = 1', use_sudo=True)
 
     sudo('sysctl -p')
-    sudo('reboot')
+    reboot()
 
     print 'You need to log in and install mailutils yourself as automated ' \
           'installation causes interactive prompting.'

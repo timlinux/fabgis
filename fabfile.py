@@ -59,7 +59,8 @@ from fabgis.dropbox import (
     start_dropbox,
     stop_dropbox)
 from fabgis.system import create_user
-from fabgis.docker import setup_docker
+from fabgis.docker import (
+    setup_docker, setup_docker_image, docker, create_docker_container)
 # You can also make generic tasks available at the command line simply by
 # importing them. e.g.
 #from fabgis.sphinx import setup_sphinx
@@ -68,6 +69,12 @@ from fabgis.docker import setup_docker
 # noinspection PyUnresolvedReferences
 from fabtools.vagrant import vagrant
 
+
+@task
+def ls():
+    """Simply list the directory on the remote server."""
+    run('pwd')
+    run('ls')
 
 @task
 def build_server():

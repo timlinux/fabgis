@@ -49,7 +49,7 @@ def all():
                                      'dev',
                                      'python')
         env.inasafe_git_url = 'git://github.com/AIFDR/inasafe.git'
-        env.qgis_git_url = 'git://github.com/qgis/Quantum-GIS.git'
+        env.qgis_git_url = 'git://github.com/qgis/QGIS.git'
         env.repo_alias = 'inasafe-test'
         env.code_path = os.path.join(env.workspace, env.repo_alias)
 

@@ -1,0 +1,9 @@
+<VirtualHost *:80>
+  ServerName %(site_name)s
+  ServerAdmin %(server_admin)s
+  LogLevel warn
+  CustomLog /var/log/apache2/%(site_name)s.access.log combined
+  ErrorLog /var/log/apache2/%(site_name)s.error.log
+  DocumentRoot '%s(web_root)s'
+  ServerSignature Off
+</VirtualHost>
