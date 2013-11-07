@@ -15,18 +15,22 @@ from . import virtualenv
 
 
 @task
-def set_media_permissions(code_path, wsgi_user='wsgi'):
+def set_media_permissions(code_path, wsgi_user='wsgi', media_dir=None):
     """Set the django media dir so apache can write to it.
 
-    :param code_path: Path to top level deploy dir. It will be assumed that
-        the media files live in ``<code_path>/django_project/media``.
+    :param code_path: Path to top level deploy dir.
     :type code_path: str
+    :param media_dir: Optional dir underneath code_path if media does not live in
+        ``<code_path>/django_project/media``. No trailing slash.
+    :type media_dir: str
     :param wsgi_user: User that should receive write permissions to the folder.
         Defaults to 'wsgi'.
     :type wsgi_user: str
     """
-
-    media_path = '%s/django_project/media' % code_path
+    if not media_dir:
+        media_path = '%s/django_project/media' % code_path
+    else:
+        media_path = '%s/%s' % (code_path, media_dir)
     if not exists(media_path):
         sudo('mkdir %s' % media_path)
     sudo('chgrp -R %s %s' % (wsgi_user, media_path))
@@ -38,6 +42,7 @@ def setup_apache(
         code_path,
         domain,
         template_dir=None,
+        media_dir=None,
         wsgi_user='wsgi',
         **kwargs):
     """Set up the apache server for this site.
@@ -56,7 +61,11 @@ def setup_apache(
     :param template_dir: Directory where the template files live. If none
         will default to ``resources/server_config/apache``. Must be a
         relative path to the fabfile you are running.
-    :type domain: str
+    :type template_dir: str
+    
+    :param media_dir: Optional dir under code_path if media does not live in 
+        ``<code_path>/django_project/media``. No trailing slash.
+    :type media_dir: str
 
     :param wsgi_user: Name of user wsgi process should run as. The user will
         be created as needed.
@@ -107,7 +116,7 @@ def setup_apache(
         context=context,
         use_sudo=True)
 
-    set_media_permissions(code_path, wsgi_user)
+    set_media_permissions(code_path, wsgi_user, media_dir=media_dir)
 
     sudo('a2ensite %s.apache.conf' % site_name)
     sudo('a2dissite default')
