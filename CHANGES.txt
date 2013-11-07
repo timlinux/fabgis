@@ -1,3 +1,4 @@
+v0.16.1,
 v0.16.0, 27 September 2013 -- Added task to install qgis 2. Added docker group
 	and user setup commands, and make docker setup a little more robust when run
 	multiple times. Tweaks to git checkout task and added a task to strip
