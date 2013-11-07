@@ -116,7 +116,7 @@ def setup_apache(
         context=context,
         use_sudo=True)
 
-    set_media_permissions(code_path, media_dir=media_dir, wsgi_user)
+    set_media_permissions(code_path, wsgi_user, media_dir=media_dir)
 
     sudo('a2ensite %s.apache.conf' % site_name)
     sudo('a2dissite default')
