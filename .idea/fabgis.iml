@@ -7,7 +7,7 @@
     <orderEntry type="library" name="sass-stdlib" level="application" />
   </component>
   <component name="PyDocumentationSettings">
-    <option name="myDocStringFormat" value="Plain" />
+    <option name="myDocStringFormat" value="reStructuredText" />
   </component>
   <component name="TestRunnerService">
     <option name="projectConfiguration" value="Nosetests" />

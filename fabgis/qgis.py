@@ -156,7 +156,7 @@ def install_qgis2(gdal_from_source=False):
 
 
 @task
-def install_master(gdal_from_source=False):
+def install_qgis_master(gdal_from_source=False):
     """Install QGIS master under /usr/local/qgis-master.
 
     :param gdal_from_source: Whether gdal should be built from source.
