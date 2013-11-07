@@ -65,7 +65,7 @@ def setup_apache(
     
     :param media_dir: Optional dir under code_path if media does not live in 
         ``<code_path>/django_project/media``. No trailing slash.
-    :type medi_dir: str
+    :type media_dir: str
 
     :param wsgi_user: Name of user wsgi process should run as. The user will
         be created as needed.
