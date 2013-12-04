@@ -77,7 +77,7 @@ def compile_qgis(build_path, build_prefix, gdal_from_source=False):
             use_sudo=True,
             owner=env.fg.user)
         os_version = run('cat /etc/issue.net')
-        os_version = float(os_version.split(' ')[1])
+        os_version = float(os_version.split(' ')[1].split('.')[0])
 
         if os_version > 13:
             extra = '-DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython2.7.so'
