@@ -29,6 +29,7 @@ def setup_tilemill():
     # Note raring seems not to be supported yet...
     setup_env()
     add_developmentseed_ppa()
+    fabtools.require.deb.package('lsb-release')
     fabtools.require.deb.package('tilemill')
     fabtools.require.deb.package('libmapnik')
     # TODO: switch to using nodeenv
