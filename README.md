@@ -4,6 +4,8 @@ FabGIS
 [![Downloads](https://pypip.in/d/fabgis/badge.png)](https://crate.io/packages/fabgis)
 [![Downloads](https://pypip.in/v/fabgis/badge.png)](https://crate.io/packages/fabgis)
 
+[![Stories in Ready](https://badge.waffle.io/timlinux/fabgis.png?label=ready)](http://waffle.io/timlinux/fabgis)
+
 'Fabric tasks for the busy FOSSGIS professional'
 
 Welcome to the fabgis project! The purpose of this project is to commodotise
