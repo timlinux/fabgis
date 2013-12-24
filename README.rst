@@ -1,6 +1,9 @@
 FabGIS
 ======
 
+[![Downloads](https://pypip.in/d/fabgis/badge.png)](https://crate.io/packages/fabgis)
+[![Downloads](https://pypip.in/v/fabgis/badge.png)](https://crate.io/packages/fabgis)
+
 'Fabric tasks for the busy FOSSGIS professional'
 
 Welcome to the fabgis project! The purpose of this project is to commodotise
