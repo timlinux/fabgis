@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/timlinux/fabgis.png?label=ready)](https://waffle.io/timlinux/fabgis)  
 FabGIS
 ======
 
