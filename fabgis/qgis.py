@@ -117,6 +117,7 @@ def install_qgis1_8(gdal_from_source=False):
     add_ubuntugis_ppa()
     setup_ccache()
     sudo('apt-get build-dep -y qgis')
+    fabtools.require.deb.package('libspatialindex-dev')
     clone_qgis(branch='release-1_8')
     workspace = '%s/cpp' % env.fg.workspace
     code_path = '%s/QGIS' % workspace

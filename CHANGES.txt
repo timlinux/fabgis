@@ -1,4 +1,5 @@
-v0.16.1, Dec 16 2013 -- Fixed bug in determining ubuntu version from issue.net
+v0.16.1, Jan 3 2014 -- Fixed bug in determining ubuntu version from issue.net
+        and missing spatialindex dependency for qgis 1.8 build. 
 v0.16.0, 27 September 2013 -- Added task to install qgis 2. Added docker group
 	and user setup commands, and make docker setup a little more robust when run
 	multiple times. Tweaks to git checkout task and added a task to strip
