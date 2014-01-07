@@ -1,5 +1,11 @@
 # coding=utf-8
-"""Helpers for installing hdf5"""
+"""
+Helpers for installing hdf5.
+============================
+
+----------
+
+"""
 
 import fabtools
 from fabric.contrib.files import exists

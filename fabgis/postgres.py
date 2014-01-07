@@ -1,5 +1,11 @@
 # coding=utf-8
-"""Postgres related fabric tasks and helpers."""
+"""
+Postgres related fabric tasks.
+==============================
+
+----------
+
+"""
 import os
 import fabtools
 from fabric.contrib.files import exists

@@ -1,5 +1,11 @@
 # coding=utf-8
-"""General utilities."""
+"""
+General utilities.
+==================
+
+----------
+
+"""
 import os
 from fabric.api import cd, sudo
 from fabric.contrib.files import contains, append

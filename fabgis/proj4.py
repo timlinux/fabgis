@@ -1,5 +1,11 @@
 # coding=utf-8
-"""Helpers for installing proj4"""
+"""
+PROJ4 related tasks.
+====================
+
+----------
+
+"""
 
 import fabtools
 from fabric.contrib.files import exists

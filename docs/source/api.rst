@@ -2,6 +2,10 @@
 API Documentation
 =================
 
+.. automodule:: fabgis.django
+   :members:
+
+
 .. automodule:: fabgis.hdf
    :members:
 
@@ -55,10 +59,6 @@ API Documentation
 
 
 .. automodule:: fabgis.common
-   :members:
-
-
-.. automodule:: fabgis.django
    :members:
 
 

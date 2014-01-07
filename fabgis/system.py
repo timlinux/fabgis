@@ -1,5 +1,11 @@
 # coding=utf-8
-"""Tools for setting up and hardening a system."""
+"""
+System related tasks.
+=====================
+
+----------
+
+Tools for setting up and hardening a system."""
 
 from getpass import getpass
 

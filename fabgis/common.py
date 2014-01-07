@@ -1,5 +1,11 @@
 # coding=utf-8
-"""Common helpers to bootstrap fabric."""
+"""
+Common helpers to bootstrap fabric.
+===================================
+
+----------
+
+"""
 import os
 from fabric.api import env, task, fastprint, run, hide
 from fabric.utils import _AttributeDict as fdict

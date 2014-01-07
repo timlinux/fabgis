@@ -5,7 +5,13 @@ from fabric.api import run, cd, env, task, sudo, put
 import fabtools
 from .utilities import append_if_not_present, replace_tokens
 from .common import setup_env
+"""
+Jenkins related tasks.
+======================
 
+----------
+
+"""
 
 @task
 def add_jenkins_repository():

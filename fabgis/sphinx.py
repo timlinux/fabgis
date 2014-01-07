@@ -1,5 +1,11 @@
 # coding=utf-8
-"""Tasks for setting up sphinx."""
+"""
+Tasks for setting up sphinx.
+============================
+
+----------
+
+"""
 import fabtools
 from fabric.api import task, sudo, fastprint
 from fabric.colors import green, blue

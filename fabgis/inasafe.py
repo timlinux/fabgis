@@ -1,5 +1,11 @@
 # coding=utf-8
-"""Tasks for setting up InaSAFE."""
+"""
+Tasks for setting up InaSAFE.
+=============================
+
+----------
+
+"""
 
 from fabric.api import task, fastprint
 from fabric.colors import blue, green

@@ -1,5 +1,11 @@
 # coding=utf-8
-"""Tools for deployment of cartodb on a server.
+"""
+Cartodb related tasks
+=====================
+
+----------
+
+Tools for deployment of cartodb on a server.
 
 Note this is currently just a place holder. I plan to port these scripts to
 fabric scripts:

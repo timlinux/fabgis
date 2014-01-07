@@ -146,7 +146,7 @@ This command will initialise your vagrant sandbox.::
     vagrant up
 
 .. note:: When we run the above command, there will be a one-time download
-of around 400mb to add the base image to your boxes collection.
+    of around 400mb to add the base image to your boxes collection.
 
 After the `vagrant up` command completes, you should have a running ubuntu
 virtual machine. You can log into it by doing::

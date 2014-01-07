@@ -1,7 +1,9 @@
 # coding=utf-8
-"""Motion Web Cam
-==================
+"""
+Motion Web Cam related tasks.
+=============================
 
+----------
 
 This module provides tools for setting up the motion web cam daemon.
 

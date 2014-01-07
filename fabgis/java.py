@@ -1,5 +1,11 @@
 # coding=utf-8
-"""Tasks for install and setup of java."""
+"""
+Tasks for install and setup of java.
+====================================
+
+----------
+
+"""
 
 from fabric.api import run, sudo, task, fastprint, env
 from fabric.colors import red, green, blue, yellow

@@ -1,5 +1,9 @@
 # coding=utf-8
-"""Tools for deployment of tilemill.
+"""
+Tools for deployment of tilemill.
+=================================
+
+----------
 
 .. note:: Usually you should run tilemill on your local host and prepare your
     mbtiles, then use tilestream (https://github.com/mapbox/tilestream) to

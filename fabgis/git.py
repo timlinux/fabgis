@@ -1,4 +1,10 @@
-"""Git related utilities."""
+"""
+Git related utilities.
+======================
+
+----------
+
+"""
 import os
 from fabric.api import fastprint, run, cd, task, env
 from fabric.colors import red, cyan, green
@@ -30,7 +36,7 @@ def update_git_checkout(code_path, url, repo_alias, branch='master', tag=None):
 
     To run e.g.::
 
-        fab -H 188.40.123.80:8697 remote update_git_checkout
+        fab -H foo:1234 remote update_git_checkout
 
     """
     fastprint(cyan('Updating git checkout.\n'))

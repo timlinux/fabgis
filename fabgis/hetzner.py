@@ -1,5 +1,11 @@
 # coding=utf-8
-"""Set up a Hetzner server from scratch."""
+"""
+Hetzner Server related tasks.
+=============================
+
+----------
+
+Set up a Hetzner server from scratch."""
 
 from fabric.api import task, run, local
 
@@ -11,9 +17,9 @@ def hetzner_setup(host_name):
     :param host_name: The fully qualified domain name to use for the host.
     :type host_name: str
 
-    .. example::
+    For example::
 
-        fab -H mts2 hetzner_setup:host_name=mappingthesacred.org
+        fab -H mts2 hetzner_setup:host_name=foo.org
 
     If you have an ssh agent running you may be prompted for your password::
 

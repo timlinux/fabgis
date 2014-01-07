@@ -1,5 +1,11 @@
 # coding=utf-8
-"""Tools for configuration and set up of docker.
+"""
+Docker Related Tasks.
+=====================
+
+----------
+
+Tools for configuration and set up of docker.
 
 .. seealso:: http://www.docker.io/
      and http://docs.docker.io/en/latest/installation/

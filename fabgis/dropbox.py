@@ -1,5 +1,11 @@
 # coding=utf-8
-"""Helpers dropbox so that you can easily move gis data to the server."""
+"""
+Dropbox related tasks.
+======================
+
+----------
+
+Helpers for dropbox so that you can easily move gis data to the server."""
 
 import os
 

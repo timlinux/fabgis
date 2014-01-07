@@ -1,5 +1,11 @@
 # coding=utf-8
-"""Tools relating tot he use of python virtualenv."""
+"""
+Tools relating to the use of python virtualenv.
+===============================================
+
+----------
+
+"""
 
 import os
 from fabric.api import fastprint, run, cd, task

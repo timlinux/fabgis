@@ -1,5 +1,11 @@
 # coding=utf-8
-"""Module for gdal related tasks"""
+"""
+GDAL Related Tasks.
+===================
+
+----------
+
+Module for gdal related tasks"""
 import fabtools
 from fabric.contrib.files import exists, append
 from fabric.api import fastprint, run, cd, env, task, sudo, settings

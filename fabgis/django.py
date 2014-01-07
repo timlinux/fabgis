@@ -1,7 +1,9 @@
 # coding=utf-8
 """
-Django related tasks
---------------------
+Django related tasks.
+=====================
+
+----------
 """
 
 import os

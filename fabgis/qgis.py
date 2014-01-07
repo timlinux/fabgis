@@ -1,5 +1,11 @@
 # coding=utf-8
-"""QGIS related build tools."""
+"""
+QGIS related build tools.
+=========================
+
+----------
+
+"""
 from fabric.contrib.files import exists
 from fabric.api import run, cd, env, task, sudo
 import fabtools

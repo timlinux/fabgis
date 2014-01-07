@@ -42,7 +42,11 @@ to your local X-xerver.
 Tim Sutton, Jan 2013
 """
 
-from fabric.api import task, hosts, cd, run
+import os
+# lcd = local cd
+from fabric.api import task, hosts, cd, run, fastprint, local, lcd
+from fabric.contrib.project import rsync_project
+from fabric.colors import blue
 from fabgis.postgres import (
     create_postgis_1_5_db,
     get_postgres_dump,
@@ -75,6 +79,7 @@ def ls():
     """Simply list the directory on the remote server."""
     run('pwd')
     run('ls')
+
 
 @task
 def build_server():
@@ -125,3 +130,26 @@ def update_website():
         run('git pull')
         run('make clean')
         run('../venv/bin/sphinx-build source build/html')
+
+
+@task
+def sync_docs_to_server(remote_dir='/home/web/fabgis'):
+    """Synchronize docs with webserver.
+
+    :param remote_dir: The directory to sync the docs to. After syncing it will
+        match the content of your local docs/build/html dir.
+    :type remote_dir: str
+    """
+    base_path = os.path.dirname(__file__)
+    docs_path = os.path.join(base_path, 'docs')
+    html_path = os.path.join(docs_path, 'build', 'html')
+    with lcd(docs_path):
+        local('make clean')
+        # Make sure to set pythonpath in case there is alread a system
+        # installed copy of fabgis overriding our local copy.
+        local('PYTHONPATH=%s make html' % base_path)
+
+    rsync_project(remote_dir=remote_dir, local_dir=html_path)
+    run('chmod o+rX -R %s' % remote_dir)
+    fastprint(blue(
+        'Your server docs are now synchronised to your local project\n'))
