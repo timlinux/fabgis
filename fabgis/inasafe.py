@@ -24,4 +24,5 @@ def setup_inasafe():
     fabtools.require.deb.package('python-numpy')
     fabtools.require.deb.package('python-qt4')
     fabtools.require.deb.package('python-nose')
+    fabtools.require.deb.package('gdal-bin')
     fastprint(green('Setting up InaSAFE dependencies completed.\n'))
