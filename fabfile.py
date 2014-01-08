@@ -48,6 +48,7 @@ from fabric.api import task, hosts, cd, run, fastprint, local, lcd
 from fabric.contrib.project import rsync_project
 from fabric.colors import blue
 from fabgis.postgres import (
+    setup_postgis_latest, 
     create_postgis_1_5_db,
     get_postgres_dump,
     setup_nightly_backups)

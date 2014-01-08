@@ -80,13 +80,70 @@ def create_postgis_2_template():
 
 
 @task
-def setup_postgis_2():
-    """Set up postgis 2.0 from packages in ubuntugis."""
-    add_ubuntugis_ppa()
-    fabtools.require.deb.package('build-essential')
-    fabtools.require.deb.package('postgresql-9.1-postgis-2.0')
-    fabtools.require.deb.package('postgresql-9.1-postgis-2.0-scripts')
-    fabtools.require.deb.package('postgresql-server-dev-all')
+def setup_postgis_2(from_source=False):
+    """Set up postgis 2.0 from packages in ubuntugis or from source.
+
+    :param from_source: Whether postgis should be built from source.
+    :type from_source: bool
+    .. versionadded:: from_source parameter added in 0.17.0
+
+    """
+    if from_source:
+        setup_postgis_latest():
+    else:
+        add_ubuntugis_ppa()
+        fabtools.require.deb.package('build-essential')
+        fabtools.require.deb.package('postgresql-9.1-postgis-2.0')
+        fabtools.require.deb.package('postgresql-9.1-postgis-2.0-scripts')
+        fabtools.require.deb.package('postgresql-server-dev-all')
+        create_postgis_2_template()
+
+@task
+def setup_postgis_latest():
+    """Set up postgis latest package from source..
+
+    You can call this multiple times without it actually installing all over
+    again each time since it checks for the presence of pgis first.
+
+    We build from source because we want the latest build
+
+    I'm using this together with the postgresql repo here:
+
+    deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main
+
+    which provides pg 9.3 at time of writing this.
+
+    .. versionadded:: 0.17.0
+    """
+    setup_env()
+
+    pg_file = '/usr/share/postgresql/9.3/contrib/postgis-2/postgis.sql'
+    if not fabtools.files.is_file(pg_file):
+        add_ubuntugis_ppa()
+        fabtools.require.deb.package('postgresql-server-dev-9.3')
+        fabtools.require.deb.package('build-essential')
+
+        # Note - no postgis installation from package as we want to build 1.5
+        # from source
+        fabtools.require.postgres.server()
+
+        # Now get and install postgis 1.5 if needed
+
+        fabtools.require.deb.package('libxml2-dev')
+        fabtools.require.deb.package('libgeos-dev')
+        fabtools.require.deb.package('libgdal1-dev')
+        fabtools.require.deb.package('libproj-dev')
+        source_url = ('http://download.osgeo.org/postgis/source/'
+                      'postgis-2.1.1.tar.gz')
+        source = 'postgis-2.1.1'
+        if not fabtools.files.is_file('%s.tar.gz' % source):
+            run('wget %s' % source_url)
+            run('tar xfz %s.tar.gz' % source)
+        with cd(source):
+            run('./configure')
+            run('make')
+            sudo('make install')
+
     create_postgis_2_template()
 
 
