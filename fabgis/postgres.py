@@ -10,7 +10,8 @@ import os
 import fabtools
 from fabric.contrib.files import exists
 from fabtools.postgres import create_user
-from fabric.api import run, cd, env, task, sudo, get, put
+from fabric.colors import red, green, blue
+from fabric.api import run, cd, env, task, sudo, get, put, fastprint
 from .common import setup_env, show_environment, add_ubuntugis_ppa
 from .utilities import replace_tokens
 
@@ -89,7 +90,7 @@ def setup_postgis_2(from_source=False):
 
     """
     if from_source:
-        setup_postgis_latest():
+        setup_postgis_latest()
     else:
         add_ubuntugis_ppa()
         fabtools.require.deb.package('build-essential')
@@ -304,9 +305,12 @@ def restore_postgres_dump(
     :type file_name: str
     """
     setup_env()
+    fastprint(green('Restoring to database: %s\n' % dbname))
+
     if user is None:
         user = env.fg.user
     show_environment()
+    fastprint(green('Checking user exists\n'))
     require_postgres_user(user, password=password)
     if file_name is None or file_name == '':
         date = run('date +%d-%B-%Y')
@@ -315,10 +319,13 @@ def restore_postgres_dump(
     else:
         my_file = os.path.split(file_name)[1]
         put(file_name, '/tmp/%s' % my_file)
+    fastprint(green('Restoring from file: %s\n' % file_name))
 
     if fabtools.postgres.database_exists(dbname):
+        fastprint(red('Dropping existing db: %s\n' % dbname))
         run('dropdb %s' % dbname)
 
+    fastprint(green('Creating database: %s\n' % dbname))
     # noinspection PyArgumentEqualDefault
     fabtools.require.postgres.database(
         '%s' % dbname,
@@ -329,8 +336,12 @@ def restore_postgres_dump(
     if not ignore_permissions:
         extra_args = ''
     else:
+        fastprint(blue('Ignoring permissions\n'))
         extra_args = '-x -O'
+
+    fastprint(green('Starting restore...\n'))
     run('pg_restore %s /tmp/%s | psql %s' % (extra_args, my_file, dbname))
+    fastprint(green('Restore completed.\n'))
 
 
 @task
