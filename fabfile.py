@@ -51,10 +51,15 @@ from fabgis.postgres import (
     setup_postgis_latest, 
     create_postgis_1_5_db,
     get_postgres_dump,
+    compile_osm2pgsql,
     setup_nightly_backups)
 from fabgis.tilemill import setup_tilemill, start_tilemill
 from fabgis.tilestream import setup_tilestream, start_tilestream
-from fabgis.qgis import install_qgis2, install_qgis1_8, install_qgis_master
+from fabgis.qgis import (
+    install_qgis2,
+    install_qgis1_8,
+    install_qgis_master,
+    setup_qgis_server)
 from fabgis.proj4 import build_proj4
 from fabgis.hdf import build_hdf5
 from fabgis.dropbox import (

@@ -6,8 +6,12 @@ QGIS related build tools.
 ----------
 
 """
+import os
 from fabric.contrib.files import exists
-from fabric.api import run, cd, env, task, sudo
+from fabric.api import run, cd, env, task, sudo, fastprint
+from fabric.colors import red, green, blue
+from fabtools import require
+from fabric.contrib.files import upload_template
 import fabtools
 from .common import add_ubuntugis_ppa
 from .common import setup_env
@@ -101,9 +105,10 @@ def compile_qgis(build_path, build_prefix, gdal_from_source=False):
                  '-DWITH_MAPSERVER=ON '
                  '-DWITH_INTERNAL_SPATIALITE=ON '
                  '-DWITH_GRASS=OFF '
+                 '-DCMAKE_BUILD_TYPE=Debug '
                  '%s'
                  % (build_prefix, extra))
-        run('cmake .. %s' % cmake)
+        run(cmake)
         processor_count = run('cat /proc/cpuinfo | grep processor | wc -l')
         run('time make -j %s install' % processor_count)
 
@@ -199,3 +204,109 @@ def setup_qgis2_and_postgis():
     """
     create_postgis_1_5_db('gis', env.user)
     install_qgis2()
+
+
+@task
+def setup_qgis_server(
+        site_name,
+        web_root='/home/web/qgis-server',
+        qgis_version='2.0',
+        server_admin='none@none.com',
+        template_dir=None,
+        **kwargs):
+    """Set up QGIS Server for QGIS.
+
+    We assume your QGIS was built using fabgis into /usr/local/qgis-<version>.
+
+    Place your projects in subdirectories of web root for them to be published.
+
+    :param site_name: Name of the site e.g. qgis.linfiniti.com. Should be a
+        single word with only alpha characters and dots in it.
+    :type site_name: str
+
+    :param web_root: Directory where the content lives.
+    :type web_root: str
+
+    :param qgis_version: The version you wish to server maps with. Currently
+        supported values are '1.8', '2.0' and 'master'.
+    :type qgis_version: str
+
+    :param server_admin: Email address for the server admin. Defaults to
+        none@none.com. This value is placed in the apache config file.
+        No validation is performed.
+    :type server_admin: str
+
+
+    :param template_dir: Directory where the template files live. If none
+        will default to ``resources/server_config/apache``. Must be a
+        relative path to the fabfile you are running.
+    :type template_dir: str
+
+    :param kwargs: Any extra keyword arguments that should be appended to the
+        token list that will be used when rendering the apache config template.
+        Use this to pass in sensitive data such as passwords.
+    :type kwargs: dict
+
+    :returns: Path to the apache conf file.
+    :rtype: str
+    """
+    setup_env()
+    if qgis_version == '1.8':
+        install_qgis1_8()
+    elif qgis_version == '2.0':
+        install_qgis2()
+        pass
+    elif qgis_version == 'master':
+        install_qgis_master()
+    else:
+        raise Exception('Invalid QGIS version requested')
+    # Clone and replace tokens in apache conf
+    if template_dir is None:
+        template_dir = os.path.join(
+            os.path.dirname(__file__),
+            'fabgis_resources', 'server_config', 'apache/')
+    filename = 'qgis-server.conf.templ'
+    template_path = os.path.join(template_dir, filename)
+    fastprint(green('Using %s for template\n' % template_path))
+    cgi_path = os.path.join(web_root, 'qgis-%s' % qgis_version)
+    qgis_prefix = '/usr/local/qgis-%s' % qgis_version
+
+    require.directory(cgi_path)
+    with cd(cgi_path):
+        qgis_binary = os.path.join(qgis_prefix, 'bin', 'qgis_mapserv.fcgi')
+
+        if exists('qgis_mapserv.fcgi'):
+            run('rm qgis_mapserv.fcgi')
+
+        run('ln -s %s .' % qgis_binary)
+
+    context = {
+        'escaped_server_name': site_name.replace('.', '\.'),
+        'server_name': site_name,
+        'server_admin': server_admin,
+        'web_root': web_root,
+        'site_name': site_name,
+        'cgi_path': cgi_path,
+        'qgis_prefix': qgis_prefix}
+    context.update(kwargs)  # merge in any params passed in to this function
+    destination = '/etc/apache2/sites-available/%s.apache.conf' % site_name
+    fastprint(green('Context: %s\n' % context))
+
+    require.deb.packages(['apache2', 'libapache2-mod-fcgid'])
+
+    upload_template(
+        template_path,
+        destination,
+        context=context,
+        use_sudo=True)
+
+    sudo('a2dissite 000-default.conf')
+    sudo('a2ensite %s.apache.conf' % site_name)
+    # Check if apache configs are ok - script will abort if not ok
+    sudo('/usr/sbin/apache2ctl configtest')
+    require.service.restarted('apache2')
+    sudo('chmod o+rX -R %s' % web_root)
+    fastprint(green('Now upload your QGIS project file and data to\n'))
+    fastprint(green('%s\n' % cgi_path))
+
+    return destination

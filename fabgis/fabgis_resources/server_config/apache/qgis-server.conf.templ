@@ -1,0 +1,23 @@
+<VirtualHost *:80>
+    ServerName %(site_name)s
+    ServerAdmin %(server_admin)s
+    LogLevel warn
+    CustomLog /var/log/apache2/%(site_name)s.access.log combined
+    ErrorLog /var/log/apache2/%(site_name)s.error.log
+    DocumentRoot '%(web_root)s'
+    ServerSignature Off
+
+    ScriptAlias /cgi/ %(cgi_path)s/
+    <Directory "%(cgi_path)s">
+      AllowOverride None
+      Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+      Order allow,deny
+      Allow from all
+      # TODO check security risks of this but seems needed for ub13.10
+      Require all granted
+      # Next for QGIS Mapserver
+      SetEnv QGIS_PREFIX_PATH %(qgis_prefix)s
+      SetEnv LD_LIBRARY_PATH %(qgis_prefix)s/lib
+    </Directory>
+
+</VirtualHost>

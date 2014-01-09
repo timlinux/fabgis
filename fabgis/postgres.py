@@ -358,6 +358,43 @@ def restore_postgres_dump(
 
 
 @task
+def compile_osm2pgsql():
+    """From-source compile of osm2pgsql.
+
+    We build from source so we can use recent postgresql packages.
+
+    See: http://wiki.openstreetmap.org/wiki/Osm2pgsql#From_source
+    """
+    add_ubuntugis_ppa()
+    fabtools.require.deb.packages([
+        'build-essential',
+        'libxml2-dev',
+        'libgeos++-dev',
+        'libpq-dev',
+        'libbz2-dev',
+        'libproj-dev',
+        'libtool',
+        'automake',
+        'subversion',
+        'libprotobuf-c0-dev',
+        'protobuf-c-compiler',
+        'lua5.2',
+        'liblua5.2-0',
+        'liblua5.2-dev',
+        'liblua5.1-0',
+    ])
+    with cd('/tmp'):
+        if not exists('osm2pgsql'):
+            run('git clone https://github.com/openstreetmap/osm2pgsql.git')
+
+    with cd('/tmp/osm2pgsql'):
+        run('./autogen.sh')
+        run('./configure')
+        run('make -j4')
+        sudo('make install')
+
+
+@task
 def setup_nightly_backups():
     """Setup nightly backups for all postgresql databases.
 
