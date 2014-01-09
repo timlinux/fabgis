@@ -18,6 +18,7 @@
       # Next for QGIS Mapserver
       SetEnv QGIS_PREFIX_PATH %(qgis_prefix)s
       SetEnv LD_LIBRARY_PATH %(qgis_prefix)s/lib
+      SetEnv QGIS_DEBUG 1
+      SetEnv QGIS_LOG_FILE /tmp/qgis.log
     </Directory>
-
 </VirtualHost>
