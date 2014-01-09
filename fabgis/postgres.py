@@ -67,25 +67,29 @@ def create_postgis_2_template():
             owner='%s' % env.user,
             encoding='UTF8',
             locale='en_US.UTF-8')
-        pg_version = run('psql --version')
-        if '9.3' in pg_version:
-            version = '9.3'
-        elif '9.2' in pg_version:
-            version = '9.2'
-        else:
-            version = '9.1'
+        pg_path = '/usr/share/postgresql'
+        pg_version = run('ls %s | head -1' % pg_path)
+        pg_path = '%s/%s' % (pg_path, pg_version)
+
+        postgis_version = run('ls %s/contrib/ | grep postgis' % pg_path)
+        postgis_path = '%s/contrib/%s/' % (pg_path, postgis_version)
+
+        fastprint(green('Creating template database for:\n'))
+        fastprint(green('%s\n' % postgis_path))
         sql = ('UPDATE pg_database SET datistemplate = TRUE WHERE datname = '
                '\'template_postgis\';')
         run('psql template1 -c "%s"' % sql)
-        sql_path = '/usr/share/postgresql/$s/contrib/postgis-2.0/' % version
-        run('psql template_postgis -f %s/postgis.sql' % sql_path)
-        run('psql template_postgis -f %s/spatial_ref_sys.sql' % sql_path)
+
+        run('psql template_postgis -f %s/postgis.sql' % postgis_path)
+        run('psql template_postgis -f %s/spatial_ref_sys.sql' % postgis_path)
         grant_sql = 'GRANT ALL ON geometry_columns TO PUBLIC;'
         run('psql template_postgis -c "%s"' % grant_sql)
         grant_sql = 'GRANT ALL ON geography_columns TO PUBLIC;'
         run('psql template_postgis -c "%s"' % grant_sql)
         grant_sql = 'GRANT ALL ON spatial_ref_sys TO PUBLIC;'
         run('psql template_postgis -c "%s"' % grant_sql)
+    else:
+        fastprint(red('template_postgis already exists!\n'))
 
 
 @task
@@ -106,6 +110,7 @@ def setup_postgis_2(from_source=False):
         fabtools.require.deb.package('postgresql-9.1-postgis-2.0-scripts')
         fabtools.require.deb.package('postgresql-server-dev-all')
         create_postgis_2_template()
+
 
 @task
 def setup_postgis_latest():
