@@ -64,11 +64,19 @@ def create_postgis_2_template():
         fabtools.require.postgres.database(
             'template_postgis',
             owner='%s' % env.user,
-            encoding='UTF8')
+            encoding='UTF8',
+            locale='en_US.UTF-8')
+        pg_version = run('psql --version')
+        if '9.3' in pg_version:
+            version = '9.3'
+        elif '9.2' in pg_version:
+            version = '9.2'
+        else:
+            version = '9.1'
         sql = ('UPDATE pg_database SET datistemplate = TRUE WHERE datname = '
                '\'template_postgis\';')
         run('psql template1 -c "%s"' % sql)
-        sql_path = '/usr/share/postgresql/9.1/contrib/postgis-2.0/'
+        sql_path = '/usr/share/postgresql/$s/contrib/postgis-2.0/' % version
         run('psql template_postgis -f %s/postgis.sql' % sql_path)
         run('psql template_postgis -f %s/spatial_ref_sys.sql' % sql_path)
         grant_sql = 'GRANT ALL ON geometry_columns TO PUBLIC;'
@@ -89,7 +97,7 @@ def setup_postgis_2(from_source=False):
 
     """
     if from_source:
-        setup_postgis_latest():
+        setup_postgis_latest()
     else:
         add_ubuntugis_ppa()
         fabtools.require.deb.package('build-essential')
