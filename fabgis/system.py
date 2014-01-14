@@ -17,13 +17,15 @@ import fabtools
 from .utilities import append_if_not_present
 
 
-def setup_developer_tools():
+@task
+def setup_qt4_developer_tools():
     """Install various useful tools needed for developers."""
     fabtools.require.deb.package('qtcreator')
     fabtools.require.deb.package('qt4-designer')
     fabtools.require.deb.package('qt4-linguist-tools')
 
 
+@task
 def setup_ccache():
     """Setup ccache."""
     fabtools.require.deb.package('ccache')

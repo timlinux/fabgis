@@ -18,7 +18,7 @@ from .common import setup_env
 def update_git_checkout(code_path, url, repo_alias, branch='master', tag=None):
     """Make sure there is a read only git checkout.
 
-    :param code_path: Path to where the repo should be.
+    :param code_path: Path to where the repo should be checked out.
     :type code_path: str
 
     :param url: Complete http url for cloning/checking out the repo.

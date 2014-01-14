@@ -7,22 +7,58 @@ Tasks for setting up InaSAFE.
 
 """
 
-from fabric.api import task, fastprint
+import os
+from fabric.api import task, fastprint, env
 from fabric.colors import blue, green
 import fabtools
+from .system import setup_qt4_developer_tools, setup_ccache
+from .common import add_ubuntugis_ppa
+from .git import update_git_checkout
+from .qgis import install_qgis2
 
 
 @task
 def setup_inasafe():
     """Setup requirements for InaSAFE."""
     fastprint(blue('Setting up InaSAFE dependencies\n'))
-    fabtools.require.deb.package('pep8')
-    fabtools.require.deb.package('pylint')
-    fabtools.require.deb.package('python-nose')
-    fabtools.require.deb.package('python-nosexcover')
-    fabtools.require.deb.package('python-pip')
-    fabtools.require.deb.package('python-numpy')
-    fabtools.require.deb.package('python-qt4')
-    fabtools.require.deb.package('python-nose')
-    fabtools.require.deb.package('gdal-bin')
+    setup_qt4_developer_tools()
+    setup_ccache()
+    install_qgis2()
+    fabtools.require.deb.packages([
+        'pep8',
+        'pylint',
+        'python-nose',
+        'python-nosexcover',
+        'python-pip',
+        'python-numpy',
+        'python-qt4',
+        'python-nose',
+        'gdal-bin',
+        'rsync',
+        'python-coverage',
+        'python-gdal',
+        'pyqt4-dev-tools',
+        'pyflakes',
+
+    ])
+    code_path = os.path.join('home', env.user, 'dev', 'python')
+
+    update_git_checkout(
+        code_path=code_path,
+        url='git://github.com/AIFDR/inasafe.git',
+        repo_alias='inasafe-dev',
+        branch='master'
+    )
+    update_git_checkout(
+        code_path=code_path,
+        url='git://github.com/AIFDR/inasafe_data.git',
+        repo_alias='inasafe_data',
+        branch='master'
+    )
+    update_git_checkout(
+        code_path=code_path,
+        url='git://github.com/AIFDR/inasafe-doc.git',
+        repo_alias='inasafe-doc',
+        branch='develop'
+    )
     fastprint(green('Setting up InaSAFE dependencies completed.\n'))
