@@ -3,8 +3,6 @@
 PROJ4 related tasks.
 ====================
 
-----------
-
 """
 
 import fabtools

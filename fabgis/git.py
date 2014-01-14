@@ -2,8 +2,6 @@
 Git related utilities.
 ======================
 
-----------
-
 """
 import os
 from fabric.api import fastprint, run, cd, task, env

@@ -9,8 +9,6 @@ from .common import setup_env
 Jenkins related tasks.
 ======================
 
-----------
-
 """
 
 @task

@@ -3,8 +3,6 @@
 Tasks for setting up sphinx.
 ============================
 
-----------
-
 """
 import fabtools
 from fabric.api import task, sudo, fastprint

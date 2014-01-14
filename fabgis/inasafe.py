@@ -3,8 +3,6 @@
 Tasks for setting up InaSAFE.
 =============================
 
-----------
-
 """
 
 import os
@@ -12,7 +10,6 @@ from fabric.api import task, fastprint, env
 from fabric.colors import blue, green
 import fabtools
 from .system import setup_qt4_developer_tools, setup_ccache
-from .common import add_ubuntugis_ppa
 from .git import update_git_checkout
 from .qgis import install_qgis2
 
@@ -62,3 +59,5 @@ def setup_inasafe():
         branch='develop'
     )
     fastprint(green('Setting up InaSAFE dependencies completed.\n'))
+    fastprint(green('You should now have checkouts of inasafe-dev, \n'))
+    fastprint(green('inasafe_data and insafe-doc in your dev/python dir.\n'))

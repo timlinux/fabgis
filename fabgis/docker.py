@@ -3,8 +3,6 @@
 Docker Related Tasks.
 =====================
 
-----------
-
 Tools for configuration and set up of docker.
 
 .. seealso:: http://www.docker.io/

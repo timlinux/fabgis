@@ -3,7 +3,6 @@
 Django related tasks.
 =====================
 
-----------
 """
 
 import os

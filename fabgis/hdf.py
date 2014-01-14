@@ -3,8 +3,6 @@
 Helpers for installing hdf5.
 ============================
 
-----------
-
 """
 
 import fabtools

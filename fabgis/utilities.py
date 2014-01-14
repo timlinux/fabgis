@@ -3,8 +3,6 @@
 General utilities.
 ==================
 
-----------
-
 """
 import os
 from fabric.api import cd, sudo

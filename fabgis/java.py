@@ -3,8 +3,6 @@
 Tasks for install and setup of java.
 ====================================
 
-----------
-
 """
 
 from fabric.api import run, sudo, task, fastprint, env

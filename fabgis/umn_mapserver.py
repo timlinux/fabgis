@@ -3,8 +3,6 @@
 Mapserver related tasks.
 ========================
 
-----------
-
 """
 
 import os

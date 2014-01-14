@@ -1,7 +1,9 @@
 v0.17.0, Jan 7 2013 -- Improved API doc generation and added a task to push
    docs to server. Fixes for creation of template_postgis with different pg
    versions. Added task to postgresql for building osm2pgsql. Added task to
-   QGIS for setting up QGIS server.
+   QGIS for setting up QGIS server. Added better task for setting up InaSAFE
+   for development. removed line formatting under API headings. Fixes for
+   sphinx doc warnings.
 
 v0.16.2, Jan 3 2014 -- Another fixed bug in determining ubuntu version
 

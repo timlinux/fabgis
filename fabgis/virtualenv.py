@@ -3,8 +3,6 @@
 Tools relating to the use of python virtualenv.
 ===============================================
 
-----------
-
 """
 
 import os

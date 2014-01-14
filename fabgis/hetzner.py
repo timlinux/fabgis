@@ -3,8 +3,6 @@
 Hetzner Server related tasks.
 =============================
 
-----------
-
 Set up a Hetzner server from scratch."""
 
 from fabric.api import task, run, local
@@ -28,7 +26,9 @@ def hetzner_setup(host_name):
     Enter any text to skip it repeatedly until you get prompted for an
     interactive password.
 
-    Example session output::
+    Example:
+
+    .. code-block:: none
 
         out:                 Hetzner Online AG - installimage
         out:

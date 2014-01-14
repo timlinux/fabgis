@@ -3,8 +3,6 @@
 Motion Web Cam related tasks.
 =============================
 
-----------
-
 This module provides tools for setting up the motion web cam daemon.
 
 http://www.lavrsen.dk/foswiki/bin/view/Motion/WebHome

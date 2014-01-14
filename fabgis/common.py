@@ -3,8 +3,6 @@
 Common helpers to bootstrap fabric.
 ===================================
 
-----------
-
 """
 import os
 from fabric.api import env, task, fastprint, run, hide

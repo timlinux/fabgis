@@ -3,8 +3,6 @@
 System related tasks.
 =====================
 
-----------
-
 Tools for setting up and hardening a system."""
 
 from getpass import getpass

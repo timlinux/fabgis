@@ -3,8 +3,6 @@
 GDAL Related Tasks.
 ===================
 
-----------
-
 Module for gdal related tasks"""
 import fabtools
 from fabric.contrib.files import exists, append

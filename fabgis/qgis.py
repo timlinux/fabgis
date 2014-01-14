@@ -3,8 +3,6 @@
 QGIS related build tools.
 =========================
 
-----------
-
 """
 import os
 from fabric.contrib.files import exists

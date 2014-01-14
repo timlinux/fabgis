@@ -3,8 +3,6 @@
 Postgres related fabric tasks.
 ==============================
 
-----------
-
 """
 import os
 import fabtools
@@ -98,8 +96,9 @@ def setup_postgis_2(from_source=False):
 
     :param from_source: Whether postgis should be built from source.
     :type from_source: bool
-    .. versionadded:: from_source parameter added in 0.17.0
 
+    .. versionadded:: 0.17.0
+        from_source parameter added
     """
     if from_source:
         setup_postgis_latest()
