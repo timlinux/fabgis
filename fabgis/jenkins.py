@@ -28,9 +28,13 @@ def add_jenkins_repository():
 
 
 def configure_jenkins(repo):
-    """
+    """Configure the jenkins json file.
+
     We have to update the json file if we want to switch between distribution
-    provided jenkins and upstream jenkins
+    provided jenkins and upstream jenkins.
+
+    :param repo: A repository to use.
+    :type repo: str
     """
     command1 = 'curl -L http://updates.jenkins-ci.org/update-center.json'
     command2 = 'sed "1d;$d" > /var/lib/jenkins/updates/default.json'
@@ -44,13 +48,15 @@ def configure_jenkins(repo):
 
 @task
 def deploy_jenkins_plugins(repo):
-    """
+    """Set up jenkins plugins post-installation.
+
     Deploying plugins with jenkins-cli seems not to be reliable
     For now if the plugins are not getting installed automatically
     we have to go to the webinterface and  install at least github and xvfb
-    plugin manually before calling setup_jenkins_jobs
+    plugin manually before calling setup_jenkins_jobs.
+
     :param repo: repository to use
-    :return:
+    :type repo: str
     """
     webpath = 'http://updates.jenkins-ci.org'
     distribution = repo
@@ -114,13 +120,12 @@ def install_jenkins(use_upstream_repo=False):
         some of the plugins listed in the configure_jenkins target may not
         install.
 
-    Args:
-        use_upstream_repo - bool: (defaults to False). Whether to use the
-        official jenkins repo or not. In the case of False,
-        the distribution repo version will be used instead.
+    :param use_upstream_repo: Whether to use the official jenkins repo or not.
+        In the case of False, the distribution repo version will be used
+        instead. Defaults to False.
 
-    Example:
-        Using the upstream jenkins repo:
+    Example using the upstream jenkins repo::
+
         fab -H localhost fabgis.fabgis.install_jenkins:use_upstream_repo=True
 
     """
@@ -154,21 +159,24 @@ def install_jenkins(use_upstream_repo=False):
 
 
 @task
-def jenkins_deploy_website(site_url=None, use_upstream_repo=False):
+def jenkins_deploy_website(site_url=None):
     """
     Initialise jenkins with local proxy if we are not going to use port
     8080
+
+    :param site_url: Name of the web site.
+    :type site_url: str
     """
     setup_env()
     fabtools.require.deb.package('apache2')
-    sitename = site_url
+    site_name = site_url
 
-    if not sitename:
-        sitename = 'jenkins'
+    if not site_name:
+        site_name = 'jenkins'
     else:
-        sitename = site_url
+        site_name = site_url
 
-    jenkins_apache_conf = ('fabgis.%s.conf' % (sitename))
+    jenkins_apache_conf = ('fabgis.%s.conf' % site_name)
     jenkins_apache_conf_template = 'fabgis.jenkins.conf.templ'
 
     with cd('/etc/apache2/sites-available/'):
@@ -189,15 +197,15 @@ def jenkins_deploy_website(site_url=None, use_upstream_repo=False):
         my_tokens = {
             'SERVERNAME': env.fg.hostname,  # Web Url e.g. foo.com
             'WEBMASTER': 'werner@linfiniti.com',  # email of web master
-            'SITENAME': sitename,  # Choosen name of jenkins 'root'
+            'SITENAME': site_name,  # Choosen name of jenkins 'root'
         }
         replace_tokens(jenkins_apache_conf_template, my_tokens)
 
     # Add a hosts entry for local testing - only really useful for localhost
     hosts = '/etc/hosts'
-    if not contains(hosts, '%s.%s' % (sitename, env.fg.hostname)):
+    if not contains(hosts, '%s.%s' % (site_name, env.fg.hostname)):
         append_if_not_present(hosts,
-                              '127.0.1.1 %s.%s' % (sitename, env.fg.hostname),
+                              '127.0.1.1 %s.%s' % (site_name, env.fg.hostname),
                               use_sudo=True)
         append_if_not_present(hosts,
                               '127.0.0.1 %s.localhost' % env.fg.hostname,
@@ -207,3 +215,38 @@ def jenkins_deploy_website(site_url=None, use_upstream_repo=False):
     sudo('a2enmod proxy_http')
     sudo('a2ensite %s' % jenkins_apache_conf)
     sudo('service apache2 reload')
+
+@task
+def setup_jenkins_jobs(jobs, job_directory_path):
+    """Setup jenkins to run Continuous Integration Tests.
+
+    :param jobs: A list of job names to create.
+
+    :param job_directory_path: Directory containing jenkins xml job
+        definition files.
+
+    """
+    #fabgis.fabgis.initialise_jenkins_site()
+    xvfb_config = "org.jenkinsci.plugins.xvfb.XvfbBuildWrapper.xml"
+
+    with cd('/var/lib/jenkins/'):
+        if not exists(xvfb_config):
+            local_file = os.path.abspath(os.path.join(
+                job_directory_path,
+                'jenkins_jobs',
+                xvfb_config))
+            put(local_file,
+                "/var/lib/jenkins/", use_sudo=True)
+
+    with cd('/var/lib/jenkins/jobs/'):
+        for job in jobs:
+            if not exists(job):
+                local_job_file = os.path.abspath(os.path.join(
+                    job_directory_path,
+                    '%s.xml' % job))
+                sudo('mkdir /var/lib/jenkins/jobs/%s' % job)
+                put(local_job_file,
+                    "/var/lib/jenkins/jobs/%s/config.xml" % job,
+                    use_sudo=True)
+        sudo('chown -R jenkins:nogroup InaSAFE*')
+    sudo('service jenkins restart')
