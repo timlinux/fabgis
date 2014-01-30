@@ -38,7 +38,7 @@ def setup_inasafe():
         'pyflakes',
 
     ])
-    code_path = os.path.join('home', env.user, 'dev', 'python')
+    code_path = os.path.join('/home', env.user, 'dev', 'python')
 
     update_git_checkout(
         code_path=code_path,
