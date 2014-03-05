@@ -34,7 +34,11 @@ def show_environment():
 
 
 def setup_env():
-    """Things to do regardless of whether command is local or remote."""
+    """Things to do regardless of whether command is local or remote.
+
+    Todo - many of these env.fg settings should be module specific...
+
+    """
     if env.fg is not None:
         fastprint('Environment already set!\n')
         return
