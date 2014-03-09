@@ -1,3 +1,6 @@
+v0.17.2, Sun 9 2013 -- Bugfix: Ensure lsb gets installed properly in tilemill
+   setup process.
+
 v0.17.1, Mar 5 2014 -- Fixed bug in InSAFE setup
 
 v0.17.0, Jan 7 2013 -- Improved API doc generation and added a task to push

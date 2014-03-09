@@ -30,10 +30,11 @@ def setup_tilemill():
     """Set up tile mill - see http://www.mapbox.com/tilemill/ ."""
     # Note raring seems not to be supported yet...
     setup_env()
-    add_developmentseed_ppa()
     fabtools.require.deb.package('lsb-release')
+    add_developmentseed_ppa()
     fabtools.require.deb.package('tilemill')
     fabtools.require.deb.package('libmapnik')
+
     # TODO: switch to using nodeenv
     # SEE: https://github.com/ekalinin/nodeenv
     fabtools.require.deb.package('nodejs')
