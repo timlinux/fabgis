@@ -48,7 +48,7 @@ from fabric.api import task, hosts, cd, run, fastprint, local, lcd
 from fabric.contrib.project import rsync_project
 from fabric.colors import blue
 from fabgis.postgres import (
-    setup_postgis_latest, 
+    setup_postgis_latest,
     create_postgis_1_5_db,
     get_postgres_dump,
     compile_osm2pgsql,
@@ -151,7 +151,7 @@ def sync_docs_to_server(remote_dir='/home/web/fabgis'):
     html_path = os.path.join(docs_path, 'build', 'html')
     with lcd(docs_path):
         local('make clean')
-        # Make sure to set pythonpath in case there is alread a system
+        # Make sure to set pythonpath in case there is already a system
         # installed copy of fabgis overriding our local copy.
         local('PYTHONPATH=%s make html' % base_path)
 
