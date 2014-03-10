@@ -8,6 +8,8 @@ FABGIS
 
 Fabric tasks for the busy FOSSGIS professional
 
+Hosted on GitHub at https://github.com/timlinux/fabgis
+
 FABGIS - its absolutely FAB-U-GIS!
 
 .. image:: _static/fabgis-overview.png
