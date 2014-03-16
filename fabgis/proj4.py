@@ -40,7 +40,7 @@ def build_proj4(version='4.8.0'):
             run('wget %s' % source_url)
             run('tar xfz %s.tar.gz' % filename)
 
-    processor_count = run('cat /proc/cpuinfo | grep processor | wc -l')
+    processor_count = run('cat /proc/cpuinfo | grep ^processor | wc -l')
 
     with cd(code_path):
         # Dont fail if make clean does not work
