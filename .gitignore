@@ -12,5 +12,5 @@ data
 MANIFEST
 build
 scrap.py
-.idea/workspace.xml
+.idea
 *.orig
