@@ -7,7 +7,8 @@ We will set up node in python virtual environment nodeenv so that it does not
 interfere with other node based installations on the system.
 """
 
-from fabric.api import task, run, cd, prefix
+from fabric.api import task, run, cd
+from fabric.contrib.files import exists
 from .virtualenv import setup_venv
 
 @task
@@ -36,16 +37,16 @@ def setup_node(work_path, node_version=None, proxy_url=None):
     :type proxy_url: str
     """
     with cd(work_path):
-        setup_venv(code_path=work_path)
-        with prefix('venv/bin'):
-            run('pip install nodeenv')
-            if node_version is not None:
-                run('nodeenv env --node=%s' % node_version)
-            else:
-                run('nodeenv env')
+        setup_venv(code_path=work_path, requirements_file=None)
 
-        with prefix('env/bin'):
-            run('npm install')
-            if proxy_url is not None:
-                run('npm config set proxy %s' % proxy_url)
-                run('npm config set https-proxy %s' % proxy_url)
+        run('venv/bin/pip install nodeenv')
+        if not exists('env'):
+            if node_version is not None:
+                run('venv/bin/nodeenv env --node=%s' % node_version)
+            else:
+                run('venv/bin/nodeenv env')
+
+        run('env/bin/npm install')
+        if proxy_url is not None:
+            run('npm config set proxy %s' % proxy_url)
+            run('npm config set https-proxy %s' % proxy_url)

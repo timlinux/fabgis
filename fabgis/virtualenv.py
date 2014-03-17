@@ -26,7 +26,8 @@ def setup_venv(code_path, requirements_file='requirements.txt'):
     :type code_path: str
 
     :param requirements_file: Name of the requirements file to use in the
-        base directory. Defaults to ``requirements.txt``.
+        base directory. Defaults to ``requirements.txt``. If you pass in None
+        no attempt will be made to install packages from a requirements file.
     :type requirements_file: str
 
     To run e.g.::
@@ -41,7 +42,8 @@ def setup_venv(code_path, requirements_file='requirements.txt'):
     with cd(code_path):
         # Ensure we have a venv set up
         virtualenv('venv')
-        run('venv/bin/pip install -r %s' % requirements_file)
+        if requirements_file is not None:
+            run('venv/bin/pip install -r %s' % requirements_file)
     fastprint(green('Virtualenv setup completed.'))
 
 

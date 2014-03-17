@@ -58,8 +58,6 @@ def setup_env():
         env.fg.qgis_git_url = 'git://github.com/qgis/QGIS.git'
         env.fg.kandan_git_url = 'git://github.com/kandanapp/kandan.git'
         env.fg.gdal_svn_url = 'https://svn.osgeo.org/gdal/trunk/gdal'
-        env.fg.tilemill_tarball_url = (
-            'http://tilemill.s3.amazonaws.com/latest/install-tilemill.tar.gz')
         env.fg.inasafe_checkout_alias = 'inasafe-fabric'
         env.fg.qgis_checkout_alias = 'qgis-fabric'
         env.fg.inasafe_code_path = os.path.join(

@@ -48,17 +48,17 @@ def setup_tilemill(proxy_url=None):
     # Note raring seems not to be supported yet...
     setup_env()
     repo_alias = 'tilemill'
+    print env
     update_git_checkout(
-        env.cwd, 'git@github.com:mapbox/tilemill.git', repo_alias)
-    work_path = os.path.join(env.cwd, repo_alias)
+        env.fg.workspace, 'https://github.com/mapbox/tilemill.git', repo_alias)
+    work_path = os.path.join(env.fg.workspace, repo_alias)
     setup_node(
         work_path,
         node_version='0.10.26',  # known good version
         proxy_url=proxy_url)
 
     with cd(work_path):
-        with prefix('env/bin'):
-            run('npm install')
+        run('env/bin/npm install')
     fastprint(green(
         'Tilemill installed. Use the start_tilemill task to run it.'))
 
@@ -66,7 +66,7 @@ def setup_tilemill(proxy_url=None):
 def start_tilemill():
     """Start the tilemill service - ensure it is installed first."""
     repo_alias = 'tilemill'
-    work_path = os.path.join(env.cwd, repo_alias)
+    work_path = os.path.join(env.fg.workspace, repo_alias)
     host_ip = get_ip_address()
     with cd(work_path):
         command = (
