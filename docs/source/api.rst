@@ -37,6 +37,8 @@ API Documentation
 .. automodule:: fabgis.virtualenv
    :members:
 
+.. automodule:: fabgis.node
+   :members:
 
 .. automodule:: fabgis.tilemill
    :members:

@@ -63,8 +63,8 @@ def setup_apache(
         will default to ``resources/server_config/apache``. Must be a
         relative path to the fabfile you are running.
     :type template_dir: str
-    
-    :param media_dir: Optional dir under code_path if media does not live in 
+
+    :param media_dir: Optional dir under code_path if media does not live in
         ``<code_path>/django_project/media``. No trailing slash.
     :type media_dir: str
 
@@ -152,9 +152,13 @@ def setup_celery(project_name, user, password, code_path):
 
     Copy celery config files to correct locations and start rabbitmq and
     celery servers
+
     :param password: Password for rabbitmq server
+
     :param user: User for rabbitmq server
+
     :param project_name: Name for rabbitmq server vhost
+
     :param code_path: Directory where the code lives.
     :type code_path: str
 

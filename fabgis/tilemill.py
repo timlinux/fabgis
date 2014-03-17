@@ -10,10 +10,14 @@ Tools for deployment of tilemill.
 .. seealso:: :file:`tilestream.py`
 
 """
+import os
 import fabtools
-from fabric.api import fastprint, task, sudo, run
+from fabric.api import fastprint, task, run, env, cd, prefix
+from fabric.colors import green
 from .common import setup_env
 from .system import get_ip_address
+from .git import update_git_checkout
+from .node import setup_node
 
 
 @task
@@ -26,49 +30,52 @@ def add_developmentseed_ppa():
 
 
 @task
-def setup_tilemill():
-    """Set up tile mill - see http://www.mapbox.com/tilemill/ ."""
+def setup_tilemill(proxy_url=None):
+    """Set up tile mill - see http://www.mapbox.com/tilemill/ .
+
+    We use a pure node setup as described here:
+
+    https://github.com/mapbox/tilemill/issues/2103#issuecomment-37473991
+
+    in order to avoid potential conflicts with ubuntugis.
+
+    :param proxy_url: Optional parameters to specify the url to use for your
+        network proxy. It should be specified in the form: ``<host>:<port>``.
+        The same proxy will be used for both http and https urls. If ommitted
+        no proxy will be used.
+    :type proxy_url: str
+    """
     # Note raring seems not to be supported yet...
     setup_env()
-    fabtools.require.deb.package('lsb-release')
-    add_developmentseed_ppa()
-    fabtools.require.deb.package('tilemill')
-    fabtools.require.deb.package('libmapnik')
+    repo_alias = 'tilemill'
+    update_git_checkout(
+        env.cwd, 'git@github.com:mapbox/tilemill.git', repo_alias)
+    work_path = os.path.join(env.cwd, repo_alias)
+    setup_node(
+        work_path,
+        node_version='0.10.26',  # known good version
+        proxy_url=proxy_url)
 
-    # TODO: switch to using nodeenv
-    # SEE: https://github.com/ekalinin/nodeenv
-    fabtools.require.deb.package('nodejs')
-    fastprint('Now you can log in and use tilemill like this:')
-    fastprint('vagrant ssh -- -X')
-    fastprint('/usr/bin/nodejs /usr/share/tilemill/index.js')
-    fastprint('Or use the start tilemill task and open your')
-    fastprint('browser at the url provided.')
-
+    with cd(work_path):
+        with prefix('env/bin'):
+            run('npm install')
+    fastprint(green(
+        'Tilemill installed. Use the start_tilemill task to run it.'))
 
 @task
 def start_tilemill():
     """Start the tilemill service - ensure it is installed first."""
-    #sudo('start tilemill')
-    # Note port forward seems not to work well
-    # Using this config on the vhost:
-    #{
-    #  'listenHost': '0.0.0.0',
-    #  'coreUrl': '192.168.1.115:20009',
-    #  'tileUrl': '192.168.1.115:20008',
-    #  'files': '/usr/share/mapbox',
-    #  'server': true
-    #}
-    # Worked, accessible from http://192.168.1.115:20009/
-    # More reliable way (blocking process, ctl-c to kill)
+    repo_alias = 'tilemill'
+    work_path = os.path.join(env.cwd, repo_alias)
     host_ip = get_ip_address()
-    fastprint(host_ip)
-    command = (
-        '/usr/bin/nodejs /usr/share/tilemill/index.js '
-        '--server=true '
-        '--listenHost=0.0.0.0 '
-        '--coreUrl=%s:20009 '
-        '--tileUrl=%s:20008' % (host_ip, host_ip))
-    run(command)
+    with cd(work_path):
+        command = (
+            'PATH=$PATH:env/bin nohup index.js '
+            '--server=true '
+            '--listenHost=0.0.0.0 '
+            '--coreUrl=%s:20009 '
+            '--tileUrl=%s:20008 &' % (host_ip, host_ip))
+        run(command)
     fastprint('Tilemill is running - point your browser at:')
     fastprint('http://%s:20009' % host_ip)
     fastprint('to use it.')
