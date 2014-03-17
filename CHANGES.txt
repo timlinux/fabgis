@@ -1,4 +1,6 @@
-v0.17.2, Sun 9 2013 -- Bugfix: Ensure lsb gets installed properly in tilemill
+v0.17.3, Mar 16 2013 -- Bugfix: Fix logic for determining CPU count.
+   
+v0.17.2, Mar 9 2013 -- Bugfix: Ensure lsb gets installed properly in tilemill
    setup process.
 
 v0.17.1, Mar 5 2014 -- Fixed bug in InSAFE setup
