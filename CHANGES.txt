@@ -1,5 +1,7 @@
+v0.18.0, ?????       -- Added QGIS 2.2 build task
+
 v0.17.3, Mar 16 2013 -- Bugfix: Fix logic for determining CPU count.
-   
+
 v0.17.2, Mar 9 2013 -- Bugfix: Ensure lsb gets installed properly in tilemill
    setup process.
 
