@@ -7,7 +7,7 @@ QGIS related build tools.
 import os
 from fabric.contrib.files import exists
 from fabric.api import run, cd, env, task, sudo, fastprint
-from fabric.colors import red, green, blue
+from fabric.colors import green
 from fabtools import require
 from fabric.contrib.files import upload_template
 import fabtools
@@ -162,6 +162,36 @@ def install_qgis2(gdal_from_source=False):
     code_path = '%s/QGIS' % workspace
     build_path = '%s/build-qgis2-fabgis' % code_path
     build_prefix = '/usr/local/qgis-2.0'
+    compile_qgis(build_path, build_prefix, gdal_from_source)
+
+
+@task
+def install_qgis2_2(gdal_from_source=False):
+    """Install QGIS 2 under /usr/local/qgis-2.2.
+
+    :param gdal_from_source: Whether gdal should be built from source.
+        Default False.
+    :type gdal_from_source: bool
+
+    TODO: create one function from this and the 1.8 function above for DRY.
+
+    """
+    setup_env()
+    setup_ccache()
+    add_ubuntugis_ppa()
+    sudo('apt-get build-dep -y qgis')
+
+    #fabtools.require.deb.package('python-pyspatialite')
+    fabtools.require.deb.package('python-psycopg2')
+    fabtools.require.deb.package('python-qscintilla2')
+    fabtools.require.deb.package('libqscintilla2-dev')
+    fabtools.require.deb.package('libspatialindex-dev')
+
+    clone_qgis(branch='release-2_2')
+    workspace = '%s/cpp' % env.fg.workspace
+    code_path = '%s/QGIS' % workspace
+    build_path = '%s/build-qgis2_2-fabgis' % code_path
+    build_prefix = '/usr/local/qgis-2.2'
     compile_qgis(build_path, build_prefix, gdal_from_source)
 
 
