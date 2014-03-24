@@ -5,13 +5,17 @@ PROJ4 related tasks.
 
 """
 
+
 import fabtools
 from fabric.contrib.files import exists
 from fabric.api import fastprint, run, cd, env, task, sudo, settings
 
-from .system import setup_ccache
+from .system import setup_ccache, get_processor_count
 from .common import setup_env
 from .utilities import append_if_not_present
+
+
+
 
 
 @task
@@ -40,7 +44,7 @@ def build_proj4(version='4.8.0'):
             run('wget %s' % source_url)
             run('tar xfz %s.tar.gz' % filename)
 
-    processor_count = run('cat /proc/cpuinfo | grep ^processor | wc -l')
+    processor_count = get_processor_count()
 
     with cd(code_path):
         # Dont fail if make clean does not work

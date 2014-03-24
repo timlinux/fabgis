@@ -9,7 +9,7 @@ from fabric.contrib.files import exists, append
 from fabric.api import fastprint, run, cd, env, task, sudo, settings
 
 from .common import add_ubuntugis_ppa, setup_env
-from .system import setup_ccache
+from .system import setup_ccache, get_processor_count
 from .proj4 import build_proj4
 
 
@@ -61,7 +61,7 @@ def build_gdal(with_ecw=False, with_mrsid=False):
         '--with-spatialite '
         '--without-libtool')
 
-    processor_count = run('cat /proc/cpuinfo | grep processor | wc -l')
+    processor_count = get_processor_count()
 
     # Currently you need to have downloaded the MRSID sdk to remote home dir
     if with_mrsid:

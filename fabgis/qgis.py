@@ -14,7 +14,7 @@ import fabtools
 from .common import add_ubuntugis_ppa
 from .common import setup_env
 from .git import update_git_checkout
-from .system import setup_ccache
+from .system import setup_ccache, get_processor_count
 from .gdal import build_gdal
 from .postgres import create_postgis_1_5_db
 
@@ -96,18 +96,19 @@ def compile_qgis(build_path, build_prefix, gdal_from_source=False):
             build_gdal()  # see that task for ecw and mrsid support
             extra += '-DGDAL_CONFIG=/usr/local/bin/gdal-config '
 
-        cmake = ('cmake .. '
-                 '-DCMAKE_INSTALL_PREFIX=%s '
-                 '-DCMAKE_CXX_COMPILER:FILEPATH=/usr/local/bin/g++ '
-                 '-DQT_QMAKE_EXECUTABLE=/usr/bin/qmake-qt4 '
-                 '-DWITH_MAPSERVER=ON '
-                 '-DWITH_INTERNAL_SPATIALITE=ON '
-                 '-DWITH_GRASS=OFF '
-                 '-DCMAKE_BUILD_TYPE=Debug '
-                 '%s'
-                 % (build_prefix, extra))
+        cmake = (
+            'cmake .. '
+            '-DCMAKE_INSTALL_PREFIX=%s '
+            '-DCMAKE_CXX_COMPILER:FILEPATH=/usr/local/bin/g++ '
+            '-DQT_QMAKE_EXECUTABLE=/usr/bin/qmake-qt4 '
+            '-DWITH_MAPSERVER=ON '
+            '-DWITH_INTERNAL_SPATIALITE=ON '
+            '-DWITH_GRASS=OFF '
+            '-DCMAKE_BUILD_TYPE=Debug '
+            '%s'
+             % (build_prefix, extra))
         run(cmake)
-        processor_count = run('cat /proc/cpuinfo | grep processor | wc -l')
+        processor_count = get_processor_count()
         run('time make -j %s install' % processor_count)
 
 

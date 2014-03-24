@@ -11,6 +11,7 @@ from fabric.api import cd, fastprint, prompt
 from fabric.contrib.files import contains, exists, append, sed
 from fabric.colors import red
 from fabric.api import env, task, sudo, local, reboot
+from fabric.operations import run
 import fabtools
 from .utilities import append_if_not_present
 
@@ -318,3 +319,7 @@ def masquerade():
         sed(rc_file, '^exit 0', '#exit 0', use_sudo=True)
         append(rc_file, rule_1, use_sudo=True)
         append(rc_file, rule_2, use_sudo=True)
+
+
+def get_processor_count():
+    return run('cat /proc/cpuinfo | grep ^processor | wc -l')
