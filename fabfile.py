@@ -71,6 +71,7 @@ from fabgis.dropbox import (
 from fabgis.system import create_user
 from fabgis.docker import (
     setup_docker, setup_docker_image, docker, create_docker_container)
+from fabgis.btsync import install_btsync
 # You can also make generic tasks available at the command line simply by
 # importing them. e.g.
 #from fabgis.sphinx import setup_sphinx
