@@ -1,3 +1,7 @@
+
+# 🛑 Warning: No longer maintained
+## This repo is no longer maintained. It is provided for archival / reference purposes only.
+
 FabGIS
 ======
 
